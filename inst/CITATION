@@ -1,0 +1,9 @@
+bibentry(
+  bibtype  = "unpublished",
+  title    = "La estimación no paramétrica de curvas con datos sesgados",
+  author   = "Noelia Sánchez Martínez",
+  school   = "Universidade de Santiago de Compostela",
+  year     = "2025",
+  type     = "Master's thesis",
+  note     = "Available on GitHub"
+)
