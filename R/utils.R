@@ -52,7 +52,7 @@
 }
 
 .get_kernel_values <- function(kernel) {
-  kernel_function_density <-
+  kernel_function_density <- # Kernel Density functions
     switch(kernel,
       gaussian = function(u) dnorm(u),
       epanechnikov = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 0, 0.75 * (1 - (u^2)))),
@@ -64,74 +64,30 @@
       stop("unknown kernel")
     )
 
-  kernel_function_distribution <-
+  kernel_function_distribution <- # Kernel Distribution functions
     switch(kernel,
       gaussian = function(u) pnorm(u),
       epanechnikov = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, 0.75 * u * (1 - (u^2) / 3) + 0.5)),
       rectangular = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, (u + 1) / 2)),
       triangular = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, -0.5 * u * abs(u) + u + 0.5)),
-      biweight = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, ((15 / 16) * u - (5 / 8) * u^3 + (3 / 16) * u^5) + 0.5)),
+      biweight = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, (15 / 16) * u - (5 / 8) * u^3 + (3 / 16) * u^5 + 0.5)),
       cosine = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, (sin(pi * u) + pi * u + pi) / (2 * pi))),
       optcosine = function(u) ifelse(u <= -1, 0, ifelse(u >= 1, 1, (1 + sin(pi * u / 2)) / 2)),
       stop("unknown kernel")
     )
 
-  kernel_function_density_deriv <- switch(kernel,
+  kernel_function_density_deriv <- switch(kernel, # Kernel First Derivative of density functions
     gaussian = function(u) dnorm(u) * (-u),
     epanechnikov = function(u) ifelse(abs(u) < 1, -1.5 * u, 0),
     rectangular = function(u) ifelse(abs(u) < 1, 0, 0),
-    triangular = function(u) ifelse(abs(u) < 1, -u / abs(u), 0),
+    triangular = function(u) ifelse(abs(u) < 1 & abs(u) > .Machine$double.eps^0.5, -u / abs(u), 0),
     biweight = function(u) ifelse(abs(u) < 1, -(15 / 4) * u * (1 - u^2), 0),
-    cosine = function(u) -0.5 * sin(pi / 2 * u) * (abs(u) <= 1),
+    cosine = function(u) -0.5 * sin(pi * u) * pi * (abs(u) <= 1),
     optcosine = function(u) -pi^2 / 8 * sin(pi / 2 * u) * (abs(u) <= 1),
     stop("unknown kernel")
   )
 
-  sigma_K_2 <- switch(kernel,
-    "gaussian" = 1,
-    "epanechnikov" = 1 / 5,
-    "rectangular" = 1 / 3,
-    "triangular" = 1 / 6,
-    "biweight" = 1 / 7,
-    "cosine" = (pi^2 - 6) / (3 * pi^2),
-    "optcosine" = (pi^2 - 8) / (pi^2),
-    stop("unknown kernel")
-  )
-
-  RK <- switch(kernel,
-    "gaussian" = 1 / (2 * sqrt(pi)),
-    "epanechnikov" = 3 / 5,
-    "rectangular" = 1 / 2,
-    "triangular" = 2 / 3,
-    "biweight" = 5 / 7,
-    "cosine" = 3 / 4,
-    "optcosine" = pi^2 / 16,
-    stop("unknown kernel")
-  )
-
-  RKprime <- switch(kernel,
-    gaussian = 1 / (4 * sqrt(pi)),
-    epanechnikov = 3 / 2,
-    rectangular = 0,
-    triangular = 1,
-    biweight = 15 / 7,
-    cosine = pi^2 / 4,
-    optcosine = pi^4 / 64,
-    stop("unknown kernel")
-  )
-
-  intudW2 <- switch(kernel,
-    "gaussian" = 1 / sqrt(pi),
-    "epanechnikov" = 3 / 5,
-    "rectangular" = 1 / 3,
-    "triangular" = 1 / 3,
-    "biweight" = 155 / 672,
-    "cosine" = 1 / (2 * pi),
-    "optcosine" = (pi * 2 + 16) / (2 * pi^3),
-    stop("unknown kernel")
-  )
-
-  L_d2_norm <- switch(kernel,
+  kernel_function_density_deriv2 <- switch(kernel,
     gaussian = function(u) {
       1 / (sqrt(2 * pi)) * (u^2 - 1) * exp(-u^2 / 2)
     },
@@ -148,25 +104,13 @@
       0.25 * (45 * u^2 - 15) * (abs(u) <= 1)
     },
     cosine = function(u) {
-      -0.5 * pi^2 + cos(pi * u) * (abs(u) <= 1)
+      -0.5 * pi^2 * cos(pi * u) * (abs(u) <= 1)
     },
     optcosine = function(u) {
       -pi^3 / 16 * cos(pi * u / 2) * (abs(u) <= 1)
     },
     stop("unknown kernel")
   )
-
-  RL_deriv2 <- switch(kernel,
-    gaussian = 3 / (8 * sqrt(pi)),
-    epanechnikov = 0,
-    rectangular = 0,
-    triangular = 0,
-    biweight = 22.5,
-    cosine = pi^4 / 4,
-    optcosine = pi^6 / 256,
-    stop("unknown kernel")
-  )
-
 
   if (kernel != "gaussian" & kernel != "rectangular") {
     eps <- switch(kernel,
@@ -190,7 +134,7 @@
     }
   }
 
-  kernel_function_conv <- #### REVIEW
+  kernel_function_conv <-
     switch(kernel,
       gaussian = function(u) dnorm(u, sd = sqrt(2)),
       epanechnikov = aux,
@@ -202,17 +146,97 @@
       stop("unknown kernel")
     )
 
+  # RK <- switch(kernel,
+  #   gaussian = 1 / (2 * sqrt(pi)),
+  #   epanechnikov = 3 / 5,
+  #   rectangular = 1 / 2,
+  #   triangular = 2 / 3,
+  #   biweight = 5 / 7,
+  #   cosine = 3 / 4,
+  #   optcosine = pi^2 / 16,
+  #   stop("unknown kernel")
+  # )
+
+  RK <- integrate(
+    Vectorize(function(u) kernel_function_density(u)^2),
+    -4, 4
+  )$value
+
+  # RKprime <- switch(kernel,
+  #   gaussian = 1 / (4 * sqrt(pi)),
+  #   epanechnikov = 3 / 2,
+  #   rectangular = 0,
+  #   triangular = 2,
+  #   biweight = 15 / 7,
+  #   cosine = pi^2 / 4,
+  #   optcosine = pi^4 / 64,
+  #   stop("unknown kernel")
+  # )
+
+  RKprime <- integrate(
+    Vectorize(function(u) kernel_function_density_deriv(u)^2),
+    -4, 4
+  )$value
+
+  # RKprime2 <- switch(kernel,
+  #   gaussian = 3 / (8 * sqrt(pi)),
+  #   epanechnikov = 9 / 2,
+  #   rectangular = 0,
+  #   triangular = 0,
+  #   biweight = 22.5,
+  #   cosine = pi^4 / 4,
+  #   optcosine = pi^6 / 256,
+  #   stop("unknown kernel")
+  # )
+
+  RKprime2 <- integrate(
+    Vectorize(function(u) kernel_function_density_deriv2(u)^2),
+    -4, 4
+  )$value
+
+  # sigma_K_2 <- switch(kernel,
+  #   gaussian = 1,
+  #   epanechnikov = 1 / 5,
+  #   rectangular = 1 / 3,
+  #   triangular = 1 / 6,
+  #   biweight = 1 / 7,
+  #   cosine = (pi^2 - 6) / (3 * pi^2),
+  #   optcosine = (pi^2 - 8) / (pi^2),
+  #   stop("unknown kernel")
+  # )
+
+  sigma_K_2 <- integrate(
+    Vectorize(function(u) u^2 * kernel_function_density(u)),
+    -4, 4
+  )$value
+
+  # intudW2 <- switch(kernel,
+  #   gaussian = 1 / sqrt(pi),
+  #   epanechnikov = 9 / 35,
+  #   rectangular = 1 / 3,
+  #   triangular = 7 / 30,
+  #   biweight = 50 / 231,
+  #   cosine = (4 * pi^2 - 15) / (12 * pi^2),
+  #   optcosine = 1 / 4,
+  #   stop("unknown kernel")
+  # )
+
+  intudW2 <- integrate(
+    Vectorize(function(u) 2 * u * kernel_function_density(u) * kernel_function_distribution(u)),
+    -4, 4
+  )$value
+
   list(
     kernel_function_density = kernel_function_density,
     kernel_function_distribution = kernel_function_distribution,
     kernel_function_density_deriv = kernel_function_density_deriv,
-    sigma_K_2 = sigma_K_2,
+    kernel_function_density_deriv2 = kernel_function_density_deriv2,
+    kernel_function_conv = kernel_function_conv,
     RK = RK,
     RKprime = RKprime,
-    intudW2 = intudW2,
-    L_d2_norm = L_d2_norm,
-    RL_deriv2 = RL_deriv2,
-    kernel_function_conv = kernel_function_conv
+    RKprime2 = RKprime2,
+    sigma_K_2 = sigma_K_2,
+    intudW2 = intudW2
   )
 }
 

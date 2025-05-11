@@ -54,12 +54,12 @@
 <g clip-path='url(#cpMC4wMHwyNDAuMDB8MC4wMHw1NzYuMDA=)'>
 <text x='129.50' y='573.15' text-anchor='middle' style='font-size: 7.92px; font-family: sans;' textLength='20.69px' lengthAdjust='spacingAndGlyphs'>CV(h)</text>
 <text x='129.50' y='563.64' text-anchor='middle' style='font-size: 7.92px; font-family: sans;' textLength='36.99px' lengthAdjust='spacingAndGlyphs'>Bandwidht</text>
-<text x='129.50' y='22.75' text-anchor='middle' style='font-size: 9.50px; font-weight: bold; fill: #0000FF; font-family: sans;' textLength='119.41px' lengthAdjust='spacingAndGlyphs'>Optimal Bandwidht h:0.2677</text>
+<text x='129.50' y='22.75' text-anchor='middle' style='font-size: 9.50px; font-weight: bold; fill: #0000FF; font-family: sans;' textLength='90.89px' lengthAdjust='spacingAndGlyphs'>CV bandwidth:0.2677</text>
 </g>
 <g clip-path='url(#cpMzguOTd8MjIwLjA0fDM4Ljk3fDUyNy41Mw==)'>
 <line x1='38.97' y1='509.43' x2='220.04' y2='509.43' style='stroke-width: 0.75; stroke: #0000FF;' />
 <line x1='73.62' y1='527.53' x2='73.62' y2='38.97' style='stroke-width: 0.75; stroke: #0000FF;' />
-<line x1='76.49' y1='527.53' x2='76.49' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
+<line x1='76.50' y1='527.53' x2='76.50' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
 </g>
 <defs>
   <clipPath id='cpMjc4Ljk3fDQ2MC4wNHwzOC45N3w1MjcuNTM='>
@@ -101,7 +101,7 @@
 </g>
 <g clip-path='url(#cpMjc4Ljk3fDQ2MC4wNHwzOC45N3w1MjcuNTM=)'>
 <line x1='313.62' y1='527.53' x2='313.62' y2='38.97' style='stroke-width: 0.75; stroke: #0000FF;' />
-<line x1='316.49' y1='527.53' x2='316.49' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
+<line x1='316.50' y1='527.53' x2='316.50' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
 </g>
 <defs>
   <clipPath id='cpNTE4Ljk3fDcwMC4wNHwzOC45N3w1MjcuNTM='>
@@ -145,7 +145,7 @@
 </g>
 <g clip-path='url(#cpNTE4Ljk3fDcwMC4wNHwzOC45N3w1MjcuNTM=)'>
 <line x1='553.62' y1='527.53' x2='553.62' y2='38.97' style='stroke-width: 0.75; stroke: #0000FF;' />
-<line x1='556.49' y1='527.53' x2='556.49' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
+<line x1='556.50' y1='527.53' x2='556.50' y2='38.97' style='stroke-width: 0.75; stroke-dasharray: 4.00,4.00;' />
 </g>
 <defs>
   <clipPath id='cpNTkuMDR8Njg5Ljc2fDU5LjA0fDUwMi41Ng=='>

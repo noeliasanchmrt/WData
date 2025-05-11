@@ -1,0 +1,43 @@
+
+\documentclass[a4paper,10pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{booktabs}
+
+\begin{document}
+%\begin{landscape}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lcccccccc}
+\textbf{Kernel} & $K$ & $W$  \\
+\toprule
+Gaussian & 
+$\frac{1}{\sqrt{2\pi}} \exp(-\frac{1}{2}u^2)$ &
+NA
+\\
+Epanechnikov & 
+$\frac{3}{4}(1 - u^2) \, \mathbb{I}(|u| \leq 1)$ & 
+$\frac{3}{4} u (1-\frac{u^2}{3}) + \frac{1}{2}$ \\
+Rectangular & 
+$\frac{1}{2} \, \mathbb{I}(|u| \leq 1)$ & 
+$\frac{1}{2} (u+1) + u + \frac{1}{2}$ \\
+\\
+Triangular & 
+$(1 - |u|) \, \mathbb{I}(|u| \leq 1)$ & 
+$ - \frac{1}{2} \left(u |u| + 1\right) $ \\
+\\
+Biweight & 
+$\frac{15}{16}(1 - u^2)^2 \, \mathbb{I}(|u| \leq 1)$  \\
+Cosine & 
+$\frac{1}{2}(1 + \cos(\pi u)) \, \mathbb{I}(|u| \leq 1)$  \\
+Optcosine & 
+$\frac{\pi}{4} \cos\left( \frac{\pi u}{2} \right) \, \mathbb{I}(|u| \leq 1)$ \\
+\bottomrule
+\end{tabular}
+\caption{Propiedades de los núcleos y derivadas necesarias para programar selectores}
+\end{table}
+%\end{landscape}
+\end{document}

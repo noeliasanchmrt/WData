@@ -248,7 +248,7 @@ bw.f.BGMboot2 <- function(y,
     if (h < lower + tol || h > upper - tol) {
       title("Minimum occurred at one end of the range", col.main = "red")
     } else {
-      title(paste0("Optimal Bandwidht h: ", round(h, 4)), col.main = "blue")
+      title(paste0("Bootstrap bandwidht: ", round(h, 4)), col.main = "blue")
     }
 
     plot(hs, Bias,

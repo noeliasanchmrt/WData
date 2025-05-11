@@ -33,8 +33,8 @@ bw.F.SBCcv <- function(y,
                          "cosine",
                          "optcosine"
                        ),
-                       lower = IQR(y) * length(y)^(-0.33) * 0.05,
-                       upper = IQR(y) * length(y)^(-0.33) * 5,
+                       lower = IQR(y) * length(y)^(-1 / 3) * 0.05,
+                       upper = IQR(y) * length(y)^(-1 / 3) * 5,
                        nh = 200L,
                        tol = 0.1 * lower,
                        plot = TRUE) {
@@ -87,8 +87,8 @@ bw.F.SBCcv <- function(y,
 
   if (plot) {
     # Compute the rule of the thumb bandwidth
-    sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
-    bw.F.SBCnrd0 <- sigma * (sqrt(pi) * uw * uwb * intudW2)^(0.33) * (n * sigma_K_2^2)^(-0.33)
+    sigma <- sqrt(uw * (mean(yw) - uw))
+    bw.F.SBCnrd0 <- sigma * (sqrt(pi) * uw * uwb * intudW2)^(1 / 3) * (n * sigma_K_2^2)^(-1 / 3)
 
     plot(
       hs,
@@ -101,7 +101,7 @@ bw.F.SBCcv <- function(y,
     if (h < lower + tol || h > upper - tol) {
       title("Minimum occurred at one end of the range", col.main = "red")
     } else {
-      title(paste0("Optimal Bandwidth h: ", round(h, 4)), col.main = "blue")
+      title(paste0("CV bandwidth: ", round(h, 4)), col.main = "blue")
     }
 
     abline(

@@ -56,8 +56,8 @@ bw.F.BD <- function(y,
     stop("argument 'c_adj' must be numeric")
   }
 
-  sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
-  bw <- c_adj * sigma * n^(-0.33) * x^(-0.33)
+  sigma <- sqrt(uw * (mean(yw) - uw))
+  bw <- c_adj * sigma * n^(-1 / 3) * x^(-1 / 3)
 
   if (any(is.nan(bw)) || any(is.na(bw)) || any(bw <= 0)) {
     warning("some 'bw' are not positive. They will be replaced by the mean of the neighbors")

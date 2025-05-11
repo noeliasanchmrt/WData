@@ -153,7 +153,7 @@ cdf.bd(shrub.data$Width, correction = "left", bw = bw_cv)
 cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F.SBCpi")
 ```
 
-#### `cdf.efro()`: @efromovich2008 Series distribution estimator 
+#### `cdf.efro()`: @efromovich2008 series distribution estimator 
 
 ```{r,  fig.width=12, fig.height=6, fig.align="center"}
 par(mfrow = c(2, 4))

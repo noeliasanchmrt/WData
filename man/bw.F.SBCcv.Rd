@@ -11,8 +11,8 @@ bw.F.SBCcv(
  },
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
-  lower = IQR(y) * length(y)^(-0.33) * 0.05,
-  upper = IQR(y) * length(y)^(-0.33) * 5,
+  lower = IQR(y) * length(y)^(-1/3) * 0.05,
+  upper = IQR(y) * length(y)^(-1/3) * 5,
   nh = 200L,
   tol = 0.1 * lower,
   plot = TRUE

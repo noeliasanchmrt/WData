@@ -39,9 +39,9 @@ bw.F.SBCpi <- function(y,
 
   # Pilot bandwidth
   if (kernel == "rectangular") {
-    stop("rectangular kernel is not supported for automatic bandwidth selection with optimal pilot bandwidth")
+    stop("rectangular kernel is not supported for optimal pilot bandwidth")
   }
-  sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
+  sigma <- sqrt(uw * (mean(yw) - uw))
   bw0 <- sigma * (4 * sqrt(pi) * RKprime * uw * uwb)^(0.2) * (n * sigma_K_2)^(-0.2)
   if (!is.finite(bw0)) stop("non-finite 'bw0'")
   if (bw0 <= 0) stop("'bw0' is not positive")
@@ -50,19 +50,18 @@ bw.F.SBCpi <- function(y,
 
   # Bootstrap bandwidth
 
-  fJh0_d2_hat_2 <- function(z) {
+  fJ_bw0_1_hat_2 <- function(z) { # Squared first derivative of Jones' density estimator
     aux <- (z - y) / bw0
     aux <- kernel_function_density_deriv(aux) %*% diag(weights)
-    prod <- outer(aux, aux, "*")
-    sum(prod)
+    aux <- (uw / (n * bw0^2)) * sum(aux)
+    aux <- aux^2
   }
 
-  R_fJh0_d1_hat <- (uw / (n * bw0^2))^2 *
-    integrate(Vectorize(fJh0_d2_hat_2),
-      lower = min(y) - (sort(y)[4] - min(y)),
-      upper = max(y) + (max(y) - sort(y, decreasing = T)[4]),
-      subdivisions = 1000, rel.tol = .Machine$double.eps^.15
-    )$value
+  R_fJ_bw0_1_hat_2 <- integrate(Vectorize(fJ_bw0_1_hat_2),
+    lower = min(y) - (sort(y)[4] - min(y)),
+    upper = max(y) + (max(y) - sort(y, decreasing = T)[4]),
+    subdivisions = 1000, rel.tol = .Machine$double.eps^.15
+  )$value
 
-  ((intudW2 * uw * uwb) / (n * sigma_K_2^2 * R_fJh0_d1_hat))^(1 / 3)
+  ((intudW2 * uw * uwb) / (n * sigma_K_2^2 * R_fJ_bw0_1_hat_2))^(1 / 3)
 }

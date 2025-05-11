@@ -98,7 +98,7 @@ bw.f.BGMcv <-
     if (plot == TRUE) {
       # Rule of the thumb with normal kernel as reference.
 
-      sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
+      sigma <- sqrt(uw * (mean(yw) - uw))
       bw.f.BGMnrd0 <- sigma * (8 * sqrt(pi) * RK * uw * uwb)^(0.2) * (3 * n * sigma_K_2^2)^(-0.2)
 
       # Plot the Cross - Validation function
@@ -111,7 +111,7 @@ bw.f.BGMcv <-
       if (h < lower + tol || h > upper - tol) {
         title("Minimum occurred at one end of the range", col.main = "red")
       } else {
-        title(paste0("Optimal Bandwidht h:", round(h, 4)), col.main = "blue")
+        title(paste0("CV bandwidth:", round(h, 4)), col.main = "blue")
       }
 
       abline(v = h, h = min(cvh), col = "blue")

@@ -45,6 +45,6 @@ bw.f.BGMnrd0 <- function(y,
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
 
-  sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
+  sigma <- sqrt(uw * (mean(yw) - uw))
   sigma * (8 * sqrt(pi) * RK * uw * uwb)^(0.2) * (3 * n * sigma_K_2^2)^(-0.2)
 }

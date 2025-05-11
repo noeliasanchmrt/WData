@@ -24,9 +24,16 @@ test_that(".get_kernel_values() handles valid inputs", {
 
     expect_type(result, "list")
     expect_named(result, c(
-      "kernel_function_density", "kernel_function_distribution",
-      "kernel_function_density_deriv", "sigma_K_2", "RK", "RKprime",
-      "intudW2", "L_d2_norm", "RL_deriv2", "kernel_function_conv"
+      "kernel_function_density",
+      "kernel_function_distribution",
+      "kernel_function_density_deriv",
+      "kernel_function_density_deriv2",
+      "kernel_function_conv",
+      "RK",
+      "RKprime",
+      "RKprime2",
+      "sigma_K_2",
+      "intudW2"
     ))
     expect_type(result$kernel_function_density, "closure")
   })
@@ -35,6 +42,44 @@ test_that(".get_kernel_values() handles valid inputs", {
 test_that(".get_kernel_values() throws errors for invalid inputs", {
   expect_error(.get_kernel_values("unknown_kernel"), "unknown kernel")
 })
+
+test_that(".get_kernel_values() is consistent", {
+  kernels <- c(
+    "gaussian", "epanechnikov", "rectangular",
+    "triangular",
+    "biweight", "cosine", "optcosine"
+  )
+
+  for (i in kernels) {
+    k <- .get_kernel_values(i)
+
+    expect_lt(abs(integrate(
+      Vectorize(function(u) k$kernel_function_density(u)^2),
+      -4, 4
+    )$value - k$RK), 0.01)
+
+    expect_lt(abs(integrate(
+      Vectorize(function(u) k$kernel_function_density_deriv(u)^2),
+      -4, 4
+    )$value - k$RKprime), 0.01)
+
+    expect_lt(abs(integrate(
+      Vectorize(function(u) k$kernel_function_density_deriv2(u)^2),
+      -4, 4
+    )$value - k$RKprime2), 0.01)
+
+    expect_lt(abs(integrate(
+      Vectorize(function(u) u^2 * k$kernel_function_density(u)),
+      -4, 4
+    )$value - k$sigma_K_2), 0.01)
+
+    expect_lt(abs(integrate(
+      Vectorize(function(u) 2 * u * k$kernel_function_density(u) * k$kernel_function_distribution(u)),
+      -4, 4
+    )$value - k$intudW2), 0.01)
+  }
+})
+
 
 test_that(".simpsons_rule() handles valid inputs", {
   x <- seq(0, 1, length.out = 11)

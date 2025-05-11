@@ -140,13 +140,6 @@ cdf.bd <- function(y,
       col = "blue"
     )
     rug(y)
-    legend(
-      "topright",
-      legend = c("Estimated Unbiased Distribution"),
-      col = c("blue"),
-      lty = c(1),
-      cex = 0.8
-    )
   }
 
   structure(

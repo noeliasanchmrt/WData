@@ -38,8 +38,7 @@
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
 #' # Bootstrap
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "RT")
-#' # "epanechnikov" kernel is not supported when bw0 = "opt"
-#' df.jones(y = shrub.data$Width, kernel = "biweight", bw = "bw.f.BGMboot1", bw0 = "Opt")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "Opt")
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot2", nh = 50L)
 df.jones <- function(y,
                      w = function(y) {
@@ -96,11 +95,6 @@ df.jones <- function(y,
       ylab = "Density", col = "blue"
     )
     rug(y)
-    legend("topright",
-      legend = c("Estimated Unbiased Density"),
-      col = c("blue"),
-      lty = c(1), cex = 0.8
-    )
   }
 
   structure(

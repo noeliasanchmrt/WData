@@ -47,6 +47,6 @@ bw.F.SBCnrd0 <- function(y,
   list2env(.get_kernel_values(kernel), envir = environment())
 
   # Compute the bandwidth
-  sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
-  sigma * (4 * sqrt(pi) * uw * uwb * intudW2)^(0.33) * (n * sigma_K_2^2)^(-0.33)
+  sigma <- sqrt(uw * (mean(yw) - uw))
+  sigma * (4 * sqrt(pi) * uw * uwb * intudW2)^(1 / 3) * (n * sigma_K_2^2)^(-1 / 3)
 }

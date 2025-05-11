@@ -24,7 +24,7 @@ test_that("bw.f.BGMboot1() correctly handles different kernels", {
 })
 
 test_that("bw.f.BGMboot1() (Opt) throws an error for unsupported kernels", {
-  unsupported_kernels <- c("epanechnikov", "rectangular", "triangular")
+  unsupported_kernels <- c("rectangular", "triangular")
 
   lapply(unsupported_kernels, function(k) {
     expect_error(
@@ -76,7 +76,7 @@ test_that("df.jones() with bw.f.BGMboot1() (Opt) produces stable plots for suppo
   old_width <- options("width")$width
   on.exit(options(width = old_width), add = TRUE)
 
-  supported_kernels <- c("gaussian", "biweight", "cosine", "optcosine")
+  supported_kernels <- c("gaussian", "epanechnikov", "biweight", "cosine", "optcosine")
 
   lapply(seq_along(biased_models), function(i) {
     lapply(supported_kernels, function(k) {

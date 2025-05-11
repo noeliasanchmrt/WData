@@ -73,8 +73,7 @@ df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMnrd0")
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
 # Bootstrap
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "RT")
-# "epanechnikov" kernel is not supported when bw0 = "opt"
-df.jones(y = shrub.data$Width, kernel = "biweight", bw = "bw.f.BGMboot1", bw0 = "Opt")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "Opt")
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot2", nh = 50L)
 }
 \references{

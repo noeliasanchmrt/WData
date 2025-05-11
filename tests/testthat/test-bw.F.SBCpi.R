@@ -22,7 +22,7 @@ test_that("bw.F.SBCpi() throws an error for unsupported kernels with Opt", {
   lapply(unsupported_kernels, function(k) {
     expect_error(
       bw.F.SBCpi(biased_models[[1]], kernel = k),
-      "not supported for automatic bandwidth selection"
+      "not supported for optimal pilot bandwidth"
     )
   })
 })

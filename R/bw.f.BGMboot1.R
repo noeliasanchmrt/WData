@@ -57,7 +57,7 @@ bw.f.BGMboot1 <- function(y,
   # Pilot bandwidth
 
   if (is.character(bw0)) {
-    sigma <- min(sqrt(uw * (mean(yw) - uw)), IQR(y) / 1.34)
+    sigma <- sqrt(uw * (mean(yw) - uw))
 
     bw0 <- match.arg(bw0)
 
@@ -68,11 +68,10 @@ bw.f.BGMboot1 <- function(y,
         n^(1 / 5 - 1 / 7) * sigma * (8 * sqrt(pi) * RK * uw * uwb)^(0.2) * (3 * n * sigma_K_2^2)^(-0.2)
       },
       Opt = {
-        if (kernel == "epanechnikov") stop("epanechnikov kernel is not supported for automatic bandwidth selection with optimal pilot bandwidth")
         if (kernel == "rectangular") stop("rectangular kernel is not supported for automatic bandwidth selection with optimal pilot bandwidth")
         if (kernel == "triangular") stop("triangular kernel is not supported for automatic bandwidth selection with optimal pilot bandwidth")
         Rfprime3 <- 15 / (16 * sqrt(pi) * sigma^7)
-        ((5 * uw * uwb * RL_deriv2) / (2 * n * sigma_K_2 * Rfprime3))^(1 / 7)
+        ((5 * uw * uwb * RKprime2) / (2 * n * sigma_K_2 * Rfprime3))^(1 / 7)
       },
       stop("unkown pilot bandwidth")
     )
@@ -84,19 +83,21 @@ bw.f.BGMboot1 <- function(y,
 
   # Bootstrap bandwidth
 
-  fJh0_d2_hat_2 <- function(z) {
+  fJ_bw0_2_hat_2 <- function(z) {
     aux <- (z - y) / bw0
-    aux <- L_d2_norm(aux) %*% diag(weights)
-    prod <- outer(aux, aux, "*")
-    sum(prod)
+    aux <- kernel_function_density_deriv2(aux) %*% diag(weights)
+    aux <- outer(aux, aux, "*")
+    aux <- (uw / (n * bw0^3))^2 * sum(aux)
   }
-  R_fJh0_d2_hat <- (uw / (n * bw0^3))^2 *
-    integrate(Vectorize(fJh0_d2_hat_2),
-      min(y) - (sort(y)[4] - min(y)), max(y) + (max(y) - sort(y, decreasing = T)[4]),
+
+  R_fJ_bw0_2_hat_2 <-
+    integrate(Vectorize(fJ_bw0_2_hat_2),
+      lower = min(y) - (sort(y)[4] - min(y)),
+      upper = max(y) + (max(y) - sort(y, decreasing = T)[4]),
       subdivisions = 1000, rel.tol = .Machine$double.eps^.15
     )$value
 
-  h_B_hat <- (RK * uw * uwb)^(0.2) * (n * sigma_K_2^2 * R_fJh0_d2_hat)^(-0.2)
+  h_B_hat <- (RK * uw * uwb)^(0.2) * (n * sigma_K_2^2 * R_fJ_bw0_2_hat_2)^(-0.2)
 
   return(h_B_hat)
 }
