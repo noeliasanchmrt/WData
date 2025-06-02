@@ -56,23 +56,33 @@ bw.F.BD <- function(y,
     stop("argument 'c_adj' must be numeric")
   }
 
-  sigma <- sqrt(uw * (mean(yw) - uw))
-  bw <- c_adj * sigma * n^(-1 / 3) * x^(-1 / 3)
-
-  if (any(is.nan(bw)) || any(is.na(bw)) || any(bw <= 0)) {
-    warning("some 'bw' are not positive. They will be replaced by the mean of the neighbors")
+  if (length(c_adj) > 1 & length(c_adj) != length(x)) {
+    stop("arguments 'x' and 'c_adj' must have the same length or 'c_adj' must be a single value")
   }
 
+  sigma <- sqrt(uw * (mean(yw) - uw))
+  bw <- c_adj * sigma * n^(-1 / 3) * w(x)^(-1 / 3)
+
+
+  if (any(is.nan(bw)) || any(is.na(bw)) || any(bw <= 0)) {
+    warning("some 'bw' are not positive or could not be computated. They will be replaced by the mean of the neighbors")
+  }
+
+  # In case of NA, NaN or negative values, replace them with the mean of the closest non-NA, finite and positive values.
+  # This is done by sorting the values based on x and then replacing them in the original order.
+  # The intent is to don't produce errors when bw are extremely small do to a small c_adj, big n or big x.
+
   replace_with_closest_non_na <- function(bw) {
-    bw_filled <- bw
+    ord <- order(x)
+    bw_sorted <- bw[ord]
 
     for (i in 1:length(bw)) {
-      if (is.na(bw_filled[i]) || is.infinite(bw_filled[i]) || is.nan(bw_filled[i]) || bw_filled[i] <= 0) {
+      if (is.na(bw_sorted[i]) || is.infinite(bw_sorted[i]) || is.nan(bw_sorted[i]) || bw_sorted[i] <= 0) {
         left_value <- NA
         if (i > 1) {
           for (j in (i - 1):1) {
-            if (is.finite(bw_filled[j])) {
-              left_value <- bw_filled[j]
+            if (is.finite(bw_sorted[j])) {
+              left_value <- bw_sorted[j]
               break
             }
           }
@@ -81,26 +91,29 @@ bw.F.BD <- function(y,
         right_value <- NA
         if (i < length(bw)) {
           for (j in (i + 1):length(bw)) {
-            if (is.finite(bw_filled[j])) {
-              right_value <- bw_filled[j]
+            if (is.finite(bw_sorted[j])) {
+              right_value <- bw_sorted[j]
               break
             }
           }
         }
 
         if (!is.na(left_value) && !is.na(right_value)) {
-          bw_filled[i] <- mean(c(left_value, right_value), na.rm = TRUE)
+          bw_sorted[i] <- mean(c(left_value, right_value), na.rm = TRUE)
         } else if (!is.na(left_value)) {
-          bw_filled[i] <- left_value
+          bw_sorted[i] <- left_value
         } else if (!is.na(right_value)) {
-          bw_filled[i] <- right_value
+          bw_sorted[i] <- right_value
         } else {
-          bw_filled[i] <- bw_filled[i]
+          bw_sorted[i] <- bw_sorted[i]
         }
       }
     }
+    bw_filled <- numeric(length(bw))
+    bw_filled[ord] <- bw_sorted
     return(bw_filled)
   }
 
   bw <- replace_with_closest_non_na(bw)
+  return(bw)
 }

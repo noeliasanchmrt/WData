@@ -16,8 +16,8 @@ bw.f.BGMboot2(
   upper = IQR(y) * (log(n)/n)^(0.2) * 500,
   nh = 200L,
   tol = 0.1 * lower,
-  from = min(y) - (sort(y)[2] - min(y)),
-  to = max(y) + (max(y) - sort(y, decreasing = T)[2]),
+  from = min(y) - (sort(y)[5] - min(y)),
+  to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
   plot = TRUE
 )
 }

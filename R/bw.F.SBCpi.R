@@ -58,8 +58,8 @@ bw.F.SBCpi <- function(y,
   }
 
   R_fJ_bw0_1_hat_2 <- integrate(Vectorize(fJ_bw0_1_hat_2),
-    lower = min(y) - (sort(y)[4] - min(y)),
-    upper = max(y) + (max(y) - sort(y, decreasing = T)[4]),
+    lower = -Inf,
+    upper = +Inf,
     subdivisions = 1000, rel.tol = .Machine$double.eps^.15
   )$value
 

@@ -18,12 +18,12 @@
 #' @param ... Additional arguments to be passed to bandwidth selection functions.
 #' @return A list with the following components:
 #'   \item{`x`}{The points where the density is estimated.}
-#'   \item{`y`}{The estimated density values.}
+#'   \item{`est_values`}{The estimated density values.}
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{The call which produced the result.}
 #'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
-#'   \item{`has.na`}{Logical, for compatibility (always `FALSE`).}
+#'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details
 #' \insertCite{jones1991;textual}{WData} kernel density estimator is expressed as
 #' \deqn{\widehat{f}_{\mathrm{J}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_h(y-Y_i),\quad
@@ -86,10 +86,11 @@ df.jones <- function(y,
   yords <- uw / bw * rowMeans(aux)
 
   if (plot == TRUE) {
-    plot(x, yords,
+    ord <- order(x)
+    plot(x[ord], yords[ord],
       type = "l", main = "Jones' Estimator",
       xlab = paste(
-        "N = ", n, "Bandwidth = ",
+        "n = ", n, "Bandwidth = ",
         format(round(bw, 5), nsmall = 5)
       ),
       ylab = "Density", col = "blue"
@@ -97,16 +98,13 @@ df.jones <- function(y,
     rug(y)
   }
 
-  structure(
-    list(
-      x = x,
-      y = yords,
-      data.name = data.name,
-      bw = bw,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = x,
+    est_values = yords,
+    data.name = data.name,
+    bw = bw,
+    n = n,
+    has.na = has.na,
+    call = match.call()
   )
 }

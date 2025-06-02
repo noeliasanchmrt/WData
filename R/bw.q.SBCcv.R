@@ -70,7 +70,7 @@ bw.q.SBCcv <- function(y, w = function(y) {
   }
   if (plot == TRUE) {
     plot(hs, cvh,
-      type = "l", xlab = "Bandwidht", ylab = "",
+      type = "l", xlab = "Bandwidth", ylab = "",
       sub = "CV(h)"
     )
     if (h < lower + tol || h > upper - tol) {
@@ -78,7 +78,7 @@ bw.q.SBCcv <- function(y, w = function(y) {
         col.main = "red"
       )
     } else {
-      title(paste0("Optimal Bandwidht h:", round(h, 4)),
+      title(paste0("Optimal Bandwidth h:", round(h, 4)),
         col.main = "blue"
       )
     }

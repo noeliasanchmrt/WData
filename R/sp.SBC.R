@@ -13,13 +13,13 @@
 #' @param nb An integer specifying the number of points for evaluation when `x` is not provided. Default is 99.
 #' @param plot A logical value indicating whether to plot the sparsity estimation. Default is `TRUE`.
 #' @return A list with the following components:
-#' \item{x}{The points where the sparsity is estimated.}
-#' \item{y}{The estimated sparsity values.}
-#' \item{bw}{The bandwidth used.}
-#' \item{n}{The sample size after elimination of missing values.}
-#' \item{call}{The call which produced the result.}
-#' \item{data.name}{The deparsed name of the y argument (biased dataset).}
-#' \item{has.na}{Logical, for compatibility (always `FALSE`).}
+#' \item{`x`}{The points where the sparsity is estimated.}
+#' \item{`est_values`}{The estimated sparsity values.}
+#' \item{`bw`}{The bandwidth used.}
+#' \item{`n`}{The sample size after elimination of missing values.}
+#' \item{`call`}{The call which produced the result.}
+#' \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#' \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details The sparsity estimator is given by:
 #' \deqn{\widehat{\left(F^{-1}\right)_{h}^{(1)}} (\tau) = \sum_{i=1}^{n} Y_{(i)} \left( K_h \left( T_{i-1} - \tau \right) - K_h \left( T_{i} - \tau \right) \right),
 #' \quad \text{where} \quad
@@ -61,10 +61,11 @@ sp.SBC <- function(y,
   yords <- 1 / bw * rowSums(product)
 
   if (plot == TRUE) {
-    plot(x, yords,
+    order <- order(x)
+    plot(x[order], yords[order],
       type = "l", main = "SBC's Sparsity Estimator",
       xlab = paste(
-        "N = ", n, "Bandwidth = ",
+        "n = ", n, "Bandwidth = ",
         format(round(bw, 5), nsmall = 5)
       ),
       ylab = "Density", col = "blue"
@@ -88,16 +89,13 @@ sp.SBC <- function(y,
     # lines(x, yords, col = "magenta")
   }
 
-  structure(
-    list(
-      x = x,
-      y = yords,
-      data.name = data.name,
-      bw = bw,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = x,
+    est_values = yords,
+    data.name = data.name,
+    bw = bw,
+    n = n,
+    has.na = has.na,
+    call = match.call()
   )
 }

@@ -62,8 +62,8 @@ bw.f.BGMboot2 <- function(y,
                           upper = IQR(y) * (log(n) / n)^(0.2) * 500,
                           nh = 200L,
                           tol = 0.1 * lower,
-                          from = min(y) - (sort(y)[2] - min(y)),
-                          to = max(y) + (max(y) - sort(y, decreasing = T)[2]),
+                          from = min(y) - (sort(y)[5] - min(y)),
+                          to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
                           plot = TRUE) {
   list2env(.check_biased_dataset(y, w), envir = environment())
   kernel <- match.arg(kernel)
@@ -105,17 +105,7 @@ bw.f.BGMboot2 <- function(y,
   gnbw0wz <- gnbw0$y * wz
 
   # aux1 <- cubintegrate(approxfun(gnbw0$x, gnbw0wz), lower = from, upper = to)$integral
-
-  aux1 <- numeric(1)
-  for (l in seq(
-    from = 2,
-    to = (length(gnbw0$x) - 1),
-    by = 2
-  )) {
-    aux1 <- aux1 + ((gnbw0$x[l + 1] - gnbw0$x[l - 1]) / 6) *
-      (gnbw0wz[l - 1] + 4 * gnbw0wz[l] + gnbw0wz[l + 1])
-  }
-
+  aux1 <- .simpsons_rule(gnbw0$x, gnbw0wz)
 
   Bias <- Variance <- numeric(length(hs))
 
@@ -160,14 +150,8 @@ bw.f.BGMboot2 <- function(y,
     # }
 
     for (j in 1:length(fjh$x)) {
-      for (i in seq(2, length(gnbw0$x) - 1, by = 2)) {
-        aux2[j] <- aux2[j] +
-          ((gnbw0$x[i + 1] - gnbw0$x[i - 1]) / 6) *
-            (gnbw0wzKhyz[j, i - 1] + 4 * gnbw0wzKhyz[j, i] + gnbw0wzKhyz[j, i + 1])
-        aux3[j] <- aux3[j] +
-          ((gnbw0$x[i + 1] - gnbw0$x[i - 1]) / 6) *
-            (gnbw0wzKhyz2[j, i - 1] + 4 * gnbw0wzKhyz2[j, i] + gnbw0wzKhyz2[j, i + 1])
-      }
+      aux2[j] <- .simpsons_rule(gnbw0$x, gnbw0wzKhyz[j, ])
+      aux3[j] <- .simpsons_rule(gnbw0$x, gnbw0wzKhyz2[j, ])
     }
 
     aux2aux1dfhy2 <- (aux2 / aux1 - fjh$y)^2
@@ -186,20 +170,8 @@ bw.f.BGMboot2 <- function(y,
     #   lower = from, upper = to
     # )$integral
 
-    for (t in seq(
-      from = 2,
-      to = (length(fjh$x) - 1),
-      by = 2
-    )) {
-      Bias[k] <- Bias[k] +
-        ((fjh$x[t + 1] - fjh$x[t - 1]) / 6) *
-          (aux2aux1dfhy2[t - 1] + 4 * aux2aux1dfhy2[t] + aux2aux1dfhy2[t + 1])
-
-      Variance[k] <- Variance[k] +
-        ((fjh$x[t + 1] - fjh$x[t - 1]) / 6) *
-          (aux3aux22[t - 1] + 4 * aux3aux22[t] + aux3aux22[t + 1])
-    }
-
+    Bias[k] <- .simpsons_rule(fjh$x, aux2aux1dfhy2)
+    Variance[k] <- .simpsons_rule(fjh$x, aux3aux22)
 
     pb$tick()
   }
@@ -238,7 +210,7 @@ bw.f.BGMboot2 <- function(y,
     # par(mfrow = c(1, 3))
     plot(
       hs, MISE,
-      type = "l", xlab = "Bandwidht", ylab = "", sub = "MISE(h)"
+      type = "l", xlab = "Bandwidth", ylab = "", sub = "MISE(h)"
     )
 
     abline(v = h, h = min(MISE), lty = 1, col = "blue")
@@ -248,11 +220,11 @@ bw.f.BGMboot2 <- function(y,
     if (h < lower + tol || h > upper - tol) {
       title("Minimum occurred at one end of the range", col.main = "red")
     } else {
-      title(paste0("Bootstrap bandwidht: ", round(h, 4)), col.main = "blue")
+      title(paste0("Bootstrap bandwidth: ", round(h, 4)), col.main = "blue")
     }
 
     plot(hs, Bias,
-      type = "l", xlab = "Bandwidht", ylab = "", sub = "Bias(h)"
+      type = "l", xlab = "Bandwidth", ylab = "", sub = "Bias(h)"
     )
     abline(v = h, h = min(Bias), lty = 1, col = "blue")
     abline(v = bw.f.BGMnrd0(y, w, kernel = kernel), lty = 2)
@@ -261,7 +233,7 @@ bw.f.BGMboot2 <- function(y,
     par(ask = TRUE)
 
     plot(hs, Variance,
-      type = "l", xlab = "Bandwidht", ylab = "", sub = "Var(h)"
+      type = "l", xlab = "Bandwidth", ylab = "", sub = "Var(h)"
     )
     abline(v = h, h = min(Variance), lty = 1, col = "blue")
     abline(v = bw.f.BGMnrd0(y, w, kernel = kernel), lty = 2)

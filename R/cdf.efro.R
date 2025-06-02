@@ -305,8 +305,12 @@ cdf.efro <- function(y,
   }
 
   return(invisible(list(
-    J = J - 1, c = copt, U = U,
-    x = x, fords = yords, Fords = Fyords,
+    J = J - 1,
+    c = copt,
+    U = U,
+    x = x,
+    fords = yords,
+    Fords = Fyords,
     theta = theta,
     omega = omega,
     MISE = aux,

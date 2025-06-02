@@ -40,7 +40,7 @@ test_that("qf.SBCkernel() with bw.q.SBCcv() produces stable plots", {
   lapply(seq_along(biased_models), function(i) {
     lapply(kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("df.jones_bw.f.BGMcv_model_", i, "_kernel_", k),
+        paste0("qf.SBCkernel_bw.f.BGMcv_model_", i, "_kernel_", k),
         function() {
           qf.SBCkernel(biased_models[[i]],
             bw = "bw.q.SBCcv",

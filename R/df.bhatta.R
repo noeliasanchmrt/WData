@@ -9,13 +9,13 @@
 #' * `kernel` A character string giving the smoothing kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
 #' * `bw` The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. Options available can be checked in [`bw.nrd`][stats::bw.nrd()]. Default is `"nrd0"`.
 #' @return A list with the following components:
-#'   \item{x}{The points where the density is estimated.}
-#'   \item{y}{The estimated density values.}
-#'   \item{bw}{The bandwidth used.}
-#'   \item{n}{The sample size after elimination of missing values.}
-#'   \item{call}{ The call which produced the result.}
-#'   \item{data.name}{The deparsed name of the y argument (biased dataset).}
-#'   \item{has.na}{Logical, for compatibility (always `FALSE`).}
+#'   \item{`x`}{The points where the density is estimated.}
+#'   \item{`est_values`}{The estimated density values.}
+#'   \item{`bw`}{The bandwidth used.}
+#'   \item{`n`}{The sample size after elimination of missing values.}
+#'   \item{`call`}{ The call which produced the result.}
+#'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details \insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
 #' \deqn{\widehat{f}_{\mathrm{B}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}(y),
 #' \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
@@ -43,12 +43,20 @@ df.bhatta <- function(y,
   f_hat <- uw * g_hat$y / w(g_hat$x)
 
   if (plot == TRUE) {
-    plot(g_hat,
+    order <- order(g_hat$x)
+    plot(g_hat$x[order], f_hat[order],
+      type = "l",
       ylim = c(0, max(max(g_hat$y, na.rm = TRUE), max(f_hat, na.rm = TRUE))),
+      ylab = "Density",
+      xlab = paste(
+        "n = ", n, "Bandwidth = ",
+        format(round(g_hat$bw, 5), nsmall = 5)
+      ),
+      col = "blue",
       main = "Bhattacharyya's Estimator"
     )
     rug(y)
-    lines(x = g_hat$x, y = f_hat, col = "blue")
+    lines(x = g_hat$x, y = g_hat$y, col = "black")
     legend("topright",
       legend = c(
         "Estimated Biased Density",
@@ -59,15 +67,13 @@ df.bhatta <- function(y,
     )
   }
 
-  structure(
-    list(
-      x = g_hat$x, y = f_hat,
-      bw = g_hat$bw,
-      data.name = data.name,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = g_hat$x,
+    est_values = f_hat,
+    bw = g_hat$bw,
+    data.name = data.name,
+    n = n,
+    has.na = has.na,
+    call = match.call()
   )
 }

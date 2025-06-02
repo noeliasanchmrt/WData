@@ -2,7 +2,7 @@ test_that(".check_biased_dataset() handles valid inputs", {
   result <- .check_biased_dataset(1:10, function(y) y + 1)
 
   expect_type(result, "list")
-  expect_named(result, c("data.name", "n", "y", "w", "yw", "weights", "uw", "uwb"))
+  expect_named(result, c("data.name", "n", "y", "w", "yw", "weights", "uw", "uwb", "has.na"))
   expect_equal(result$n, 10)
   expect_type(result$w, "closure")
   expect_length(result$y, 10)

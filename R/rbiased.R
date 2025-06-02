@@ -356,22 +356,20 @@ rbiased <- function(n,
     plot(density(y, bw = bw.SJ(y)),
       col = "black", lty = 2,
       ylim = c(y_min, y_max),
-      main = paste0("Simulated Biased Dataset (N=", n, "). Generations:", ngen),
       sub = paste0("Bias:", gsub("\\s+", " ", deparse1(w))),
       xlab = paste0("Unbiased Density f(y):", gsub("\\s+", " ", deparse1(fx)))
     )
     rug(y, col = "black")
     curve(g, add = TRUE, col = "black")
     curve(f, add = TRUE, col = "blue")
-    curve(w(x) / uw$value, add = TRUE, col = "red")
+
     legend("topright",
       legend = c(
         "Simulated Biased Density",
         "Expected Simulated Biased Density",
-        "Unbiased Density",
-        "Escalated Bias Function"
+        "Unbiased Density"
       ),
-      col = c("black", "black", "blue", "red"),
+      col = c("black", "black", "blue"),
       lty = c(2, 1, 1, 1), cex = 0.8
     )
   }

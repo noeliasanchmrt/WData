@@ -5,6 +5,7 @@
     stop("invalid 'y'")
   }
 
+  has.na <- any(is.na(y))
   if ((n <- length(y <- y[!is.na(y)])) < 2L) {
     stop("need at least 2 data points")
   }
@@ -48,7 +49,7 @@
     }))
   if (!is.numeric(uwb)) stop("non numeric value for 'uwb'")
 
-  list(data.name = data.name, n = n, y = y, w = w, yw = yw, weights = weights, uw = uw, uwb = uwb)
+  list(data.name = data.name, n = n, y = y, w = w, yw = yw, weights = weights, uw = uw, uwb = uwb, has.na = has.na)
 }
 
 .get_kernel_values <- function(kernel) {
@@ -242,11 +243,20 @@
 
 
 .simpsons_rule <- function(x, fx) {
+  # https://scicomp.stackexchange.com/questions/25649/composite-simpsons-rule-with-odd-intervals
   valid <- which(!is.na(x) & !is.na(fx) & is.finite(x) & is.finite(fx))
   x <- x[valid]
   fx <- fx[valid]
+
+  ord <- order(x)
+  x <- x[ord]
+  fx <- fx[ord]
   n <- length(x)
-  h <- (x[n] - x[1]) / (n - 1)
+  if (n < 5) stop("At least 5 points are required for Simpson's rule")
+
+  h <- (x[2] - x[1])
+  if (any(abs(diff(x) - h) > .Machine$double.eps^0.5)) stop("x must be equally spaced")
+
   integral <- fx[1] + fx[n] + 4 * sum(fx[seq.int(2, n - 1, by = 2)]) + 2 * sum(fx[seq.int(3, n - 2, by = 2)])
   integral * h / 3
 }
@@ -301,10 +311,10 @@
 .get_xaxn_grid <- function(y, x, from, to, nb, plot) {
   if (missing(x)) {
     if (missing(from)) {
-      from <- min(y) - (sort(y)[2] - min(y))
+      from <- min(y) - (sort(y)[5] - min(y))
     }
     if (missing(to)) {
-      to <- max(y) + (max(y) - sort(y, decreasing = TRUE)[2])
+      to <- max(y) + (max(y) - sort(y, decreasing = TRUE)[5])
     }
 
     .validate_number(nb, "nb")
@@ -315,7 +325,6 @@
     x <- seq.int(from, to, length.out = nb)
   } else {
     if (!is.numeric(x) || !is.vector(x)) stop("'x' must be a numeric vector")
-    x <- sort(x)
     from <- min(x)
     to <- max(x)
   }

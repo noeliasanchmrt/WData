@@ -13,13 +13,13 @@
 #' @param nb An integer specifying the number of points for evaluation when `x` is not provided. Default is 99.
 #' @param plot A logical value indicating whether to plot the sparsity estimation. Default is `TRUE`.
 #' @return A list with the following components:
-#' \item{x}{The points where the sparsity is estimated.}
-#' \item{y}{The estimated sparsity values.}
-#' \item{bw}{The bandwidth used.}
-#' \item{n}{The sample size after elimination of missing values.}
-#' \item{call}{The call which produced the result.}
-#' \item{data.name}{The deparsed name of the y argument (biased dataset).}
-#' \item{has.na}{Logical, for compatibility (always `FALSE`).}
+#' \item{`x`}{The points where the sparsity is estimated.}
+#' \item{`est_values`}{The estimated sparsity values.}
+#' \item{`bw`}{The bandwidth used.}
+#' \item{`n`}{The sample size after elimination of missing values.}
+#' \item{`call`}{The call which produced the result.}
+#' \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#' \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details \insertCite{akbari2019;textual}{WData} sparsity estimator is given by
 #' \deqn{\widehat{\left(F^{-1}\right)_{h}^{(1)}} (\tau) = \int_{0}^{1} K_h (t-\tau) d \widehat{F^{-1}_{\operatorname{SEN}}} (t),}
 #' where \eqn{\widehat{F^{-1}_{\operatorname{SEN}}}} is \insertCite{sen1984;textual}{WData} quantile estimator, \eqn{h} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h}(u)=1/h K\left(u / h\right)}.
@@ -59,10 +59,11 @@ sp.akbarikernel <- function(y,
   yords <- 1 / bw * rowSums(aux)
 
   if (plot == TRUE) {
-    plot(x, yords,
+    order <- order(x)
+    plot(x[order], yords[order],
       type = "l", main = "Akbari's Sparsity Estimator",
       xlab = paste(
-        "N = ", n, "Bandwidth = ",
+        "n = ", n, "Bandwidth = ",
         format(round(bw, 5), nsmall = 5)
       ),
       ylab = "Density", col = "blue"
@@ -75,16 +76,13 @@ sp.akbarikernel <- function(y,
     )
   }
 
-  structure(
-    list(
-      x = x,
-      y = yords,
-      data.name = data.name,
-      bw = bw,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = x,
+    est_values = yords,
+    data.name = data.name,
+    bw = bw,
+    n = n,
+    has.na = has.na,
+    call = match.call()
   )
 }

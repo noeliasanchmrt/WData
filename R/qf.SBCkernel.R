@@ -14,13 +14,13 @@
 #' @param plot A logical value indicating whether to plot the quantile estimation. Default is `TRUE`.
 #' @param ... Additional arguments to be passed to bandwidth selection functions.
 #' @return A list with the following components:
-#' \item{x}{The points where the quantiles are estimated.}
-#' \item{y}{The estimated quantile values.}
-#' \item{bw}{The bandwidth used.}
-#' \item{n}{The sample size after elimination of missing values.}
-#' \item{call}{The call which produced the result.}
-#' \item{data.name}{The deparsed name of the y argument (biased dataset).}
-#' \item{has.na}{Logical, for compatibility (always `FALSE`).}
+#' \item{`x`}{The points where the quantiles are estimated.}
+#' \item{`est_values`}{The estimated quantile values.}
+#' \item{`bw`}{The bandwidth used.}
+#' \item{`n`}{The sample size after elimination of missing values.}
+#' \item{`call`}{The call which produced the result.}
+#' \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#' \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details Estimator is given by
 #' \deqn{\widehat{F_{h}^{-1}} (\tau) = \int_{0}^{1} \widehat{F^{-1}_n} (t) K_h \left(t-\tau\right) dt,}
 #' where \eqn{\widehat{F^{-1}_n}} is the the empirical quantile function based on the estimator proposed by \insertCite{cox2005;textual}{WData} for the distribution function, \eqn{h} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h}(u)=1/h K\left(u / h\right)}.
@@ -66,9 +66,10 @@ qf.SBCkernel <- function(y,
   weightsvals <- sapply(vals, w)^(-1)
   ti <- cumsum(weightsvals) / n * uw # Increasing sequence of quantiles
   # We force to have 10 points in each interval
-  t <- unlist(lapply(1:(length(ti) - 1), function(i) seq(ti[i], ti[i + 1], length.out = 26)))
-  t <- c(seq(0, ti[1], length.out = 26), t)
-  t <- sort(t)
+  # t <- unlist(lapply(1:(length(ti) - 1), function(i) seq(ti[i], ti[i + 1], length.out = 26)))
+  # t <- c(seq(0, ti[1], length.out = 26), t)
+  # t <- sort(t)
+  t <- seq(0, 1, length.out = 5000L)
   aux <- bw^(-1) * outer(x, t, "-")
   aux <- kernel_function_density(aux) / bw
 
@@ -86,10 +87,11 @@ qf.SBCkernel <- function(y,
   yords <- rowSums(F_inv_hat) ## Estimations at x
 
   if (plot == TRUE) {
-    plot(x, yords,
+    order <- order(x)
+    plot(x[order], yords[order],
       type = "l", main = "Quantile Function Estimator",
       xlab = paste(
-        "N = ", n, "Bandwidth = ",
+        "n = ", n, "Bandwidth = ",
         format(round(bw, 5), nsmall = 5)
       ),
       ylab = "", col = "blue"
@@ -97,16 +99,13 @@ qf.SBCkernel <- function(y,
     rug(ti)
   }
 
-  structure(
-    list(
-      x = x,
-      y = yords,
-      data.name = data.name,
-      bw = bw,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = x,
+    est_values = yords,
+    data.name = data.name,
+    bw = bw,
+    n = n,
+    has.na = FALSE,
+    call = match.call()
   )
 }

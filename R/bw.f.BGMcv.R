@@ -106,12 +106,12 @@ bw.f.BGMcv <-
       plot(
         hs, cvh,
         type = "l",
-        xlab = "Bandwidht", ylab = "", sub = "CV(h)"
+        xlab = "Bandwidth", ylab = "", sub = "CV(h)"
       )
       if (h < lower + tol || h > upper - tol) {
         title("Minimum occurred at one end of the range", col.main = "red")
       } else {
-        title(paste0("CV bandwidth:", round(h, 4)), col.main = "blue")
+        title(paste0("CV bandwidth: ", round(h, 4)), col.main = "blue")
       }
 
       abline(v = h, h = min(cvh), col = "blue")
@@ -122,7 +122,7 @@ bw.f.BGMcv <-
       plot(
         hs, int,
         type = "l",
-        xlab = "Bandwidht",
+        xlab = "Bandwidth",
         ylab = "",
         sub = "Bias(h)",
       )
@@ -132,7 +132,7 @@ bw.f.BGMcv <-
       plot(
         hs, es,
         type = "l",
-        xlab = "Bandwidht",
+        xlab = "Bandwidth",
         ylab = "",
         sub = "Var(h)",
       )

@@ -49,12 +49,12 @@ cdf.bd(
 }
 \value{
 A list with the following components:
-\item{x}{The points where the distribution is estimated.}
-\item{y}{The estimated distribution values.}
-\item{bw}{The bandwidth used.}
-\item{n}{The sample size after elimination of missing values.}
-\item{call}{The call which produced the result.}
-\item{\code{has.na}}{Logical, for compatibility (always \code{FALSE}).}
+\item{\code{x}}{The points where the distribution is estimated.}
+\item{\code{est_values}}{The estimated distribution values.}
+\item{\code{bw}}{The bandwidth used.}
+\item{\code{n}}{The sample size after elimination of missing values.}
+\item{\code{call}}{The call which produced the result.}
+\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
 }
 \description{
 This function calculates \insertCite{bose2022;textual}{WData} kernel distribution estimator given a biased dataset and its bias function.

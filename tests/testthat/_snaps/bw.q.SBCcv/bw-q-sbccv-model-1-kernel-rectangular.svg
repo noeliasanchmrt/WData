@@ -52,8 +52,8 @@
 <text transform='translate(41.76,107.96) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='16.68px' lengthAdjust='spacingAndGlyphs'>1.0</text>
 <polygon points='59.04,502.56 689.76,502.56 689.76,59.04 59.04,59.04 ' style='stroke-width: 0.75; fill: none;' />
 <text x='374.40' y='571.68' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='31.34px' lengthAdjust='spacingAndGlyphs'>CV(h)</text>
-<text x='374.40' y='557.28' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='56.04px' lengthAdjust='spacingAndGlyphs'>Bandwidht</text>
-<text x='374.40' y='34.48' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; fill: #0000FF; font-family: sans;' textLength='180.93px' lengthAdjust='spacingAndGlyphs'>Optimal Bandwidht h:0.0084</text>
+<text x='374.40' y='557.28' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='56.04px' lengthAdjust='spacingAndGlyphs'>Bandwidth</text>
+<text x='374.40' y='34.48' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; fill: #0000FF; font-family: sans;' textLength='180.93px' lengthAdjust='spacingAndGlyphs'>Optimal Bandwidth h:0.0084</text>
 </g>
 <g clip-path='url(#cpNTkuMDR8Njg5Ljc2fDU5LjA0fDUwMi41Ng==)'>
 <line x1='59.04' y1='486.13' x2='689.76' y2='486.13' style='stroke-width: 0.75; stroke: #0000FF;' />

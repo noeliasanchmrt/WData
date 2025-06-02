@@ -46,13 +46,13 @@ qf.SBCkernel(
 }
 \value{
 A list with the following components:
-\item{x}{The points where the quantiles are estimated.}
-\item{y}{The estimated quantile values.}
-\item{bw}{The bandwidth used.}
-\item{n}{The sample size after elimination of missing values.}
-\item{call}{The call which produced the result.}
-\item{data.name}{The deparsed name of the y argument (biased dataset).}
-\item{has.na}{Logical, for compatibility (always \code{FALSE}).}
+\item{\code{x}}{The points where the quantiles are estimated.}
+\item{\code{est_values}}{The estimated quantile values.}
+\item{\code{bw}}{The bandwidth used.}
+\item{\code{n}}{The sample size after elimination of missing values.}
+\item{\code{call}}{The call which produced the result.}
+\item{\code{data.name}}{The deparsed name of the y argument (biased dataset).}
+\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
 }
 \description{
 This function estimates the quantile function using the kernel method. It is a generalization of the quantile function estimator given in \insertCite{parzen1979;textual}{WData}  for unbiased data.

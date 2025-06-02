@@ -15,12 +15,12 @@
 #' @param correction A character string specifying the boundary correction to be applied. Options are "none", "left", "right" and "both". Default is "none".
 #' @param ... Additional arguments to be passed to bandwidth selection functions.
 #' @return A list with the following components:
-#'   \item{x}{The points where the distribution is estimated.}
-#'   \item{y}{The estimated distribution values.}
-#'   \item{bw}{The bandwidth used.}
-#'   \item{n}{The sample size after elimination of missing values.}
-#'   \item{call}{The call which produced the result.}
-#'   \item{`has.na`}{Logical, for compatibility (always `FALSE`).}
+#'   \item{`x`}{The points where the distribution is estimated.}
+#'   \item{`est_values`}{The estimated distribution values.}
+#'   \item{`bw`}{The bandwidth used.}
+#'   \item{`n`}{The sample size after elimination of missing values.}
+#'   \item{`call`}{The call which produced the result.}
+#'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details
 #' \insertCite{bose2022;textual}{WData} kernel distribution estimator is expressed as
 #' \deqn{
@@ -123,13 +123,14 @@ cdf.bd <- function(y,
   }
 
   if (plot == TRUE) {
+    ord <- order(x)
     plot(
-      x,
-      yords,
+      x[ord],
+      yords[ord],
       type = "l",
       main = "Bose & Dutta's Estimator",
       xlab = paste(
-        "N = ", n, "Bandwidth = ",
+        "n = ", n, "Bandwidth = ",
         ifelse(is.vector(bw) && length(bw) > 1,
           "Local Bandwidth",
           format(round(bw, 5), nsmall = 5)
@@ -142,16 +143,13 @@ cdf.bd <- function(y,
     rug(y)
   }
 
-  structure(
-    list(
-      x = x,
-      y = yords,
-      data.name = data.name,
-      bw = bw,
-      n = n,
-      has.na = FALSE,
-      call = match.call()
-    ),
-    class = "density"
+  list(
+    x = x,
+    est_values = yords,
+    data.name = data.name,
+    bw = bw,
+    n = n,
+    has.na = has.na,
+    call = match.call()
   )
 }

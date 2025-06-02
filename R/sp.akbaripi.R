@@ -36,7 +36,7 @@ sp.akbaripi <- function(y,
   weightsvals <- sapply(vals, w)^(-1)
   ti <- cumsum(weightsvals) / n * uw
   jones <- df.jones(y = vals, w = w, bw = bw, adjust = adjust, kernel = kernel, x = vals, plot = FALSE)
-  rval <- approxfun(ti, 1 / jones$y,
+  rval <- approxfun(ti, 1 / jones$est_values,
     method = "constant", rule = 2,
     f = 0, ties = "ordered"
   )
