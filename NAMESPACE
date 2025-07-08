@@ -17,13 +17,13 @@ importFrom("progress", "progress_bar")
 importFrom(Rcpp, evalCpp)
 export(
     "bw.F.BD",
+    "bw.F.SBCcv",
+    "bw.F.SBCpi",
+    "bw.F.SBCrt",
     "bw.f.BGMboot1",
     "bw.f.BGMboot2",
     "bw.f.BGMcv",
-    "bw.f.BGMnrd0",
-    "bw.F.SBCcv",
-    "bw.F.SBCnrd0",
-    "bw.F.SBCpi",
+    "bw.f.BGMrt",
     "cdf.bd",
     "cdf.cox",
     "df.bhatta",

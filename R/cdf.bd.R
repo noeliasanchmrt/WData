@@ -4,19 +4,18 @@
 #'
 #' @param y  A numeric vector containing the biased data.
 #' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
-#' @param x A numeric vector specifying the points where the distribution is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
-#' @param bw The smoothing bandwidth to be used in the distribution estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.F.SBCnrd0`][WData::bw.F.SBCnrd0()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()] and [`bw.F.SBCpi`][WData::bw.F.SBCpi()]. Default is [`bw.F.SBCnrd0`][WData::bw.F.SBCnrd0()]. The specified (or computed) value of `bw` multiplied by `adjust`.
-#' @param adjust A numeric value representing the manual adjustment factor for the bandwidth. Default is 1.
+#' @param y.seq A numeric vector specifying the points where the distribution is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
+#' @param bw The smoothing bandwidth to be used in the distribution estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.F.SBCrt`][WData::bw.F.SBCrt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()] and [`bw.F.SBCpi`][WData::bw.F.SBCpi()]. Default is [`bw.F.SBCrt`][WData::bw.F.SBCrt()].
 #' @param kernel A character vector specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
-#' @param from Numeric value specifying the lower bound for  evaluation when `x` not provided. Default is calculated based on the range of input data.
-#' @param to Numeric value specifying the upper bound for  evaluation when `x` not provided. Default is calculated based on the range of input data.
-#' @param nb An integer specifying the number of points for evaluation when `x` not provided. Default is 512.
+#' @param from Numeric value specifying the lower bound for  evaluation when `y.seq` not provided. Default is calculated based on the range of input data.
+#' @param to Numeric value specifying the upper bound for  evaluation when `y.seq` not provided. Default is calculated based on the range of input data.
+#' @param nb An integer specifying the number of points for evaluation when `y.seq` not provided. Default is 512.
 #' @param plot A logical value indicating whether to plot the estimation. Default is `TRUE`.
 #' @param correction A character string specifying the boundary correction to be applied. Options are "none", "left", "right" and "both". Default is "none".
 #' @param ... Additional arguments to be passed to bandwidth selection functions.
 #' @return A list with the following components:
-#'   \item{`x`}{The points where the distribution is estimated.}
-#'   \item{`est_values`}{The estimated distribution values.}
+#'   \item{`y.seq`}{The points where the distribution is estimated.}
+#'   \item{`F.hat`}{The estimated distribution values.}
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{The call which produced the result.}
@@ -24,12 +23,12 @@
 #' @details
 #' \insertCite{bose2022;textual}{WData} kernel distribution estimator is expressed as
 #' \deqn{
-#' \widehat{F}_h(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_h\left(y-Y_i\right),
+#' \widehat{F}_{h_{F}}(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_{h_{F}}\left(y-Y_i\right),
 #' \quad
 #' \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}\frac{1}{w(Y_i)}\right)^{-1},}
-#' \eqn{h} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_h(u) = W(u/h)}.
+#' \eqn{h_{F}} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_{h_{F}}(u) = W(u/{h_{F}})}.
 #' @references \insertAllCited{}
-#' @seealso [`bw.F.SBCnrd0`][WData::bw.F.SBCnrd0()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()], [`bw.F.SBCpi`][WData::bw.F.SBCpi()]
+#' @seealso [`bw.F.SBCrt`][WData::bw.F.SBCrt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()], [`bw.F.SBCpi`][WData::bw.F.SBCpi()]
 #' @examples
 #' cdf.bd(shrub.data$Width, kernel = "epanechnikov")
 #' cdf.bd(shrub.data$Width, bw = "bw.F.SBCcv")
@@ -37,9 +36,8 @@ cdf.bd <- function(y,
                    w = function(y) {
                      ifelse(y >= 0, y, NA)
                    },
-                   x,
-                   bw = "bw.F.SBCnrd0",
-                   adjust = 1,
+                   y.seq,
+                   bw = "bw.F.SBCrt",
                    kernel = c(
                      "gaussian",
                      "epanechnikov",
@@ -58,11 +56,7 @@ cdf.bd <- function(y,
   list2env(.check_biased_dataset(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
-  list2env(.get_xaxn_grid(y, x, from, to, nb, plot), envir = environment())
-
-  if (adjust <= 0) {
-    stop("'adjust' is not positive")
-  }
+  list2env(.get_xaxn_grid(y, y.seq, from, to, nb, plot), envir = environment())
 
   # Bandwidth
   if (is.character(bw)) {
@@ -70,8 +64,8 @@ cdf.bd <- function(y,
       stop("need at least 2 points to select a bandwidth automatically")
     }
     bw <- switch(bw,
-      bw.F.SBCnrd0 = bw.F.SBCnrd0(y, w, kernel),
-      bw.F.BD = bw.F.BD(y, w, x, ...),
+      bw.F.SBCrt = bw.F.SBCrt(y, w, kernel),
+      bw.F.BD = bw.F.BD(y, w, y.seq, ...),
       bw.F.SBCcv = bw.F.SBCcv(y, w, kernel, plot = FALSE, ...),
       bw.F.SBCpi = bw.F.SBCpi(y, w, kernel, ...),
       stop("unknown bandwidth rule")
@@ -82,8 +76,6 @@ cdf.bd <- function(y,
     stop("non-finite 'bw'")
   }
 
-  bw <- adjust * bw ## Manual Adjustment on the bw
-
   if (is.vector(bw) & length(bw) == 1) {
     if (bw <= 0) stop("'bw' is not positive")
   }
@@ -92,7 +84,7 @@ cdf.bd <- function(y,
     if (any(bw <= 0, na.rm = TRUE)) {
       stop("some 'bw' are not positive")
     }
-    if (length(bw) != length(x)) {
+    if (length(bw) != length(y.seq)) {
       stop("number of bandwidths must be equal to the number of points for evaluation")
     }
     if (any(is.nan(bw) | is.infinite(bw) | is.na(bw))) {
@@ -101,10 +93,10 @@ cdf.bd <- function(y,
   }
 
   # Distribution Estimation
-  aux <- diag(bw^(-1), length(x)) %*% outer(x, y, "-") # We need for local bandwidth
+  aux <- diag(bw^(-1), length(y.seq)) %*% outer(y.seq, y, "-") # We need for local bandwidth
   aux <- kernel_function_distribution(aux)
   aux <- aux %*% diag(weights)
-  yords <- uw * apply(aux, 1, mean)
+  F.hat <- uw * apply(aux, 1, mean)
 
   # Boundary correction
 
@@ -112,21 +104,21 @@ cdf.bd <- function(y,
 
   if (correction != "none") {
     if (correction == "left") {
-      yords <- (yords - yords[1]) / (1 - yords[1])
+      F.hat <- (F.hat - F.hat[1]) / (1 - F.hat[1])
     }
     if (correction == "right") {
-      yords <- yords / tail(yords, 1)
+      F.hat <- F.hat / tail(F.hat, 1)
     }
     if (correction == "both") {
-      yords <- (yords - yords[1]) / (tail(yords, 1) - yords[1])
+      F.hat <- (F.hat - F.hat[1]) / (tail(F.hat, 1) - F.hat[1])
     }
   }
 
   if (plot == TRUE) {
-    ord <- order(x)
+    ord <- order(y.seq)
     plot(
-      x[ord],
-      yords[ord],
+      y.seq[ord],
+      F.hat[ord],
       type = "l",
       main = "Bose & Dutta's Estimator",
       xlab = paste(
@@ -144,8 +136,8 @@ cdf.bd <- function(y,
   }
 
   list(
-    x = x,
-    est_values = yords,
+    y.seq = y.seq,
+    F.hat = F.hat,
     data.name = data.name,
     bw = bw,
     n = n,

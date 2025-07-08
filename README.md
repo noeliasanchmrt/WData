@@ -140,14 +140,14 @@ Bhattacharyya et al. (1988) density estimator for shrub width.
 
 The function allows different bandwidth selection methods:
 
-- `"bw.f.BGMnrd0"`: Normal reference rule-of-thumb selector.
+- `"bw.f.BGMrt"`: Normal reference rule-of-thumb selector.
 - `"bw.f.BGMcv"`: Cross-validation-based selector.
 - `"bw.f.BGMboot1"`: Bootstrap-based selector (method 1).
 - `"bw.f.BGMboot2"`: Bootstrap-based selector (method 2).
 
 ``` r
 par(mfrow = c(2, 3))
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMnrd0", from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMrt", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMcv", lower = 0.01, upper = 0.5, nh = 500L, from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
@@ -202,15 +202,15 @@ Cox (2005) distribution estimator for shrub width.
 
 ``` r
 par(mfrow = c(2, 2))
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.25, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.25, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.5, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.5, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(1.3, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(1.3, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-c_adj <- ifelse(seq(from = 0, to = 3, length.out = 512) <= quantile(shrub.data$Width, 0.05) |
+cy.seq <- ifelse(seq(from = 0, to = 3, length.out = 512) <= quantile(shrub.data$Width, 0.05) |
   seq(from = 0, to = 3, length.out = 512) >= quantile(shrub.data$Width, 0.95), 0.5, 1.3)
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = c_adj)
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = cy.seq)
 #> Interval for Estimation: [0.000000, 3.000000]
 ```
 
@@ -225,7 +225,7 @@ bandwidth selector.
 
 </div>
 
-##### `bw.F.SBCnrd0()`, `bw.F.SBCcv()`and `bw.F.SBCpi()`: Global bandwidth selectors
+##### `bw.F.SBCrt()`, `bw.F.SBCcv()`and `bw.F.SBCpi()`: Global bandwidth selectors
 
 ``` r
 par(mfrow = c(1, 3))

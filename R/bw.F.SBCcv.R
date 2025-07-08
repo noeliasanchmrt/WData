@@ -8,13 +8,13 @@
 #' @param lower Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.
 #' @param upper Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.
 #' @param nh An integer specifying the number of points for evaluation. Default is 200.
-#' @param tol A numeric value specifying the tolerance for the bandwidth search. Default is \eqn{10\%} of the lower bound.
+#' @param tol Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within `[lower, lower+tol]` or `[upper-tol, upper]`. Default is 10% of the lower bound.
 #' @param plot A logical value indicating whether to plot the cross-validation function. Default is `TRUE`.
 #' @return The optimal bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator based on cross-validation.
 #' @details The optimal bandwidth is obtained as the one that minimizes the cross-validation function, that is,
-#' \deqn{\widehat{h}_{\mathrm{CV}} = \arg \min_{h>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{-j, h}(y)\right)^2,
+#' \deqn{\widehat{h}_{F, \mathrm{CV}} = \arg \min_{h_{F}>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{h_{F}, -j}(y)\right)^2 \!\!,
 #' \quad \text{with} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}}
-#' and \eqn{\widehat{F}_{-j, h}(y)} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
+#' and \eqn{\widehat{F}_{h_{F}, -j}} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
@@ -46,25 +46,25 @@ bw.F.SBCcv <- function(y,
   # Points for distribution evaluation
   from <- min(y) - (sort(y)[5] - min(y))
   to <- max(y) + (max(y) - sort(y, decreasing = T)[5])
-  x <- seq.int(from, to, length.out = 511)
+  y.seq <- seq.int(from, to, length.out = 511)
   uw_minus_j <- (n - 1) / (sum(weights) - weights)
 
-  # Returns a matrix which stores by columns the estimations for each entry of "x" without one point.
-  F_minus_j_h <- function(x, y, bw) {
-    aux <- outer(x, y, "-") / bw # (i, j) = (x[i] - y[j]) / bw
-    W_h_matrix <- kernel_function_distribution(aux) # (i, j) = N((x[i] - y[j]) / bw
-    W_h_matrix_weights <- W_h_matrix %*% diag(weights) # (i,j) = N((x[i] - y[j]) / bw) * 1 / y[j]
+  # Returns a matrix which stores by columns the estimations for each entry of "y.seq" without one point.
+  F_minus_j_h <- function(y.seq, y, bw) {
+    aux <- outer(y.seq, y, "-") / bw # (i, j) = (y.seq[i] - y[j]) / bw
+    W_h_matrix <- kernel_function_distribution(aux) # (i, j) = N((y.seq[i] - y[j]) / bw
+    W_h_matrix_weights <- W_h_matrix %*% diag(weights) # (i,j) = N((y.seq[i] - y[j]) / bw) * 1 / y[j]
     row_sums <- rowSums(W_h_matrix_weights)
-    result <- ((row_sums - W_h_matrix_weights) %*% diag(uw_minus_j)) / (n - 1) # (i,j) = F_j,h(x[i])
+    result <- ((row_sums - W_h_matrix_weights) %*% diag(uw_minus_j)) / (n - 1) # (i,j) = F_j,h(y.seq[i])
     return(result)
   }
 
   cvh <- numeric(nh)
 
   # The estimation of the DF for each h.
-  F_minus_j_h_vals <- lapply(hs, function(h) F_minus_j_h(x, y, h)) # A list of matrixs
-  diff_matrix <- outer(x, y, "-") >= 0 # (i, j) = x[i] - y[j] >= 0
-  weighted_diff <- diff_matrix %*% diag(weights) * uw # (i, j) = 1_{x[i] - y[j] >= 0} * 1 / y[j] *uw
+  F_minus_j_h_vals <- lapply(hs, function(h) F_minus_j_h(y.seq, y, h)) # A list of matrixs
+  diff_matrix <- outer(y.seq, y, "-") >= 0 # (i, j) = y.seq[i] - y[j] >= 0
+  weighted_diff <- diff_matrix %*% diag(weights) * uw # (i, j) = 1_{y.seq[i] - y[j] >= 0} * 1 / y[j] *uw
 
   pb <- progress_bar$new(
     format = "  Progress [:bar] :percent in :elapsed, time to finish: :eta",
@@ -75,7 +75,7 @@ bw.F.SBCcv <- function(y,
 
   for (i in 1:nh) {
     integrand <- rowMeans((weighted_diff - F_minus_j_h_vals[[i]])^2)
-    cvh[i] <- .simpsons_rule(x = x, fx = integrand)
+    cvh[i] <- .simpsons_rule(y.seq = y.seq, fx = integrand)
 
     pb$tick()
   }
@@ -88,7 +88,7 @@ bw.F.SBCcv <- function(y,
   if (plot) {
     # Compute the rule of the thumb bandwidth
     sigma <- sqrt(uw * (mean(yw) - uw))
-    bw.F.SBCnrd0 <- sigma * (sqrt(pi) * uw * uwb * intudW2)^(1 / 3) * (n * sigma_K_2^2)^(-1 / 3)
+    bw.F.SBCrt <- sigma * (sqrt(pi) * uw * uwb * kernel_kappa)^(1 / 3) * (n * kernel_eta^2)^(-1 / 3)
 
     plot(
       hs,
@@ -109,7 +109,7 @@ bw.F.SBCcv <- function(y,
       h = min(cvh),
       col = "blue"
     )
-    abline(v = bw.F.SBCnrd0, lty = 2)
+    abline(v = bw.F.SBCrt, lty = 2)
   }
 
   return(h)

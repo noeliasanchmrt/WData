@@ -31,7 +31,7 @@ bw.F.SBCcv(
 
 \item{nh}{An integer specifying the number of points for evaluation. Default is 200.}
 
-\item{tol}{A numeric value specifying the tolerance for the bandwidth search. Default is \eqn{10\%} of the lower bound.}
+\item{tol}{Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within \verb{[lower, lower+tol]} or \verb{[upper-tol, upper]}. Default is 10\% of the lower bound.}
 
 \item{plot}{A logical value indicating whether to plot the cross-validation function. Default is \code{TRUE}.}
 }
@@ -43,9 +43,9 @@ This function performs bandwidth selection for \insertCite{bose2022;textual}{WDa
 }
 \details{
 The optimal bandwidth is obtained as the one that minimizes the cross-validation function, that is,
-\deqn{\widehat{h}_{\mathrm{CV}} = \arg \min_{h>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{-j, h}(y)\right)^2,
+\deqn{\widehat{h}_{F, \mathrm{CV}} = \arg \min_{h_{F}>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{h_{F}, -j}(y)\right)^2 \!\!,
 \quad \text{with} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}}
-and \eqn{\widehat{F}_{-j, h}(y)} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
+and \eqn{\widehat{F}_{h_{F}, -j}} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
 }
 \examples{
 bw.F.SBCcv(shrub.data$Width)

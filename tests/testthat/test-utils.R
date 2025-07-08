@@ -26,14 +26,14 @@ test_that(".get_kernel_values() handles valid inputs", {
     expect_named(result, c(
       "kernel_function_density",
       "kernel_function_distribution",
-      "kernel_function_density_deriv",
+      "kernel_function_density_deriv1",
       "kernel_function_density_deriv2",
       "kernel_function_conv",
-      "RK",
-      "RKprime",
-      "RKprime2",
-      "sigma_K_2",
-      "intudW2"
+      "kernel_r",
+      "kernel_r_deriv1",
+      "kernel_r_deriv2",
+      "kernel_eta",
+      "kernel_kappa"
     ))
     expect_type(result$kernel_function_density, "closure")
   })
@@ -56,27 +56,27 @@ test_that(".get_kernel_values() is consistent", {
     expect_lt(abs(integrate(
       Vectorize(function(u) k$kernel_function_density(u)^2),
       -4, 4
-    )$value - k$RK), 0.01)
+    )$value - k$kernel_r), 0.01)
 
     expect_lt(abs(integrate(
-      Vectorize(function(u) k$kernel_function_density_deriv(u)^2),
+      Vectorize(function(u) k$kernel_function_density_deriv1(u)^2),
       -4, 4
-    )$value - k$RKprime), 0.01)
+    )$value - k$kernel_r_deriv1), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) k$kernel_function_density_deriv2(u)^2),
       -4, 4
-    )$value - k$RKprime2), 0.01)
+    )$value - k$kernel_r_deriv2), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) u^2 * k$kernel_function_density(u)),
       -4, 4
-    )$value - k$sigma_K_2), 0.01)
+    )$value - k$kernel_eta), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) 2 * u * k$kernel_function_density(u) * k$kernel_function_distribution(u)),
       -4, 4
-    )$value - k$intudW2), 0.01)
+    )$value - k$kernel_kappa), 0.01)
   }
 })
 
@@ -123,14 +123,14 @@ test_that(".get_xaxn_grid() handles valid inputs", {
   result <- .get_xaxn_grid(1:10, from = 1, to = 10, nb = 5, plot = FALSE)
 
   expect_type(result, "list")
-  expect_named(result, c("x", "from", "to"))
-  expect_length(result$x, 5)
+  expect_named(result, c("y.seq", "from", "to"))
+  expect_length(result$y.seq, 5)
   expect_equal(result$from, 1)
   expect_equal(result$to, 10)
 })
 
 test_that(".get_xaxn_grid() throws errors for invalid inputs", {
-  expect_error(.get_xaxn_grid(1:10, x = NULL, from = 10, to = 1, nb = 5, plot = FALSE), "'x' must be a numeric vector")
+  expect_error(.get_xaxn_grid(1:10, y.seq = NULL, from = 10, to = 1, nb = 5, plot = FALSE), "'y.seq' must be a numeric vector")
   expect_error(.get_xaxn_grid(1:10, from = 10, to = 1, nb = 5, plot = FALSE), "'from' must be smaller than 'to'")
   expect_error(.get_xaxn_grid(1:10, from = 1, to = 10, nb = -5, plot = FALSE), "'nb' must be a positive integer")
 })

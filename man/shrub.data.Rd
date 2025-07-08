@@ -11,7 +11,7 @@ A \code{data.frame} with the following variables:
 \code{Transect} \tab {Transect identifier (1,2 or 3).} \cr \tab \cr
 \code{Number} \tab {Shrub/clump identifier.} \cr \tab \cr
 \code{Intercept} \tab {Length of the intersection of the clump of overlapping shrubs with the transect.} \cr \tab \cr
-\code{Widht} \tab {Width between two lines tangent to the shrub and parallel to the transect. } \cr \tab \cr
+\code{Width} \tab {Width between two lines tangent to the shrub and parallel to the transect. } \cr \tab \cr
 \code{Height} \tab {Maximum height of the shrub encountered by the transect.} \cr \tab \cr
 \code{Stems} \tab {Number of stems on the shrub encountered by the transect.} \cr
 }

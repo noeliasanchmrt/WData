@@ -1,5 +1,5 @@
 Package: WData
-Title: Density, Distribution, and Quantile Estimation for Biased Datasets
+Title: Statistical Inference for Weighted Data
 Version: 0.1.0
 Authors@R: c(
     person("Sánchez Martínez", "Noelia", , "noelia.sanchez.martinez@rai.usc.es", role = c("cre", "aut"),
@@ -13,16 +13,16 @@ Description: Set of tools for analyzing and modeling data that may be
     subject to biases in sampling. It offers functions to estimate density
     function and cumulative distribution function from a biased sample of
     a continuous distribution. Regarding density function estimation, the
-    package includes @bhattacharyya1988 and @jones1991 density estimators
-    and various bandwidth selectors for the latter, enhancing the
-    flexibility and adaptability of density estimation to different types
-    of datasets and biases. For cumulative distribution function
+    package includes Bhattacharyya et al. (1988) and Jones (1991) density
+    estimators and various bandwidth selectors for the latter, enhancing
+    the flexibility and adaptability of density estimation to different
+    types of datasets and biases. For cumulative distribution function
     estimation, the package includes the empirical estimator proposed by
-    @cox2005 and the kernel-type estimator by @bose2022, along with
-    several bandwidth selectors for the latter. Finally, the package
-    includes @muttlak1988 real length-biased dataset on shrub width as an
-    example dataset.
-License: MIT + file LICENSE
+    Cox (2005) and the kernel-type estimator by Bose and Dutta (2022),
+    along with several bandwidth selectors for the latter. Finally, the
+    package includes Muttlak (1988) real length-biased dataset on shrub
+    width as an example dataset.
+License: GPL-3 | file LICENSE
 URL: https://github.com/noeliasanchmrt/WData
 BugReports: https://github.com/noeliasanchmrt/WData/issues
 Depends: 

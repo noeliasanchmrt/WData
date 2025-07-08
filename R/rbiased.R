@@ -86,47 +86,47 @@ rbiased <- function(n,
   ))
 
   f <- switch(fx,
-    beta = function(x) {
-      dbeta(x, shape1, shape2)
+    beta = function(y) {
+      dbeta(y, shape1, shape2)
     },
-    cauchy = function(x) {
-      dcauchy(x, location, scale)
+    cauchy = function(y) {
+      dcauchy(y, location, scale)
     },
-    chisq = function(x) {
-      dchisq(x, df, ncp)
+    chisq = function(y) {
+      dchisq(y, df, ncp)
     },
-    exp = function(x) {
-      dexp(x, rate)
+    exp = function(y) {
+      dexp(y, rate)
     },
-    f = function(x) {
-      df(x, df1, df2)
+    f = function(y) {
+      df(y, df1, df2)
     },
-    gamma = function(x) {
-      dgamma(x, shape, rate)
+    gamma = function(y) {
+      dgamma(y, shape, rate)
     },
-    logis = function(x) {
-      dlogis(x, location, scale)
+    logis = function(y) {
+      dlogis(y, location, scale)
     },
-    lnorm = function(x) {
-      dlnorm(x, meanlog, sdlog)
+    lnorm = function(y) {
+      dlnorm(y, meanlog, sdlog)
     },
-    norm = function(x) {
-      dnorm(x, mean, sd)
+    norm = function(y) {
+      dnorm(y, mean, sd)
     },
-    t = function(x) {
-      dt(x, df, ncp)
+    t = function(y) {
+      dt(y, df, ncp)
     },
-    unif = function(x) {
-      dunif(x, min, max)
+    unif = function(y) {
+      dunif(y, min, max)
     },
-    weibull = function(x) {
-      dweibull(x, shape, scale)
+    weibull = function(y) {
+      dweibull(y, shape, scale)
     },
-    mixnorm = function(x) {
-      KScorrect::dmixnorm(x, mean, sd, pro)
+    mixnorm = function(y) {
+      KScorrect::dmixnorm(y, mean, sd, pro)
     },
-    mgamma = function(x) {
-      evmix::dmgamma(x, mgshape, mgscale, mgweight)
+    mgamma = function(y) {
+      evmix::dmgamma(y, mgshape, mgscale, mgweight)
     }
   )
 
@@ -204,11 +204,11 @@ rbiased <- function(n,
     pro <- pro / sum(pro)
     clabels <- sample(1:G, size = n, replace = TRUE, prob = pro)
     ctable <- tabulate(clabels, nbins = G)
-    x <- rep(0, n)
+    y <- rep(0, n)
     for (k in 1:G) {
-      x[clabels == k] <- mean[k] + rnorm(ctable[k], sd = sd[k])
+      y[clabels == k] <- mean[k] + rnorm(ctable[k], sd = sd[k])
     }
-    structure(as.vector(x), modelName = modelName)
+    structure(as.vector(y), modelName = modelName)
   }
 
 
@@ -236,13 +236,13 @@ rbiased <- function(n,
     modelName <- "V"
     clabels <- sample(1:G, size = n, replace = TRUE, prob = mgweight)
     ctable <- tabulate(clabels, nbins = G)
-    x <- rep(0, n)
+    y <- rep(0, n)
 
     for (i in 1:G) {
-      x[clabels == i] <- rgamma(1, shape = mgshape[i], scale = mgscale[i])
+      y[clabels == i] <- rgamma(1, shape = mgshape[i], scale = mgscale[i])
     }
 
-    structure(as.vector(x), modelName = modelName)
+    structure(as.vector(y), modelName = modelName)
   }
 
   r <- switch(fx,
@@ -338,7 +338,7 @@ rbiased <- function(n,
 
   if (plot == TRUE) {
     wf <- function(y) {
-      w(y) * f(x = y)
+      w(y) * f(y = y)
     }
     uw <- integrate(wf, lower = q(lim), upper = q(1 - lim))
     g <- function(y) {

@@ -9,9 +9,8 @@ cdf.bd(
   w = function(y) {
      ifelse(y >= 0, y, NA)
  },
-  x,
-  bw = "bw.F.SBCnrd0",
-  adjust = 1,
+  y.seq,
+  bw = "bw.F.SBCrt",
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   from,
@@ -27,19 +26,17 @@ cdf.bd(
 
 \item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
 
-\item{x}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
+\item{y.seq}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
 
-\item{bw}{The smoothing bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}} and \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}. Default is \code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}. The specified (or computed) value of \code{bw} multiplied by \code{adjust}.}
-
-\item{adjust}{A numeric value representing the manual adjustment factor for the bandwidth. Default is 1.}
+\item{bw}{The smoothing bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}} and \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}. Default is \code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}.}
 
 \item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{from}{Numeric value specifying the lower bound for  evaluation when \code{x} not provided. Default is calculated based on the range of input data.}
+\item{from}{Numeric value specifying the lower bound for  evaluation when \code{y.seq} not provided. Default is calculated based on the range of input data.}
 
-\item{to}{Numeric value specifying the upper bound for  evaluation when \code{x} not provided. Default is calculated based on the range of input data.}
+\item{to}{Numeric value specifying the upper bound for  evaluation when \code{y.seq} not provided. Default is calculated based on the range of input data.}
 
-\item{nb}{An integer specifying the number of points for evaluation when \code{x} not provided. Default is 512.}
+\item{nb}{An integer specifying the number of points for evaluation when \code{y.seq} not provided. Default is 512.}
 
 \item{plot}{A logical value indicating whether to plot the estimation. Default is \code{TRUE}.}
 
@@ -49,8 +46,8 @@ cdf.bd(
 }
 \value{
 A list with the following components:
-\item{\code{x}}{The points where the distribution is estimated.}
-\item{\code{est_values}}{The estimated distribution values.}
+\item{\code{y.seq}}{The points where the distribution is estimated.}
+\item{\code{F.hat}}{The estimated distribution values.}
 \item{\code{bw}}{The bandwidth used.}
 \item{\code{n}}{The sample size after elimination of missing values.}
 \item{\code{call}}{The call which produced the result.}
@@ -62,10 +59,10 @@ This function calculates \insertCite{bose2022;textual}{WData} kernel distributio
 \details{
 \insertCite{bose2022;textual}{WData} kernel distribution estimator is expressed as
 \deqn{
-\widehat{F}_h(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_h\left(y-Y_i\right),
+\widehat{F}_{h_{F}}(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_{h_{F}}\left(y-Y_i\right),
 \quad
 \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}\frac{1}{w(Y_i)}\right)^{-1},}
-\eqn{h} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_h(u) = W(u/h)}.
+\eqn{h_{F}} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_{h_{F}}(u) = W(u/{h_{F}})}.
 }
 \examples{
 cdf.bd(shrub.data$Width, kernel = "epanechnikov")
@@ -75,5 +72,5 @@ cdf.bd(shrub.data$Width, bw = "bw.F.SBCcv")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}}, \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}
+\code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}}, \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}
 }

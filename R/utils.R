@@ -77,7 +77,7 @@
       stop("unknown kernel")
     )
 
-  kernel_function_density_deriv <- switch(kernel, # Kernel First Derivative of density functions
+  kernel_function_density_deriv1 <- switch(kernel, # Kernel First Derivative of density functions
     gaussian = function(u) dnorm(u) * (-u),
     epanechnikov = function(u) ifelse(abs(u) < 1, -1.5 * u, 0),
     rectangular = function(u) ifelse(abs(u) < 1, 0, 0),
@@ -147,7 +147,7 @@
       stop("unknown kernel")
     )
 
-  # RK <- switch(kernel,
+  # kernel_r <- switch(kernel,
   #   gaussian = 1 / (2 * sqrt(pi)),
   #   epanechnikov = 3 / 5,
   #   rectangular = 1 / 2,
@@ -158,12 +158,12 @@
   #   stop("unknown kernel")
   # )
 
-  RK <- integrate(
+  kernel_r <- integrate(
     Vectorize(function(u) kernel_function_density(u)^2),
     -4, 4
   )$value
 
-  # RKprime <- switch(kernel,
+  # kernel_r_deriv1 <- switch(kernel,
   #   gaussian = 1 / (4 * sqrt(pi)),
   #   epanechnikov = 3 / 2,
   #   rectangular = 0,
@@ -174,12 +174,12 @@
   #   stop("unknown kernel")
   # )
 
-  RKprime <- integrate(
-    Vectorize(function(u) kernel_function_density_deriv(u)^2),
+  kernel_r_deriv1 <- integrate(
+    Vectorize(function(u) kernel_function_density_deriv1(u)^2),
     -4, 4
   )$value
 
-  # RKprime2 <- switch(kernel,
+  # kernel_r_deriv2 <- switch(kernel,
   #   gaussian = 3 / (8 * sqrt(pi)),
   #   epanechnikov = 9 / 2,
   #   rectangular = 0,
@@ -190,12 +190,12 @@
   #   stop("unknown kernel")
   # )
 
-  RKprime2 <- integrate(
+  kernel_r_deriv2 <- integrate(
     Vectorize(function(u) kernel_function_density_deriv2(u)^2),
     -4, 4
   )$value
 
-  # sigma_K_2 <- switch(kernel,
+  # kernel_eta <- switch(kernel,
   #   gaussian = 1,
   #   epanechnikov = 1 / 5,
   #   rectangular = 1 / 3,
@@ -206,12 +206,12 @@
   #   stop("unknown kernel")
   # )
 
-  sigma_K_2 <- integrate(
+  kernel_eta <- integrate(
     Vectorize(function(u) u^2 * kernel_function_density(u)),
     -4, 4
   )$value
 
-  # intudW2 <- switch(kernel,
+  # kernel_kappa <- switch(kernel,
   #   gaussian = 1 / sqrt(pi),
   #   epanechnikov = 9 / 35,
   #   rectangular = 1 / 3,
@@ -222,7 +222,7 @@
   #   stop("unknown kernel")
   # )
 
-  intudW2 <- integrate(
+  kernel_kappa <- integrate(
     Vectorize(function(u) 2 * u * kernel_function_density(u) * kernel_function_distribution(u)),
     -4, 4
   )$value
@@ -230,32 +230,32 @@
   list(
     kernel_function_density = kernel_function_density,
     kernel_function_distribution = kernel_function_distribution,
-    kernel_function_density_deriv = kernel_function_density_deriv,
+    kernel_function_density_deriv1 = kernel_function_density_deriv1,
     kernel_function_density_deriv2 = kernel_function_density_deriv2,
     kernel_function_conv = kernel_function_conv,
-    RK = RK,
-    RKprime = RKprime,
-    RKprime2 = RKprime2,
-    sigma_K_2 = sigma_K_2,
-    intudW2 = intudW2
+    kernel_r = kernel_r,
+    kernel_r_deriv1 = kernel_r_deriv1,
+    kernel_r_deriv2 = kernel_r_deriv2,
+    kernel_eta = kernel_eta,
+    kernel_kappa = kernel_kappa
   )
 }
 
 
-.simpsons_rule <- function(x, fx) {
+.simpsons_rule <- function(y.seq, fx) {
   # https://scicomp.stackexchange.com/questions/25649/composite-simpsons-rule-with-odd-intervals
-  valid <- which(!is.na(x) & !is.na(fx) & is.finite(x) & is.finite(fx))
-  x <- x[valid]
+  valid <- which(!is.na(y.seq) & !is.na(fx) & is.finite(y.seq) & is.finite(fx))
+  y.seq <- y.seq[valid]
   fx <- fx[valid]
 
-  ord <- order(x)
-  x <- x[ord]
+  ord <- order(y.seq)
+  y.seq <- y.seq[ord]
   fx <- fx[ord]
-  n <- length(x)
+  n <- length(y.seq)
   if (n < 5) stop("At least 5 points are required for Simpson's rule")
 
-  h <- (x[2] - x[1])
-  if (any(abs(diff(x) - h) > .Machine$double.eps^0.5)) stop("x must be equally spaced")
+  h <- (y.seq[2] - y.seq[1])
+  if (any(abs(diff(y.seq) - h) > .Machine$double.eps^0.5)) stop("y.seq must be equally spaced")
 
   integral <- fx[1] + fx[n] + 4 * sum(fx[seq.int(2, n - 1, by = 2)]) + 2 * sum(fx[seq.int(3, n - 2, by = 2)])
   integral * h / 3
@@ -285,31 +285,8 @@
   seq(lower, upper, length.out = nh)
 }
 
-.get_prob_grid <- function(x, from, to, nb, bw, adjust) {
-  if (missing(x)) {
-    .validate_number(nb, "nb")
-    .validate_number(from, "from")
-    .validate_number(to, "to")
-    if (from < 0 || to > 1) stop("'from' and 'to' must be numeric on [0,1]")
-    if (from > to) stop("'from' must be smaller than 'to'")
-    if (!all.equal(nb, as.integer(nb)) || nb <= 0) stop("'nb' must be a positive integer")
-    x <- seq.int(from, to, length.out = nb)
-  } else {
-    if (!is.numeric(x) || !is.vector(x) || !all(x >= 0 & x <= 1)) stop("'x' must be a numeric vector on [0,1]")
-    x <- sort(x)
-  }
-
-  message(sprintf("Interval for Estimation: [%f, %f]", min(x), max(x)))
-
-  .validate_number(bw, "bw")
-  .validate_number(adjust, "adjust")
-
-  bw <- adjust * bw
-  list(x = x, from = from, to = to, bw = bw)
-}
-
-.get_xaxn_grid <- function(y, x, from, to, nb, plot) {
-  if (missing(x)) {
+.get_xaxn_grid <- function(y, y.seq, from, to, nb, plot) {
+  if (missing(y.seq)) {
     if (missing(from)) {
       from <- min(y) - (sort(y)[5] - min(y))
     }
@@ -322,17 +299,17 @@
     .validate_number(to, "to")
     if (from >= to) stop("'from' must be smaller than 'to'")
     if (!all.equal(nb, as.integer(nb)) || nb <= 0) stop("'nb' must be a positive integer")
-    x <- seq.int(from, to, length.out = nb)
+    y.seq <- seq.int(from, to, length.out = nb)
   } else {
-    if (!is.numeric(x) || !is.vector(x)) stop("'x' must be a numeric vector")
-    from <- min(x)
-    to <- max(x)
+    if (!is.numeric(y.seq) || !is.vector(y.seq)) stop("'y.seq' must be a numeric vector")
+    from <- min(y.seq)
+    to <- max(y.seq)
   }
 
-  message(sprintf("Interval for Estimation: [%f, %f]", min(x), max(x)))
+  message(sprintf("Interval for Estimation: [%f, %f]", min(y.seq), max(y.seq)))
 
   if (!is.logical(plot)) {
     stop("argument 'plot' must be logical")
   }
-  list(x = x, from = from, to = to)
+  list(y.seq = y.seq, from = from, to = to)
 }

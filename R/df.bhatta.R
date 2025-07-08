@@ -9,17 +9,17 @@
 #' * `kernel` A character string giving the smoothing kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
 #' * `bw` The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. Options available can be checked in [`bw.nrd`][stats::bw.nrd()]. Default is `"nrd0"`.
 #' @return A list with the following components:
-#'   \item{`x`}{The points where the density is estimated.}
-#'   \item{`est_values`}{The estimated density values.}
+#'   \item{`y.seq`}{The points where the density is estimated.}
+#'   \item{`f.hat`}{The estimated density values.}
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{ The call which produced the result.}
-#'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#'   \item{`data.name`}{The deparsed name of the `y` argument (biased dataset).}
 #'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details \insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
-#' \deqn{\widehat{f}_{\mathrm{B}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}(y),
+#' \deqn{\widehat{f}_{\mathrm{B}, h_{g}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}_{h_{g}}(y),
 #' \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-#' and \eqn{\widehat{g}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
+#' and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
 #' @references \insertAllCited{}
 #' @examples
 #' # Rule of the thumb
@@ -68,8 +68,8 @@ df.bhatta <- function(y,
   }
 
   list(
-    x = g_hat$x,
-    est_values = f_hat,
+    y.seq = g_hat$x,
+    f.hat = f_hat,
     bw = g_hat$bw,
     data.name = data.name,
     n = n,

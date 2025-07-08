@@ -6,34 +6,33 @@
 #' @param w A function representing the bias function applied to the data points.
 #' It must be evaluable and positive in each point of `y`.
 #' By default, it is set to the length-biased function.
-#' @param x A numeric vector specifying the points where the density is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
-#' @param bw The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.f.BGMnrd0`][WData::bw.f.BGMnrd0()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] and [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()].
-#' Default is [`bw.f.BGMnrd0`][WData::bw.f.BGMnrd0()]. The specified (or computed) value of `bw` is multiplied by `adjust`.
-#' @param adjust A numeric value representing the manual adjustment factor for the bandwidth. Default is 1.
+#' @param y.seq A numeric vector specifying the points where the density is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
+#' @param bw The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.f.BGMrt`][WData::bw.f.BGMrt()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] and [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()].
+#' Default is [`bw.f.BGMrt`][WData::bw.f.BGMrt()].
 #' @param kernel A character vector specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
-#' @param from Numeric value specifying the lower bound for  evaluation when `x` is not provided. Default is calculated based on the range of input data.
-#' @param to Numeric value specifying the upper bound for  evaluation when `x` is not provided. Default is calculated based on the range of input data.
-#' @param nb An integer specifying the number of points for evaluation when `x` is not provided. Default is 512.
+#' @param from Numeric value specifying the lower bound for  evaluation when `y.seq` is not provided. Default is calculated based on the range of input data.
+#' @param to Numeric value specifying the upper bound for  evaluation when `y.seq` is not provided. Default is calculated based on the range of input data.
+#' @param nb An integer specifying the number of points for evaluation when `y.seq` is not provided. Default is 512.
 #' @param plot A logical value indicating whether to plot the density estimation. Default is `TRUE`.
 #' @param ... Additional arguments to be passed to bandwidth selection functions.
 #' @return A list with the following components:
-#'   \item{`x`}{The points where the density is estimated.}
-#'   \item{`est_values`}{The estimated density values.}
+#'   \item{`y.seq`}{The points where the density is estimated.}
+#'   \item{`f.hat`}{The estimated density values.}
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{The call which produced the result.}
-#'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#'   \item{`data.name`}{The deparsed name of the `y` argument (biased dataset).}
 #'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details
 #' \insertCite{jones1991;textual}{WData} kernel density estimator is expressed as
-#' \deqn{\widehat{f}_{\mathrm{J}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_h(y-Y_i),\quad
+#' \deqn{\widehat{f}_{\mathrm{J}, h_{f}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_{h_{f}}(y-Y_i),\quad
 #' \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-#' \eqn{h} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h}(u)=1/h K\left(u / h\right)}.
+#' \eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 #' @references \insertAllCited{}
-#' @seealso [`bw.f.BGMnrd0`][WData::bw.f.BGMnrd0()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] , [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()]
+#' @seealso [`bw.f.BGMrt`][WData::bw.f.BGMrt()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] , [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()]
 #' @examples
 #' # Rule of the thumb
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMnrd0")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMrt")
 #' # Cross Validation
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
 #' # Bootstrap
@@ -44,9 +43,8 @@ df.jones <- function(y,
                      w = function(y) {
                        ifelse(y >= 0, y, NA)
                      },
-                     x,
-                     bw = "bw.f.BGMnrd0",
-                     adjust = 1,
+                     y.seq,
+                     bw = "bw.f.BGMrt",
                      kernel = c(
                        "gaussian", "epanechnikov",
                        "rectangular", "triangular",
@@ -60,15 +58,12 @@ df.jones <- function(y,
   list2env(.check_biased_dataset(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
-  list2env(.get_xaxn_grid(y, x, from, to, nb, plot), envir = environment())
-
-  # Bandwidth
-  if (adjust <= 0) stop("'adjust' is not positive")
+  list2env(.get_xaxn_grid(y, y.seq, from, to, nb, plot), envir = environment())
 
   if (is.character(bw)) {
     if (n < 2) stop("need at least 2 points to select a bandwidth automatically")
     bw <- switch(bw,
-      bw.f.BGMnrd0 = bw.f.BGMnrd0(y, w, kernel),
+      bw.f.BGMrt = bw.f.BGMrt(y, w, kernel),
       bw.f.BGMcv = bw.f.BGMcv(y, w, kernel, plot = FALSE, ...),
       bw.f.BGMboot1 = bw.f.BGMboot1(y, w, kernel, ...),
       bw.f.BGMboot2 = bw.f.BGMboot2(y, w, kernel, plot = FALSE, ...),
@@ -76,18 +71,17 @@ df.jones <- function(y,
     )
   }
   if (!is.finite(bw)) stop("non-finite 'bw'")
-  bw <- adjust * bw #  Manual Adjustment on the bw
   if (bw <= 0) stop("'bw' is not positive")
 
   # Density Estimation
-  aux <- bw^(-1) * outer(x, y, "-")
+  aux <- bw^(-1) * outer(y.seq, y, "-")
   aux <- kernel_function_density(aux)
   aux <- aux %*% diag(weights)
-  yords <- uw / bw * rowMeans(aux)
+  f.hat <- uw / bw * rowMeans(aux)
 
   if (plot == TRUE) {
-    ord <- order(x)
-    plot(x[ord], yords[ord],
+    ord <- order(y.seq)
+    plot(y.seq[ord], f.hat[ord],
       type = "l", main = "Jones' Estimator",
       xlab = paste(
         "n = ", n, "Bandwidth = ",
@@ -99,8 +93,8 @@ df.jones <- function(y,
   }
 
   list(
-    x = x,
-    est_values = yords,
+    y.seq = y.seq,
+    f.hat = f.hat,
     data.name = data.name,
     bw = bw,
     n = n,
