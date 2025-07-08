@@ -29,19 +29,15 @@ A numeric vector containing the bandwidths for each point in \code{x}.
 This function calculates the bandwidth for \insertCite{bose2022;textual}{WData} distribution estimator following the method proposed by \insertCite{bose2022;textual}{WData}.
 }
 \details{
-\insertCite{bose2022;textual}{WData} propose using local bandwidths the form
-\deqn{\widehat{h}_{\mathrm{BD}, C(y)} (y) = \frac{C(y) \widehat{\sigma}}{(n w(y))^{1/3}},}
-where \eqn{C(y)} is a positive function that depends on the point \eqn{y}, and \eqn{\widehat{\sigma}} is an estimate of the standard deviation of the distribution. \insertCite{borrajo2017;textual}{WData} suggests two options for estimating the standard deviation \eqn{\sigma}. The first is to take the square root of the following estimator of \eqn{\sigma^2}:
-\deqn{\widehat{\sigma}_w^2=\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}\left[\left(\frac{1}{n} \sum_{i=1}^n w(Y_i)\right)-\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i
-)}\right)^{-1}\right].}
-The second option is to consider a robust estimator of \eqn{\sigma}, such as
-\deqn{\widehat{\sigma}_{\mathrm{IQR}}=\mathrm{IQR}/(\Phi(0.75)-\Phi(0.25)),}
-where \eqn{\mathrm{IQR}} is the interquartile range of the sample \eqn{\{Y_1, Y_2, \dots, Y_n\}} and \eqn{\Phi} is the cumulative distribution function of the standard normal distribution.
-In order to prevent oversmoothing in the estimation, this
-function considers \eqn{\widehat{\sigma}= \min\{\widehat{\sigma}_w, \widehat{\sigma}_{\mathrm{IQR}}\}}.
-If some bandwidths are not positive, they are replaced by the mean of the neighbors.
+Bandwidths are calculated using the formula:
+\deqn{\widehat{h}_{F, \mathrm{BD}, C(y)} (y) = \frac{C(y) \widehat{\sigma}_{w}}{(n w(y))^{1/3}},}
+where \eqn{C(y)} is a positive parameter that depends on the point \eqn{y} and \eqn{\widehat{\sigma}_{w}} is an estimate of the standard deviation of the distribution given by
+\deqn{\widehat{\sigma}_w=\sqrt{\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}
+\left[\left(\frac{1}{n} \sum_{i=1}^n w(Y_i)\right)-\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}\right]}.}
 
+The parameter \eqn{C(y)} is provided to the function by using the argument \code{c_adj}, which is a vector of positive values that is used to compute the bandwidth for each point in \code{x}.
 The simulations carried out by \insertCite{bose2022;textual}{WData} suggest that choosing \eqn{C(y)=0.25} or \eqn{C(y)=0.5} provides good results in the tail region of the distribution, with tails defined as points below the 5th percentile or above the 95th percentile. On the other hand, \eqn{C(y)=1.3} provides good results for the remaining points.
+If some bandwidths are not positive, they are replaced by the mean of the neighbors.
 }
 \examples{
 bw.F.BD(shrub.data$Width, x = seq(0, 1, length.out = 512), c_adj = rep(1, 512))

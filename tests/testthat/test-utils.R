@@ -26,14 +26,14 @@ test_that(".get_kernel_values() handles valid inputs", {
     expect_named(result, c(
       "kernel_function_density",
       "kernel_function_distribution",
-      "kernel_function_density_deriv",
+      "kernel_function_density_deriv1",
       "kernel_function_density_deriv2",
       "kernel_function_conv",
-      "RK",
-      "RKprime",
-      "RKprime2",
-      "sigma_K_2",
-      "intudW2"
+      "kernel_r",
+      "kernel_r_deriv1",
+      "kernel_r_deriv2",
+      "kernel_eta",
+      "kernel_kappa"
     ))
     expect_type(result$kernel_function_density, "closure")
   })
@@ -56,27 +56,27 @@ test_that(".get_kernel_values() is consistent", {
     expect_lt(abs(integrate(
       Vectorize(function(u) k$kernel_function_density(u)^2),
       -4, 4
-    )$value - k$RK), 0.01)
+    )$value - k$kernel_r), 0.01)
 
     expect_lt(abs(integrate(
-      Vectorize(function(u) k$kernel_function_density_deriv(u)^2),
+      Vectorize(function(u) k$kernel_function_density_deriv1(u)^2),
       -4, 4
-    )$value - k$RKprime), 0.01)
+    )$value - k$kernel_r_deriv1), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) k$kernel_function_density_deriv2(u)^2),
       -4, 4
-    )$value - k$RKprime2), 0.01)
+    )$value - k$kernel_r_deriv2), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) u^2 * k$kernel_function_density(u)),
       -4, 4
-    )$value - k$sigma_K_2), 0.01)
+    )$value - k$kernel_eta), 0.01)
 
     expect_lt(abs(integrate(
       Vectorize(function(u) 2 * u * k$kernel_function_density(u) * k$kernel_function_distribution(u)),
       -4, 4
-    )$value - k$intudW2), 0.01)
+    )$value - k$kernel_kappa), 0.01)
   }
 })
 

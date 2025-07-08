@@ -22,13 +22,13 @@
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{The call which produced the result.}
-#'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#'   \item{`data.name`}{The deparsed name of the `y` argument (biased dataset).}
 #'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details
 #' \insertCite{jones1991;textual}{WData} kernel density estimator is expressed as
-#' \deqn{\widehat{f}_{\mathrm{J}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_h(y-Y_i),\quad
+#' \deqn{\widehat{f}_{\mathrm{J}, h_{f}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_{h_{f}}(y-Y_i),\quad
 #' \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-#' \eqn{h} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h}(u)=1/h K\left(u / h\right)}.
+#' \eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 #' @references \insertAllCited{}
 #' @seealso [`bw.f.BGMnrd0`][WData::bw.f.BGMnrd0()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] , [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()]
 #' @examples

@@ -15,7 +15,7 @@
 #' `Transect` \tab {Transect identifier (1,2 or 3).} \cr \tab \cr
 #' `Number` \tab {Shrub/clump identifier.} \cr \tab \cr
 #' `Intercept` \tab {Length of the intersection of the clump of overlapping shrubs with the transect.} \cr \tab \cr
-#' `Widht` \tab {Width between two lines tangent to the shrub and parallel to the transect. } \cr \tab \cr
+#' `Width` \tab {Width between two lines tangent to the shrub and parallel to the transect. } \cr \tab \cr
 #' `Height` \tab {Maximum height of the shrub encountered by the transect.} \cr \tab \cr
 #' `Stems` \tab {Number of stems on the shrub encountered by the transect.} \cr
 #' }

@@ -77,7 +77,7 @@
       stop("unknown kernel")
     )
 
-  kernel_function_density_deriv <- switch(kernel, # Kernel First Derivative of density functions
+  kernel_function_density_deriv1 <- switch(kernel, # Kernel First Derivative of density functions
     gaussian = function(u) dnorm(u) * (-u),
     epanechnikov = function(u) ifelse(abs(u) < 1, -1.5 * u, 0),
     rectangular = function(u) ifelse(abs(u) < 1, 0, 0),
@@ -147,7 +147,7 @@
       stop("unknown kernel")
     )
 
-  # RK <- switch(kernel,
+  # kernel_r <- switch(kernel,
   #   gaussian = 1 / (2 * sqrt(pi)),
   #   epanechnikov = 3 / 5,
   #   rectangular = 1 / 2,
@@ -158,12 +158,12 @@
   #   stop("unknown kernel")
   # )
 
-  RK <- integrate(
+  kernel_r <- integrate(
     Vectorize(function(u) kernel_function_density(u)^2),
     -4, 4
   )$value
 
-  # RKprime <- switch(kernel,
+  # kernel_r_deriv1 <- switch(kernel,
   #   gaussian = 1 / (4 * sqrt(pi)),
   #   epanechnikov = 3 / 2,
   #   rectangular = 0,
@@ -174,12 +174,12 @@
   #   stop("unknown kernel")
   # )
 
-  RKprime <- integrate(
-    Vectorize(function(u) kernel_function_density_deriv(u)^2),
+  kernel_r_deriv1 <- integrate(
+    Vectorize(function(u) kernel_function_density_deriv1(u)^2),
     -4, 4
   )$value
 
-  # RKprime2 <- switch(kernel,
+  # kernel_r_deriv2 <- switch(kernel,
   #   gaussian = 3 / (8 * sqrt(pi)),
   #   epanechnikov = 9 / 2,
   #   rectangular = 0,
@@ -190,12 +190,12 @@
   #   stop("unknown kernel")
   # )
 
-  RKprime2 <- integrate(
+  kernel_r_deriv2 <- integrate(
     Vectorize(function(u) kernel_function_density_deriv2(u)^2),
     -4, 4
   )$value
 
-  # sigma_K_2 <- switch(kernel,
+  # kernel_eta <- switch(kernel,
   #   gaussian = 1,
   #   epanechnikov = 1 / 5,
   #   rectangular = 1 / 3,
@@ -206,12 +206,12 @@
   #   stop("unknown kernel")
   # )
 
-  sigma_K_2 <- integrate(
+  kernel_eta <- integrate(
     Vectorize(function(u) u^2 * kernel_function_density(u)),
     -4, 4
   )$value
 
-  # intudW2 <- switch(kernel,
+  # kernel_kappa <- switch(kernel,
   #   gaussian = 1 / sqrt(pi),
   #   epanechnikov = 9 / 35,
   #   rectangular = 1 / 3,
@@ -222,7 +222,7 @@
   #   stop("unknown kernel")
   # )
 
-  intudW2 <- integrate(
+  kernel_kappa <- integrate(
     Vectorize(function(u) 2 * u * kernel_function_density(u) * kernel_function_distribution(u)),
     -4, 4
   )$value
@@ -230,14 +230,14 @@
   list(
     kernel_function_density = kernel_function_density,
     kernel_function_distribution = kernel_function_distribution,
-    kernel_function_density_deriv = kernel_function_density_deriv,
+    kernel_function_density_deriv1 = kernel_function_density_deriv1,
     kernel_function_density_deriv2 = kernel_function_density_deriv2,
     kernel_function_conv = kernel_function_conv,
-    RK = RK,
-    RKprime = RKprime,
-    RKprime2 = RKprime2,
-    sigma_K_2 = sigma_K_2,
-    intudW2 = intudW2
+    kernel_r = kernel_r,
+    kernel_r_deriv1 = kernel_r_deriv1,
+    kernel_r_deriv2 = kernel_r_deriv2,
+    kernel_eta = kernel_eta,
+    kernel_kappa = kernel_kappa
   )
 }
 

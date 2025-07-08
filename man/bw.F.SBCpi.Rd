@@ -28,15 +28,15 @@ This function calculates the bandwidth for \insertCite{bose2022;textual}{WData} 
 }
 \details{
 The bandwidth is given by:
-\deqn{\widehat{h}_{\mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \tau_{W}^{2} }{n \sigma_K^4 R \left(\widehat{f}_{\mathrm{J},\widehat{g}}^{(1)}\right)}\right)^{1/3},
-\quad \text{where} \quad
-\widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1},
-\quad
-\widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}}
-and \eqn{\tau_{W}^{2}} depends only on the kernel function. \eqn{\widehat{g}} is an estimator of:
-\deqn{g = \arg \min_{g>0} \mathrm{AMSE} \left(R\left(\widehat{f}_{\mathrm{J},g}^{(1)}\right)\right)
-= \left(\frac{3 \mu_w \bar{\mu}_w R\left(L^{(1)}\right)}{2 n \sigma_L^2 R\left( f^{(2)} \right)^2}\right)^{1/5}.}
-Here, \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a normal distribution.
+\deqn{\widehat{h}_{F, \mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \kappa(K) }{n \eta(K)^2 R \left(\widehat{f}_{\mathrm{J},\widehat{h}_{F,0, \mathrm{opt}}}^{(1)}\right)}\right)^{1/3}}
+where both \eqn{\kappa(K)} and \eqn{\eta(K)} depend only on the kernel,
+\deqn{\widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+\quad \text{and} \quad
+\widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.}
+
+\eqn{\widehat{h}_{F,0, \mathrm{opt}}} is an estimator of
+\deqn{h_{F,0, \mathrm{opt}} = \left(\frac{3 \mu_w \bar{\mu}_w R\left(L^{(1)}\right)}{2 n \eta(L) R\left( f^{(2)} \right)^2}\right)^{1/5},}
+where \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a normal distribution and \eqn{\mu_w} and \eqn{\bar{\mu}_w} are estimated by \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} as defined above.
 }
 \examples{
 bw.F.SBCpi(shrub.data$Width, kernel = "epanechnikov")

@@ -7,15 +7,15 @@
 #' @param kernel A character vector specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
 #' @return The optimal bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator using the plug-in method.
 #' @details The bandwidth is given by:
-#' \deqn{\widehat{h}_{\mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \tau_{W}^{2} }{n \sigma_K^4 R \left(\widehat{f}_{\mathrm{J},\widehat{g}}^{(1)}\right)}\right)^{1/3},
-#' \quad \text{where} \quad
-#' \widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1},
-#' \quad
-#' \widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}}
-#' and \eqn{\tau_{W}^{2}} depends only on the kernel function. \eqn{\widehat{g}} is an estimator of:
-#' \deqn{g = \arg \min_{g>0} \mathrm{AMSE} \left(R\left(\widehat{f}_{\mathrm{J},g}^{(1)}\right)\right)
-#' = \left(\frac{3 \mu_w \bar{\mu}_w R\left(L^{(1)}\right)}{2 n \sigma_L^2 R\left( f^{(2)} \right)^2}\right)^{1/5}.}
-#' Here, \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a normal distribution.
+#' \deqn{\widehat{h}_{F, \mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \kappa(K) }{n \eta(K)^2 R \left(\widehat{f}_{\mathrm{J},\widehat{h}_{F,0, \mathrm{opt}}}^{(1)}\right)}\right)^{1/3}}
+#' where both \eqn{\kappa(K)} and \eqn{\eta(K)} depend only on the kernel,
+#' \deqn{\widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+#' \quad \text{and} \quad
+#' \widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.}
+#'
+#' \eqn{\widehat{h}_{F,0, \mathrm{opt}}} is an estimator of
+#' \deqn{h_{F,0, \mathrm{opt}} = \left(\frac{3 \mu_w \bar{\mu}_w R\left(L^{(1)}\right)}{2 n \eta(L) R\left( f^{(2)} \right)^2}\right)^{1/5},}
+#' where \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a normal distribution and \eqn{\mu_w} and \eqn{\bar{\mu}_w} are estimated by \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} as defined above.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
@@ -42,7 +42,7 @@ bw.F.SBCpi <- function(y,
     stop("rectangular kernel is not supported for optimal pilot bandwidth")
   }
   sigma <- sqrt(uw * (mean(yw) - uw))
-  bw0 <- sigma * (4 * sqrt(pi) * RKprime * uw * uwb)^(0.2) * (n * sigma_K_2)^(-0.2)
+  bw0 <- sigma * (4 * sqrt(pi) * kernel_r_deriv1 * uw * uwb)^(0.2) * (n * kernel_eta)^(-0.2)
   if (!is.finite(bw0)) stop("non-finite 'bw0'")
   if (bw0 <= 0) stop("'bw0' is not positive")
 
@@ -52,7 +52,7 @@ bw.F.SBCpi <- function(y,
 
   fJ_bw0_1_hat_2 <- function(z) { # Squared first derivative of Jones' density estimator
     aux <- (z - y) / bw0
-    aux <- kernel_function_density_deriv(aux) %*% diag(weights)
+    aux <- kernel_function_density_deriv1(aux) %*% diag(weights)
     aux <- (uw / (n * bw0^2)) * sum(aux)
     aux <- aux^2
   }
@@ -63,5 +63,5 @@ bw.F.SBCpi <- function(y,
     subdivisions = 1000, rel.tol = .Machine$double.eps^.15
   )$value
 
-  ((intudW2 * uw * uwb) / (n * sigma_K_2^2 * R_fJ_bw0_1_hat_2))^(1 / 3)
+  ((kernel_kappa * uw * uwb) / (n * kernel_eta^2 * R_fJ_bw0_1_hat_2))^(1 / 3)
 }
