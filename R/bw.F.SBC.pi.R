@@ -5,7 +5,7 @@
 #' @param y A numeric vector containing the biased sample.
 #' @param w A function representing the bias function to be used. It must be evaluable and positive in each point of the sample the sample `y`. By default, it is set to the length-biased function.
 #' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
-#' @return Bandwidth value using the plug-in method.
+#' @return The bandwidth value using the plug-in method.
 #' @details The bandwidth is given by:
 #' \deqn{\widehat{h}_{F, \mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \kappa(K) }{n \eta(K)^2 R \left(\widehat{f}_{\mathrm{J},\widehat{h}_{F,0, \mathrm{opt}}}^{(1)}\right)}\right)^{1/3},}
 #' where \eqn{\kappa(K)} and \eqn{\eta(K)} depend only on the kernel and are defined as
@@ -27,27 +27,27 @@
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
-#' bw.F.SBCpi(shrub.data$Width, kernel = "epanechnikov")
-bw.F.SBCpi <- function(y,
-                       w = function(y) {
-                         ifelse(y >= 0, y, NA)
-                       },
-                       kernel = c(
-                         "gaussian",
-                         "epanechnikov",
-                         "rectangular",
-                         "triangular",
-                         "biweight",
-                         "cosine",
-                         "optcosine"
-                       )) {
+#' bw.F.SBC.pi(shrub.data$Width, kernel = "epanechnikov")
+bw.F.SBC.pi <- function(y,
+                        w = function(y) {
+                          ifelse(y >= 0, y, NA)
+                        },
+                        kernel = c(
+                          "gaussian",
+                          "epanechnikov",
+                          "rectangular",
+                          "triangular",
+                          "biweight",
+                          "cosine",
+                          "optcosine"
+                        )) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
 
   # Pilot bandwidth
   if (kernel == "rectangular") {
-    stop("rectangular kernel is not supported for optimal pilot bandwidth")
+    stop("rectangular kernel is not supported for plug-in pilot bandwidth")
   }
   sigma <- sqrt(uw * (mean(yw) - uw))
   bw0 <- sigma * (4 * sqrt(pi) * kernel_r_deriv1 * uw * uwb)^(0.2) * (n * kernel_eta)^(-0.2)

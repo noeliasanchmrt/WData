@@ -10,7 +10,7 @@ df.jones(
      ifelse(y >= 0, y, NA)
  },
   y.seq,
-  bw = "bw.f.BGMrt",
+  bw = "bw.f.BGM.rt",
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   from,
@@ -29,8 +29,8 @@ By default, it is set to the length-biased function.}
 
 \item{y.seq}{A numeric vector specifying the points where the density is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
 
-\item{bw}{The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}, \code{\link[=bw.f.BGMcv]{bw.f.BGMcv}},  \code{\link[=bw.f.BGMboot1]{bw.f.BGMboot1}} and \code{\link[=bw.f.BGMboot2]{bw.f.BGMboot2}}.
-Default is \code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}.}
+\item{bw}{The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.f.BGM.rt]{bw.f.BGM.rt}}, \code{\link[=bw.f.BGM.cv]{bw.f.BGM.cv}},  \code{\link[=bw.f.BGM.boot1]{bw.f.BGM.boot1}} and \code{\link[=bw.f.BGM.boot2]{bw.f.BGM.boot2}}.
+Default is \code{\link[=bw.f.BGM.rt]{bw.f.BGM.rt}}.}
 
 \item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
@@ -64,17 +64,17 @@ This function computes \insertCite{jones1991;textual}{WData} kernel density esti
 }
 \examples{
 # Rule of thumb
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMrt")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.rt")
 # Cross Validation
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.cv")
 # Bootstrap
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "RT")
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "PI")
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot2", nh = 50L)
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "RT")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "PI")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot2", nh = 50L)
 }
 \references{
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}, \code{\link[=bw.f.BGMcv]{bw.f.BGMcv}},  \code{\link[=bw.f.BGMboot1]{bw.f.BGMboot1}} , \code{\link[=bw.f.BGMboot2]{bw.f.BGMboot2}}
+\code{\link[=bw.f.BGM.rt]{bw.f.BGM.rt}}, \code{\link[=bw.f.BGM.cv]{bw.f.BGM.cv}},  \code{\link[=bw.f.BGM.boot1]{bw.f.BGM.boot1}} , \code{\link[=bw.f.BGM.boot2]{bw.f.BGM.boot2}}
 }

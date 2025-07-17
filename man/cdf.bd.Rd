@@ -10,7 +10,7 @@ cdf.bd(
      ifelse(y >= 0, y, NA)
  },
   y.seq,
-  bw = "bw.F.SBCrt",
+  bw = "bw.F.SBC.rt",
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   from,
@@ -28,7 +28,7 @@ cdf.bd(
 
 \item{y.seq}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
 
-\item{bw}{The bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}} and \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}. Default is \code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}.}
+\item{bw}{The bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}} and \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}. Default is \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}.}
 
 \item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
@@ -77,11 +77,11 @@ The truncation correction is also valid for variables supported on \eqn{[a, +\in
 }
 \examples{
 cdf.bd(shrub.data$Width, kernel = "epanechnikov")
-cdf.bd(shrub.data$Width, bw = "bw.F.SBCcv")
+cdf.bd(shrub.data$Width, bw = "bw.F.SBC.cv")
 }
 \references{
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=bw.F.SBCrt]{bw.F.SBCrt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}}, \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}
+\code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}}, \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}
 }

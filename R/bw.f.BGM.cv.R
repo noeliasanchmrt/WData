@@ -33,10 +33,10 @@
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
 #' @examples
-#' bw.f.BGMcv(shrub.data$Width)
-#' bw.f.BGMcv(shrub.data$Width, kernel = "epanechnikov")
+#' bw.f.BGM.cv(shrub.data$Width)
+#' bw.f.BGM.cv(shrub.data$Width, kernel = "epanechnikov")
 #'
-bw.f.BGMcv <-
+bw.f.BGM.cv <-
   function(y,
            w = function(y) {
              ifelse(y >= 0, y, NA)
@@ -92,7 +92,7 @@ bw.f.BGMcv <-
       # Rule of thumb with gaussian kernel as reference.
 
       sigma <- sqrt(uw * (mean(yw) - uw))
-      bw.f.BGMrt <- sigma * (8 * sqrt(pi) * kernel_r * uw * uwb)^(0.2) * (3 * n * kernel_eta^2)^(-0.2)
+      bw.f.BGM.rt <- sigma * (8 * sqrt(pi) * kernel_r * uw * uwb)^(0.2) * (3 * n * kernel_eta^2)^(-0.2)
 
       # Plot the Cross - Validation function
 
@@ -108,7 +108,7 @@ bw.f.BGMcv <-
       }
 
       abline(v = h, h = min(cvh), col = "blue")
-      abline(v = bw.f.BGMrt, lty = 2)
+      abline(v = bw.f.BGM.rt, lty = 2)
 
       par(ask = TRUE)
 
@@ -120,7 +120,7 @@ bw.f.BGMcv <-
         sub = "Bias(h)",
       )
       abline(v = h, col = "blue")
-      abline(v = bw.f.BGMrt, lty = 2)
+      abline(v = bw.f.BGM.rt, lty = 2)
 
       plot(
         hs, es,
@@ -130,7 +130,7 @@ bw.f.BGMcv <-
         sub = "Var(h)",
       )
       abline(v = h, col = "blue")
-      abline(v = bw.f.BGMrt, lty = 2)
+      abline(v = bw.f.BGM.rt, lty = 2)
 
       par(ask = FALSE)
     }

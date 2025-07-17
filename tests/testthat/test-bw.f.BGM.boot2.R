@@ -1,19 +1,19 @@
-test_that("bw.f.BGMboot2() returns a valid bandwidth", {
-  bw <- suppressWarnings(bw.f.BGMboot2(biased_models[[1]], nh = 25L, plot = FALSE))
+test_that("bw.f.BGM.boot2() returns a valid bandwidth", {
+  bw <- suppressWarnings(bw.f.BGM.boot2(biased_models[[1]], nh = 25L, plot = FALSE))
 
   expect_type(bw, "double")
   expect_gt(bw, 0)
 })
 
-test_that("bw.f.BGMboot2() correctly handles different kernels", {
+test_that("bw.f.BGM.boot2() correctly handles different kernels", {
   bw_values <- sapply(kernels, function(k) {
-    suppressWarnings(bw.f.BGMboot2(biased_models[[1]], nh = 25L, kernel = k, plot = FALSE))
+    suppressWarnings(bw.f.BGM.boot2(biased_models[[1]], nh = 25L, kernel = k, plot = FALSE))
   })
 
   expect_false(all(duplicated(bw_values)), info = "Different kernels should produce different bandwidths")
 })
 
-test_that("bw.f.BGMboot2() produces stable plots", {
+test_that("bw.f.BGM.boot2() produces stable plots", {
   skip_on_os(os = c("windows", "linux"))
 
   old_width <- options("width")$width
@@ -29,7 +29,7 @@ test_that("bw.f.BGMboot2() produces stable plots", {
 
           par(mfrow = c(1, 3)) # Ensure consistent plot layout
 
-          suppressWarnings(bw.f.BGMboot2(biased_models[[i]],
+          suppressWarnings(bw.f.BGM.boot2(biased_models[[i]],
             kernel = k,
             from = max(0.02, min(biased_models[[i]]) - (sort(biased_models[[i]])[2] - min(biased_models[[i]]))),
             nh = 25L,
@@ -42,7 +42,7 @@ test_that("bw.f.BGMboot2() produces stable plots", {
 })
 
 
-test_that("df.jones() with bw.f.BGMboot2() produces stable plots", {
+test_that("df.jones() with bw.f.BGM.boot2() produces stable plots", {
   skip_on_os(os = c("windows", "linux"))
 
   old_width <- options("width")$width
@@ -51,10 +51,10 @@ test_that("df.jones() with bw.f.BGMboot2() produces stable plots", {
   lapply(seq_along(biased_models), function(i) {
     lapply(kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("df.jones_bw.f.BGMboot2_model_", i, "_kernel_", k),
+        paste0("df.jones_bw.f.BGM.boot2_model_", i, "_kernel_", k),
         function() {
           suppressWarnings(df.jones(biased_models[[i]],
-            bw = "bw.f.BGMboot2", kernel = k,
+            bw = "bw.f.BGM.boot2", kernel = k,
             from = max(0.02, min(biased_models[[i]]) - (sort(biased_models[[i]])[2] - min(biased_models[[i]]))),
             nh = 25L,
             plot = TRUE

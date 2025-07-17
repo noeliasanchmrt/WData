@@ -5,7 +5,7 @@
 #' @param y A numeric vector containing the biased sample.
 #' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
 #' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
-#' @return Rule of thumb bandwidth value.
+#' @return The rule of thumb bandwidth value.
 #' @details The bandwidth is given by
 #' \deqn{\widehat{h}_{f,\mathrm{RT}}
 #' = \left(\frac{8 \sqrt{\pi} \widehat{\mu}_{w} \widehat{\bar{\mu}}_{w} R(K)}{3n \eta(K)^{2}}\right)^{1 / 5}\widehat{\sigma}_{w},}
@@ -27,17 +27,17 @@
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
 #' @examples
-#' bw.f.BGMrt(shrub.data$Width)
-#' bw.f.BGMrt(shrub.data$Width, kernel = "epanechnikov")
-bw.f.BGMrt <- function(y,
-                       w = function(y) {
-                         ifelse(y >= 0, y, NA)
-                       },
-                       kernel = c(
-                         "gaussian", "epanechnikov",
-                         "rectangular", "triangular",
-                         "biweight", "cosine", "optcosine"
-                       )) {
+#' bw.f.BGM.rt(shrub.data$Width)
+#' bw.f.BGM.rt(shrub.data$Width, kernel = "epanechnikov")
+bw.f.BGM.rt <- function(y,
+                        w = function(y) {
+                          ifelse(y >= 0, y, NA)
+                        },
+                        kernel = c(
+                          "gaussian", "epanechnikov",
+                          "rectangular", "triangular",
+                          "biweight", "cosine", "optcosine"
+                        )) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())

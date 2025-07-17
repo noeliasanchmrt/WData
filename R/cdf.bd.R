@@ -5,7 +5,7 @@
 #' @param y  A numeric vector containing the biased sample.
 #' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
 #' @param y.seq A numeric vector specifying the points where the distribution is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
-#' @param bw The bandwidth to be used in the distribution estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.F.SBCrt`][WData::bw.F.SBCrt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()] and [`bw.F.SBCpi`][WData::bw.F.SBCpi()]. Default is [`bw.F.SBCrt`][WData::bw.F.SBCrt()].
+#' @param bw The bandwidth to be used in the distribution estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.F.SBC.rt`][WData::bw.F.SBC.rt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBC.cv`][WData::bw.F.SBC.cv()] and [`bw.F.SBC.pi`][WData::bw.F.SBC.pi()]. Default is [`bw.F.SBC.rt`][WData::bw.F.SBC.rt()].
 #' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
 #' @param from Numeric value specifying the lower bound of the grid where the estimator is computed when `y.seq` is not provided. Default is computed based on the range of input data.
 #' @param to Numeric value specifying the upper bound of the grid where the estimator is computed when `y.seq` is not provided. Default is computed based on the range of input data.
@@ -39,16 +39,16 @@
 #' }
 #' The truncation correction is also valid for variables supported on \eqn{[a, +\infty)} or \eqn{(-\infty, b]}, replacing \eqn{\widehat{F}_{h_{F}}(b)} by 1 or \eqn{\widehat{F}_{h_{F}}(a)} by 0, respectively, in the above expression.  This correction is implemented in the `correction` argument, which can take values "none", "left", "right" or "both". If "left", the estimator is corrected to 0 for values less than the minimum of `y.seq`; if "right", it is corrected to 1 for values greater than the maximum of `y.seq`; if "both", it applies both corrections simultaneously.
 #' @references \insertAllCited{}
-#' @seealso [`bw.F.SBCrt`][WData::bw.F.SBCrt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBCcv`][WData::bw.F.SBCcv()], [`bw.F.SBCpi`][WData::bw.F.SBCpi()]
+#' @seealso [`bw.F.SBC.rt`][WData::bw.F.SBC.rt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBC.cv`][WData::bw.F.SBC.cv()], [`bw.F.SBC.pi`][WData::bw.F.SBC.pi()]
 #' @examples
 #' cdf.bd(shrub.data$Width, kernel = "epanechnikov")
-#' cdf.bd(shrub.data$Width, bw = "bw.F.SBCcv")
+#' cdf.bd(shrub.data$Width, bw = "bw.F.SBC.cv")
 cdf.bd <- function(y,
                    w = function(y) {
                      ifelse(y >= 0, y, NA)
                    },
                    y.seq,
-                   bw = "bw.F.SBCrt",
+                   bw = "bw.F.SBC.rt",
                    kernel = c(
                      "gaussian",
                      "epanechnikov",
@@ -75,10 +75,10 @@ cdf.bd <- function(y,
       stop("need at least 2 points to select a bandwidth automatically")
     }
     bw <- switch(bw,
-      bw.F.SBCrt = bw.F.SBCrt(y, w, kernel),
+      bw.F.SBC.rt = bw.F.SBC.rt(y, w, kernel),
       bw.F.BD = bw.F.BD(y, w, y.seq, ...),
-      bw.F.SBCcv = bw.F.SBCcv(y, w, kernel, plot = FALSE, ...),
-      bw.F.SBCpi = bw.F.SBCpi(y, w, kernel, ...),
+      bw.F.SBC.cv = bw.F.SBC.cv(y, w, kernel, plot = FALSE, ...),
+      bw.F.SBC.pi = bw.F.SBC.pi(y, w, kernel, ...),
       stop("unknown bandwidth rule")
     )
   }

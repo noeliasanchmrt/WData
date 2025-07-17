@@ -29,18 +29,18 @@
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
-#' bw.F.SBCrt(shrub.data$Width)
-#' bw.F.SBCrt(shrub.data$Width, kernel = "epanechnikov")
+#' bw.F.SBC.rt(shrub.data$Width)
+#' bw.F.SBC.rt(shrub.data$Width, kernel = "epanechnikov")
 #'
-bw.F.SBCrt <- function(y,
-                       w = function(y) {
-                         ifelse(y >= 0, y, NA)
-                       },
-                       kernel = c(
-                         "gaussian", "epanechnikov",
-                         "rectangular", "triangular",
-                         "biweight", "cosine", "optcosine"
-                       )) {
+bw.F.SBC.rt <- function(y,
+                        w = function(y) {
+                          ifelse(y >= 0, y, NA)
+                        },
+                        kernel = c(
+                          "gaussian", "epanechnikov",
+                          "rectangular", "triangular",
+                          "biweight", "cosine", "optcosine"
+                        )) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())

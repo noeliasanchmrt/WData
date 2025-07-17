@@ -18,26 +18,26 @@
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
-#' bw.F.SBCcv(shrub.data$Width)
-#' bw.F.SBCcv(shrub.data$Width, kernel = "epanechnikov")
-bw.F.SBCcv <- function(y,
-                       w = function(y) {
-                         ifelse(y >= 0, y, NA)
-                       },
-                       kernel = c(
-                         "gaussian",
-                         "epanechnikov",
-                         "rectangular",
-                         "triangular",
-                         "biweight",
-                         "cosine",
-                         "optcosine"
-                       ),
-                       lower = IQR(y) * length(y)^(-1 / 3) * 0.05,
-                       upper = IQR(y) * length(y)^(-1 / 3) * 5,
-                       nh = 200L,
-                       tol = 0.1 * lower,
-                       plot = TRUE) {
+#' bw.F.SBC.cv(shrub.data$Width)
+#' bw.F.SBC.cv(shrub.data$Width, kernel = "epanechnikov")
+bw.F.SBC.cv <- function(y,
+                        w = function(y) {
+                          ifelse(y >= 0, y, NA)
+                        },
+                        kernel = c(
+                          "gaussian",
+                          "epanechnikov",
+                          "rectangular",
+                          "triangular",
+                          "biweight",
+                          "cosine",
+                          "optcosine"
+                        ),
+                        lower = IQR(y) * length(y)^(-1 / 3) * 0.05,
+                        upper = IQR(y) * length(y)^(-1 / 3) * 5,
+                        nh = 200L,
+                        tol = 0.1 * lower,
+                        plot = TRUE) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
@@ -88,7 +88,7 @@ bw.F.SBCcv <- function(y,
   if (plot) {
     # Compute the rule of thumb bandwidth
     sigma <- sqrt(uw * (mean(yw) - uw))
-    bw.F.SBCrt <- sigma * (sqrt(pi) * uw * uwb * kernel_kappa)^(1 / 3) * (n * kernel_eta^2)^(-1 / 3)
+    bw.F.SBC.rt <- sigma * (sqrt(pi) * uw * uwb * kernel_kappa)^(1 / 3) * (n * kernel_eta^2)^(-1 / 3)
 
     plot(
       hs,
@@ -109,7 +109,7 @@ bw.F.SBCcv <- function(y,
       h = min(cvh),
       col = "blue"
     )
-    abline(v = bw.F.SBCrt, lty = 2)
+    abline(v = bw.F.SBC.rt, lty = 2)
   }
 
   return(h)

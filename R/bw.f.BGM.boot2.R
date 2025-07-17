@@ -13,7 +13,7 @@
 #' @param from Numeric value specifying the lower bound to be used in [`density`][stats::density()]. Default is computed based on the range of input data.
 #' @param to Numeric value specifying the upper bound to be used in [`density`][stats::density()]. Default is computed based on the range of input data.
 #' @param plot  Logical value indicating whether to plot the mean integrated squared error function. Default is `TRUE`.
-#' @return Bootstrap bandwidth value.
+#' @return The bootstrap bandwidth value.
 #' @details
 #' The bandwidth returned is the one minimizing \eqn{\mathrm{MISE}^{\ast}} over a compact interval \eqn{[h_1,h_2]} (determined by arguments `lower` and `upper`), i.e.,
 #' \deqn{
@@ -23,24 +23,24 @@
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
 #' @examples
-#' bw.f.BGMboot2(shrub.data$Width, nh = 50L)
-bw.f.BGMboot2 <- function(y,
-                          w = function(y) {
-                            ifelse(y >= 0, y, NA)
-                          },
-                          kernel = c(
-                            "gaussian", "epanechnikov",
-                            "rectangular", "triangular",
-                            "biweight", "cosine", "optcosine"
-                          ),
-                          bw0 = 1 / 8 * n^(-1 / 9),
-                          lower = IQR(y) * n^(-0.2) * 2000^(-1),
-                          upper = IQR(y) * (log(n) / n)^(0.2) * 500,
-                          nh = 200L,
-                          tol = 0.1 * lower,
-                          from = min(y) - (sort(y)[5] - min(y)),
-                          to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
-                          plot = TRUE) {
+#' bw.f.BGM.boot2(shrub.data$Width, nh = 50L)
+bw.f.BGM.boot2 <- function(y,
+                           w = function(y) {
+                             ifelse(y >= 0, y, NA)
+                           },
+                           kernel = c(
+                             "gaussian", "epanechnikov",
+                             "rectangular", "triangular",
+                             "biweight", "cosine", "optcosine"
+                           ),
+                           bw0 = 1 / 8 * n^(-1 / 9),
+                           lower = IQR(y) * n^(-0.2) * 2000^(-1),
+                           upper = IQR(y) * (log(n) / n)^(0.2) * 500,
+                           nh = 200L,
+                           tol = 0.1 * lower,
+                           from = min(y) - (sort(y)[5] - min(y)),
+                           to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
+                           plot = TRUE) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
@@ -190,7 +190,7 @@ bw.f.BGMboot2 <- function(y,
     )
 
     abline(v = h, h = min(MISE), lty = 1, col = "blue")
-    abline(v = bw.f.BGMrt(y, w, kernel = kernel), lty = 2)
+    abline(v = bw.f.BGM.rt(y, w, kernel = kernel), lty = 2)
     rug(hs)
 
     if (h < lower + tol || h > upper - tol) {
@@ -203,7 +203,7 @@ bw.f.BGMboot2 <- function(y,
       type = "l", xlab = "Bandwidth", ylab = "", sub = "Bias(h)"
     )
     abline(v = h, h = min(Bias), lty = 1, col = "blue")
-    abline(v = bw.f.BGMrt(y, w, kernel = kernel), lty = 2)
+    abline(v = bw.f.BGM.rt(y, w, kernel = kernel), lty = 2)
     rug(hs)
 
     par(ask = TRUE)
@@ -212,7 +212,7 @@ bw.f.BGMboot2 <- function(y,
       type = "l", xlab = "Bandwidth", ylab = "", sub = "Var(h)"
     )
     abline(v = h, h = min(Variance), lty = 1, col = "blue")
-    abline(v = bw.f.BGMrt(y, w, kernel = kernel), lty = 2)
+    abline(v = bw.f.BGM.rt(y, w, kernel = kernel), lty = 2)
     rug(hs)
 
     par(ask = FALSE)

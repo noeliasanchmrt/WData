@@ -1,5 +1,5 @@
 test_that("cdf.bd() returns a valid estimate", {
-  result <- cdf.bd(biased_models[[1]], bw = "bw.F.SBCrt", plot = FALSE)
+  result <- cdf.bd(biased_models[[1]], bw = "bw.F.SBC.rt", plot = FALSE)
 
   # expect_s3_class(result, "density")
   expect_type(result$y.seq, "double")
@@ -9,7 +9,7 @@ test_that("cdf.bd() returns a valid estimate", {
 })
 
 test_that("cdf.bd() correctly handles different bandwidth selection methods", {
-  bw_methods <- list("bw.F.SBCrt", "bw.F.SBCcv", "bw.F.SBCpi", 0.5)
+  bw_methods <- list("bw.F.SBC.rt", "bw.F.SBC.cv", "bw.F.SBC.pi", 0.5)
 
   results <- lapply(bw_methods, function(bw_method) {
     cdf.bd(biased_models[[1]], bw = bw_method, plot = FALSE)
@@ -28,7 +28,7 @@ test_that("cdf.bd() correctly handles different bandwidth selection methods", {
 
 test_that("cdf.bd() correctly handles different kernels", {
   results <- lapply(kernels, function(k) {
-    cdf.bd(biased_models[[1]], kernel = k, bw = "bw.F.SBCrt", plot = FALSE)
+    cdf.bd(biased_models[[1]], kernel = k, bw = "bw.F.SBC.rt", plot = FALSE)
   })
 
   for (i in seq_along(results)) {

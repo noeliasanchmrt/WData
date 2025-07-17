@@ -1,5 +1,5 @@
 test_that("df.jones() returns a valid estimate", {
-  result <- df.jones(biased_models[[1]], bw = "bw.f.BGMrt", plot = FALSE)
+  result <- df.jones(biased_models[[1]], bw = "bw.f.BGM.rt", plot = FALSE)
 
   # expect_s3_class(result, "density")
   expect_type(result$y.seq, "double")
@@ -9,7 +9,7 @@ test_that("df.jones() returns a valid estimate", {
 })
 
 test_that("df.jones() correctly handles different bandwidth selection methods", {
-  bw_methods <- list("bw.f.BGMrt", "bw.f.BGMcv", "bw.f.BGMboot1", "bw.f.BGMboot2", 0.5)
+  bw_methods <- list("bw.f.BGM.rt", "bw.f.BGM.cv", "bw.f.BGM.boot1", "bw.f.BGM.boot2", 0.5)
 
   results <- lapply(bw_methods, function(bw_method) {
     suppressWarnings(df.jones(biased_models[[1]], bw = bw_method, plot = FALSE))
@@ -28,7 +28,7 @@ test_that("df.jones() correctly handles different bandwidth selection methods", 
 
 test_that("df.jones() correctly handles different kernels", {
   results <- lapply(kernels, function(k) {
-    df.jones(biased_models[[1]], kernel = k, bw = "bw.f.BGMrt", plot = FALSE)
+    df.jones(biased_models[[1]], kernel = k, bw = "bw.f.BGM.rt", plot = FALSE)
   })
 
   for (i in seq_along(results)) {

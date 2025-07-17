@@ -7,8 +7,8 @@
 #' It must be evaluable and positive in each point of the sample `y`.
 #' By default, it is set to the length-biased function.
 #' @param y.seq A numeric vector specifying the points where the density is estimated. Alternatively, `from`, `to` and `nb` can be used to define the evaluation points.
-#' @param bw The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.f.BGMrt`][WData::bw.f.BGMrt()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] and [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()].
-#' Default is [`bw.f.BGMrt`][WData::bw.f.BGMrt()].
+#' @param bw The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. In this case, options available are [`bw.f.BGM.rt`][WData::bw.f.BGM.rt()], [`bw.f.BGM.cv`][WData::bw.f.BGM.cv()],  [`bw.f.BGM.boot1`][WData::bw.f.BGM.boot1()] and [`bw.f.BGM.boot2`][WData::bw.f.BGM.boot2()].
+#' Default is [`bw.f.BGM.rt`][WData::bw.f.BGM.rt()].
 #' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
 #' @param from Numeric value specifying the lower bound of the grid where the estimator is computed when `y.seq` is not provided. Default is computed based on the range of input data.
 #' @param to Numeric value specifying the upper bound of the grid where the estimator is computed when `y.seq` is not provided. Default is computed based on the range of input data.
@@ -28,22 +28,22 @@
 #' \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
 #' \eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 #' @references \insertAllCited{}
-#' @seealso [`bw.f.BGMrt`][WData::bw.f.BGMrt()], [`bw.f.BGMcv`][WData::bw.f.BGMcv()],  [`bw.f.BGMboot1`][WData::bw.f.BGMboot1()] , [`bw.f.BGMboot2`][WData::bw.f.BGMboot2()]
+#' @seealso [`bw.f.BGM.rt`][WData::bw.f.BGM.rt()], [`bw.f.BGM.cv`][WData::bw.f.BGM.cv()],  [`bw.f.BGM.boot1`][WData::bw.f.BGM.boot1()] , [`bw.f.BGM.boot2`][WData::bw.f.BGM.boot2()]
 #' @examples
 #' # Rule of thumb
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMrt")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.rt")
 #' # Cross Validation
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.cv")
 #' # Bootstrap
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "RT")
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "PI")
-#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot2", nh = 50L)
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "RT")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "PI")
+#' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot2", nh = 50L)
 df.jones <- function(y,
                      w = function(y) {
                        ifelse(y >= 0, y, NA)
                      },
                      y.seq,
-                     bw = "bw.f.BGMrt",
+                     bw = "bw.f.BGM.rt",
                      kernel = c(
                        "gaussian", "epanechnikov",
                        "rectangular", "triangular",
@@ -62,10 +62,10 @@ df.jones <- function(y,
   if (is.character(bw)) {
     if (n < 2) stop("need at least 2 points to select a bandwidth automatically")
     bw <- switch(bw,
-      bw.f.BGMrt = bw.f.BGMrt(y, w, kernel),
-      bw.f.BGMcv = bw.f.BGMcv(y, w, kernel, plot = FALSE, ...),
-      bw.f.BGMboot1 = bw.f.BGMboot1(y, w, kernel, ...),
-      bw.f.BGMboot2 = bw.f.BGMboot2(y, w, kernel, plot = FALSE, ...),
+      bw.f.BGM.rt = bw.f.BGM.rt(y, w, kernel),
+      bw.f.BGM.cv = bw.f.BGM.cv(y, w, kernel, plot = FALSE, ...),
+      bw.f.BGM.boot1 = bw.f.BGM.boot1(y, w, kernel, ...),
+      bw.f.BGM.boot2 = bw.f.BGM.boot2(y, w, kernel, plot = FALSE, ...),
       stop("unknown bandwidth rule")
     )
   }

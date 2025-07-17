@@ -6,7 +6,7 @@
 #' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
 #' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
 #' @param bw0 A character string specifying the method to determine the pilot bandwidth. Options are `"RT"` for rule of thumb and `"PI"` for plug-in bandwidth. Default is `"RT"`.
-#' @return Bootstrap bandwidth value.
+#' @return The bootstrap bandwidth value.
 #' @details
 #' When `bw0="RT"`, the bandwidth is given by
 #' \deqn{
@@ -15,7 +15,7 @@
 #' \text{where} \quad
 #' \widehat{h}_{f, 0, \mathrm{RT}}= \frac{n^{1/5}}{n^{1/7}} \widehat{h}_{f, \mathrm{RT}}.
 #' }
-#' \eqn{\widehat{h}_{f, \mathrm{RT}}} is the value returned by [`bw.f.BGMrt`][WData::bw.f.BGMrt()]. An alternative is to consider the following pilot bandwidth:
+#' \eqn{\widehat{h}_{f, \mathrm{RT}}} is the value returned by [`bw.f.BGM.rt`][WData::bw.f.BGM.rt()]. An alternative is to consider the following pilot bandwidth:
 #' \deqn{
 #' \widehat{h}_{f, \mathrm{B}_{\mathrm{opt}}}= \left( \frac{R(K^{\ast})\widehat{\mu}_w\widehat{\bar{\mu}}_w}{n \eta(K^{\ast})^{2} R\left(\widehat{f}_{J,\widehat{h}_{f, 0,\mathrm{opt}}}^{(2)}\right)}\right)^{1/5},
 #' \quad
@@ -38,19 +38,19 @@
 #' @seealso [`df.jones`][WData::df.jones()]
 #' @examples
 #' # Bandwidth value using bootstrap method with "RT" as pilot bandwidth
-#' bw.f.BGMboot1(y = shrub.data$Width)
+#' bw.f.BGM.boot1(y = shrub.data$Width)
 #' # Bandwidth value using bootstrap method with "PI" as pilot bandwidth
-#' bw.f.BGMboot1(y = shrub.data$Width, bw0 = "PI")
-bw.f.BGMboot1 <- function(y,
-                          w = function(y) {
-                            ifelse(y >= 0, y, NA)
-                          },
-                          kernel = c(
-                            "gaussian", "epanechnikov",
-                            "rectangular", "triangular",
-                            "biweight", "cosine", "optcosine"
-                          ),
-                          bw0 = c("RT", "PI")) {
+#' bw.f.BGM.boot1(y = shrub.data$Width, bw0 = "PI")
+bw.f.BGM.boot1 <- function(y,
+                           w = function(y) {
+                             ifelse(y >= 0, y, NA)
+                           },
+                           kernel = c(
+                             "gaussian", "epanechnikov",
+                             "rectangular", "triangular",
+                             "biweight", "cosine", "optcosine"
+                           ),
+                           bw0 = c("RT", "PI")) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
