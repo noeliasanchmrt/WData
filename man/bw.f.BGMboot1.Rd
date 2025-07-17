@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.f.BGMboot1.R
 \name{bw.f.BGMboot1}
 \alias{bw.f.BGMboot1}
-\title{\insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimator}
+\title{\insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator}
 \usage{
 bw.f.BGMboot1(
   y,
@@ -11,24 +11,23 @@ bw.f.BGMboot1(
  },
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
-  bw0 = c("RT", "Opt")
+  bw0 = c("RT", "PI")
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{bw0}{A character string specifying the method to determine the pilot bandwidth. Options are \code{"RT"} for rule of thumb and \code{"Opt"} for optimal bandwidth. Default is \code{"RT"}.}
+\item{bw0}{A character string specifying the method to determine the pilot bandwidth. Options are \code{"RT"} for rule of thumb and \code{"PI"} for plug-in bandwidth. Default is \code{"RT"}.}
 }
 \value{
-The estimated bootstrap bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator.
+Bootstrap bandwidth value.
 }
 \description{
-This function calculates the bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData} and
-based on the methodology introduced by \insertCite{cao1990;textual}{WData} and \insertCite{cao93;textual}{WData}.
+This function computes the bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData}.
 }
 \details{
 When \code{bw0="RT"}, the bandwidth is given by
@@ -45,18 +44,24 @@ When \code{bw0="RT"}, the bandwidth is given by
 \text{where} \quad
 \widehat{h}_{f, 0, \mathrm{opt}}= \left(\frac{5 \widehat{\mu}_w\widehat{\bar{\mu}}_w R\left(L^{(2)}\right)  }{2 n \eta(L)  R\left(f^{(3)}\right) } \right)^{1 / 7}
 }
-and \eqn{R(f^{(3)})} is estimated by assuming \eqn{f} is normal. This is implemented by stating \code{bw0="Opt"}. \eqn{R(K^{\ast})} and \eqn{\eta(K^{\ast})^{2}} depend only on the kernel,
+and \eqn{R(f^{(3)})} is estimated under the assumption that \eqn{f} is gaussian, which is implemented by setting \code{bw0="PI"}. The quantities \eqn{R(K^{\ast})} and \eqn{\eta(K^{\ast})^{2}} depend only on the kernel and are defined as
 \deqn{
-\widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+R(K^{\ast}) = \int_{-\infty}^{+\infty} K^{\ast}(u)^2 du
 \quad \text{and} \quad
-\widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.
+\eta(K^{\ast}) = \int_{-\infty}^{+\infty} u^2 K^{\ast}(u) du.
+}
+The estimators \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} are given by
+\deqn{
+\widehat{\mu}_w = n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+\quad \text{and} \quad
+\widehat{\bar{\mu}}_w = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.
 }
 }
 \examples{
-# Estimate bandwidth using bootstrap method with default pilot bandwidth
+# Bandwidth value using bootstrap method with "RT" as pilot bandwidth
 bw.f.BGMboot1(y = shrub.data$Width)
-# Estimate bandwidth using bootstrap method with optimal pilot bandwidth
-bw.f.BGMboot1(y = shrub.data$Width, bw0 = "Opt")
+# Bandwidth value using bootstrap method with "PI" as pilot bandwidth
+bw.f.BGMboot1(y = shrub.data$Width, bw0 = "PI")
 }
 \references{
 \insertAllCited{}

@@ -17,9 +17,9 @@ distribution. Regarding density function estimation, the package
 includes Bhattacharyya et al. (1988) and Jones (1991) density estimators
 and various bandwidth selectors for the latter, enhancing the
 flexibility and adaptability of density estimation to different types of
-datasets and biases. For cumulative distribution function estimation,
-the package includes the empirical estimator proposed by Cox (2005) and
-the kernel-type estimator by Bose and Dutta (2022), along with several
+samples and biases. For cumulative distribution function estimation, the
+package includes the empirical estimator proposed by Cox (2005) and the
+kernel-type estimator by Bose and Dutta (2022), along with several
 bandwidth selectors for the latter. Finally, the package includes
 Muttlak (1988) real length-biased dataset on shrub width as an example
 dataset.
@@ -155,7 +155,7 @@ jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMcv", lowe
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.293207
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", bw0 = "Opt", from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", bw0 = "PI", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.267953
 bw.f.BGMboot2 <- bw.f.BGMboot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 200L, plot = F)

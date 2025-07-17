@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.f.BGMboot2.R
 \name{bw.f.BGMboot2}
 \alias{bw.f.BGMboot2}
-\title{\insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimator}
+\title{\insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator}
 \usage{
 bw.f.BGMboot2(
   y,
@@ -22,33 +22,33 @@ bw.f.BGMboot2(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{bw0}{A character string specifying the pilot bandwidth. It can also be a character string giving a rule to choose the bandwidth. Options available can be checked in \code{\link[stats:bandwidth]{bw.nrd}}. By default it is set to \verb{1/8 n^(-1/9)}.}
+\item{bw0}{The bandwidth value to be used in \code{\link[stats:density]{density}}. It can also be a character string specifying a bandwidth selection method. Options available can be checked in \code{\link[stats:bandwidth]{bw.nrd}}. By default it is set to \verb{1/8 n^(-1/9)}, where \code{n} is the sample size.}
 
-\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{nh}{An integer specifying the number of points for evaluating the MISE function. Default is 200.}
+\item{nh}{An integer specifying the number of points in the grid to evaluate the mean integrated squared error function. Default is 200.}
 
 \item{tol}{Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within \verb{[lower, lower+tol]} or \verb{[upper-tol, upper]}. Default is 10\% of the lower bound.}
 
-\item{from}{Numeric value specifying the lower bound for  evaluation. Default is calculated based on the range of input data.}
+\item{from}{Numeric value specifying the lower bound to be used in \code{\link[stats:density]{density}}. Default is computed based on the range of input data.}
 
-\item{to}{Numeric value specifying the upper bound for  evaluation. Default is calculated based on the range of input data.}
+\item{to}{Numeric value specifying the upper bound to be used in \code{\link[stats:density]{density}}. Default is computed based on the range of input data.}
 
-\item{plot}{Logical value indicating whether to plot the function to be minimized. Default is \code{TRUE}.}
+\item{plot}{Logical value indicating whether to plot the mean integrated squared error function. Default is \code{TRUE}.}
 }
 \value{
-The estimated bootstrap bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator.
+Bootstrap bandwidth value.
 }
 \description{
-This function estimates the bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData} and based on the methodology introduced by \insertCite{bose2013;textual}{WData}.
+This function computes the bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData}.
 }
 \details{
 The bandwidth returned is the one minimizing \eqn{\mathrm{MISE}^{\ast}} over a compact interval \eqn{[h_1,h_2]} (determined by arguments \code{lower} and \code{upper}), i.e.,

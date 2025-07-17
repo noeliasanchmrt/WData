@@ -1,9 +1,9 @@
 #'  \insertCite{cox2005;textual}{WData} distribution estimator
 #'
-#' This function calculates \insertCite{cox2005;textual}{WData} distribution estimator given a biased dataset and its bias function.
+#' This function computes \insertCite{cox2005;textual}{WData} distribution estimator given a sample and the corresponding biased function.
 #'
-#' @param y  A numeric vector containing the biased data.
-#' @param w  A function representing the bias function applied to the data points. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
+#' @param y  A numeric vector containing the biased sample.
+#' @param w  A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
 #' @return A function of class `ecdf`, inheriting from the [`stepfun`][stats::stepfun()] class, and hence inheriting a [`knots`][stats::knots()] method.
 #' @details \insertCite{cox2005;textual}{WData} distribution estimator is expressed as
 #' \deqn{\widehat{F}_n(y) = \frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n} \frac{1}{w(Y_i)} \mathbb{I}(Y_i \leq y),
@@ -16,7 +16,7 @@ cdf.cox <- function(y,
                     w = function(y) {
                       ifelse(y >= 0, y, NA)
                     }) {
-  list2env(.check_biased_dataset(y, w), envir = environment())
+  list2env(.check_biased_sample(y, w), envir = environment())
 
   vals <- unique(sort(y))
   weightsvals <- unique(sapply(vals, w)^(-1))

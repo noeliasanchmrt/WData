@@ -1,19 +1,19 @@
-#' \insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimator
+#' \insertCite{borrajo2017;textual}{WData} bootstrap bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator
 #'
-#' This function estimates the bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData} and based on the methodology introduced by \insertCite{bose2013;textual}{WData}.
+#' This function computes the bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData}.
 #'
-#' @param y A numeric vector containing the biased data.
-#' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
-#' @param kernel A character vector specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
-#' @param bw0 A character string specifying the pilot bandwidth. It can also be a character string giving a rule to choose the bandwidth. Options available can be checked in [`bw.nrd`][stats::bw.nrd()]. By default it is set to `1/8 n^(-1/9)`, where `n` is the sample size.
-#' @param lower Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.
-#' @param upper Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.
-#' @param nh An integer specifying the number of points for evaluating the function to be minimized. Default is 200.
+#' @param y A numeric vector containing the biased sample.
+#' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
+#' @param kernel A character string specifying the kernel function. Available options: `"gaussian"`, `"epanechnikov"`, `"rectangular"`, `"triangular"`, `"biweight"`, `"cosine"` and `"optcosine"`.
+#' @param bw0 The bandwidth value to be used in [`density`][stats::density()]. It can also be a character string specifying a bandwidth selection method. Options available can be checked in [`bw.nrd`][stats::bw.nrd()]. By default it is set to `1/8 n^(-1/9)`, where `n` is the sample size.
+#' @param lower Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.
+#' @param upper Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.
+#' @param nh An integer specifying the number of points in the grid to evaluate the mean integrated squared error function. Default is 200.
 #' @param tol Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within `[lower, lower+tol]` or `[upper-tol, upper]`. Default is 10% of the lower bound.
-#' @param from Numeric value specifying the lower bound for  evaluation. Default is calculated based on the range of input data.
-#' @param to Numeric value specifying the upper bound for  evaluation. Default is calculated based on the range of input data.
-#' @param plot  Logical value indicating whether to plot the function to be minimized. Default is `TRUE`.
-#' @return The estimated bootstrap bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator.
+#' @param from Numeric value specifying the lower bound to be used in [`density`][stats::density()]. Default is computed based on the range of input data.
+#' @param to Numeric value specifying the upper bound to be used in [`density`][stats::density()]. Default is computed based on the range of input data.
+#' @param plot  Logical value indicating whether to plot the mean integrated squared error function. Default is `TRUE`.
+#' @return Bootstrap bandwidth value.
 #' @details
 #' The bandwidth returned is the one minimizing \eqn{\mathrm{MISE}^{\ast}} over a compact interval \eqn{[h_1,h_2]} (determined by arguments `lower` and `upper`), i.e.,
 #' \deqn{
@@ -41,7 +41,7 @@ bw.f.BGMboot2 <- function(y,
                           from = min(y) - (sort(y)[5] - min(y)),
                           to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
                           plot = TRUE) {
-  list2env(.check_biased_dataset(y, w), envir = environment())
+  list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
   list2env(.get_kernel_values(kernel), envir = environment())
   hs <- .get_bandwidth_grid(nh, lower, upper, tol, plot)
@@ -61,7 +61,7 @@ bw.f.BGMboot2 <- function(y,
   if (!is.finite(bw0)) stop("non-finite 'bw0'")
   if (bw0 <= 0) stop("'bw0' is not positive")
 
-  # We calculate a biased density estimation (hat_gnh0)
+  # We compute a biased density estimation (hat_gnh0)
   gnbw0 <- density(
     x = y, from = from, to = to,
     n = 511, bw = bw0, kernel = kernel

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.f.BGMcv.R
 \name{bw.f.BGMcv}
 \alias{bw.f.BGMcv}
-\title{Cross-validation bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimator}
+\title{Cross-validation bandwidth selector for \insertCite{jones1991;textual}{WData} kernel density estimator}
 \usage{
 bw.f.BGMcv(
   y,
@@ -19,27 +19,27 @@ bw.f.BGMcv(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{nh}{An integer specifying the number of points for evaluating the cross-validation function. Default is 200.}
+\item{nh}{An integer specifying the number of points to evaluate the cross-validation function. Default is 200.}
 
 \item{tol}{Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within \verb{[lower, lower+tol]} or \verb{[upper-tol, upper]}. Default is 10\% of the lower bound.}
 
 \item{plot}{Logical value indicating whether to plot the cross-validation function. Default is \code{TRUE}.}
 }
 \value{
-The optimal cross-validation bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator.
+The optimal bandwidth value based on cross-validation criteria.
 }
 \description{
-This function performs bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimation using cross-validation from \insertCite{guillamon1998;textual}{WData}. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation score is selected as the optimal bandwidth.
+This function estimates the bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator using cross-validation criteria from \insertCite{guillamon1998;textual}{WData}. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation function is selected as the optimal bandwidth.
 }
 \details{
 The optimal bandwidth is the one that minimizes the cross-validation function, i.e.,
@@ -51,11 +51,11 @@ It holds that
 \frac{1}{w(Y_i)} \frac{1}{w(Y_j)}
 (K \circ K) \left(\frac{Y_i-Y_j}{h_{f}} \right),
 }
-where \eqn{\circ} denotes convolution between two functions. \eqn{\widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J}, h_{f}}]} is calculated as
+where \eqn{\circ} denotes convolution between two functions and \eqn{\widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J}, h_{f}}]} is computed as
 \deqn{
 \widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J}, h_{f}}] = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n}  \frac{1}{w(Y_i)} \left( \sum_{j\neq i}  \frac{1}{w(Y_j)} \right)^{-1} \left(\sum_{j\neq i}  \frac{1}{w(Y_j)} K_{h_{f}}(Y_i-Y_j)\right).
 }
-The function optimizes the cross-validation function, \eqn{\mathrm{CV}},  on the interval \eqn{I} determined by \code{lower} and \code{upper}. By default,
+This function computes the bandwidth that minimizes the cross validation function, \eqn{\mathrm{CV}},  on the interval \eqn{I} determined by \code{lower} and \code{upper}. By default,
 \eqn{I} is the one suggested by \insertCite{borrajo2017;textual}{WData}:
 \deqn{
 I = \left[\frac{\mathrm{IQR}}{2000n^{1/5}}, \frac{500 \mathrm{IQR} \log(n)^{1/5}}{n^{1/5}}\right],

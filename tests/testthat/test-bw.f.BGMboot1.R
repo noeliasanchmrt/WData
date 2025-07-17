@@ -1,6 +1,6 @@
 test_that("bw.f.BGMboot1() correctly handles pilot bandwidth selection and returns a valid bandwidth", {
   bw_rt <- bw.f.BGMboot1(biased_models[[1]], bw0 = "RT")
-  bw_opt <- bw.f.BGMboot1(biased_models[[1]], bw0 = "Opt")
+  bw_opt <- bw.f.BGMboot1(biased_models[[1]], bw0 = "PI")
 
   expect_type(bw_opt, "double")
   expect_type(bw_rt, "double")
@@ -28,7 +28,7 @@ test_that("bw.f.BGMboot1() (Opt) throws an error for unsupported kernels", {
 
   lapply(unsupported_kernels, function(k) {
     expect_error(
-      bw.f.BGMboot1(biased_models[[1]], kernel = k, bw0 = "Opt"),
+      bw.f.BGMboot1(biased_models[[1]], kernel = k, bw0 = "PI"),
       "not supported for automatic bandwidth selection"
     )
   })
@@ -83,7 +83,7 @@ test_that("df.jones() with bw.f.BGMboot1() (Opt) produces stable plots for suppo
       vdiffr::expect_doppelganger(
         paste0("df.jones_bw.f.BGMboot1_Opt_model_", i, "_kernel_", k),
         function() {
-          df.jones(biased_models[[i]], bw = "bw.f.BGMboot1", bw0 = "Opt", kernel = k, plot = TRUE)
+          df.jones(biased_models[[i]], bw = "bw.f.BGMboot1", bw0 = "PI", kernel = k, plot = TRUE)
           suppressWarnings(curve(
             {
               \(.) df_list[[i]](.)

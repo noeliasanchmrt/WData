@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.F.SBCcv.R
 \name{bw.F.SBCcv}
 \alias{bw.F.SBCcv}
-\title{Cross-validation bandwidth selection for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
+\title{Cross-validation bandwidth selector for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
 \usage{
 bw.F.SBCcv(
   y,
@@ -19,27 +19,27 @@ bw.F.SBCcv(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and number of data points.}
+\item{upper}{Numeric value specifying the upper bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
-\item{nh}{An integer specifying the number of points for evaluation. Default is 200.}
+\item{nh}{An integer specifying the number of points to evaluate the cross-validation function. Default is 200.}
 
 \item{tol}{Tolerance value used to check whether the minimum found lies at the boundaries of the interval; that is, the function will return a warning if the window minimizing the cross-validation function lies within \verb{[lower, lower+tol]} or \verb{[upper-tol, upper]}. Default is 10\% of the lower bound.}
 
 \item{plot}{A logical value indicating whether to plot the cross-validation function. Default is \code{TRUE}.}
 }
 \value{
-The optimal bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator based on cross-validation.
+The optimal bandwidth based on cross-validation criteria.
 }
 \description{
-This function performs bandwidth selection for \insertCite{bose2022;textual}{WData} kernel distribution estimator using cross-validation. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation score is selected as the optimal bandwidth.
+This function performs bandwidth selection for \insertCite{bose2022;textual}{WData} kernel distribution estimator using cross-validation criteria. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation function is selected as the optimal bandwidth.
 }
 \details{
 The optimal bandwidth is obtained as the one that minimizes the cross-validation function, that is,

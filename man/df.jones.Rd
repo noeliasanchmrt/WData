@@ -21,10 +21,10 @@ df.jones(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
 \item{w}{A function representing the bias function applied to the data points.
-It must be evaluable and positive in each point of \code{y}.
+It must be evaluable and positive in each point of the sample \code{y}.
 By default, it is set to the length-biased function.}
 
 \item{y.seq}{A numeric vector specifying the points where the density is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
@@ -32,13 +32,13 @@ By default, it is set to the length-biased function.}
 \item{bw}{The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}, \code{\link[=bw.f.BGMcv]{bw.f.BGMcv}},  \code{\link[=bw.f.BGMboot1]{bw.f.BGMboot1}} and \code{\link[=bw.f.BGMboot2]{bw.f.BGMboot2}}.
 Default is \code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{from}{Numeric value specifying the lower bound for  evaluation when \code{y.seq} is not provided. Default is calculated based on the range of input data.}
+\item{from}{Numeric value specifying the lower bound of the grid where the estimator is computed when \code{y.seq} is not provided. Default is computed based on the range of input data.}
 
-\item{to}{Numeric value specifying the upper bound for  evaluation when \code{y.seq} is not provided. Default is calculated based on the range of input data.}
+\item{to}{Numeric value specifying the upper bound of the grid where the estimator is computed when \code{y.seq} is not provided. Default is computed based on the range of input data.}
 
-\item{nb}{An integer specifying the number of points for evaluation when \code{y.seq} is not provided. Default is 512.}
+\item{nb}{An integer specifying the number of points at which the estimator is computed when \code{y.seq} is not provided. Default is 512.}
 
 \item{plot}{A logical value indicating whether to plot the density estimation. Default is \code{TRUE}.}
 
@@ -48,14 +48,13 @@ Default is \code{\link[=bw.f.BGMrt]{bw.f.BGMrt}}.}
 A list with the following components:
 \item{\code{y.seq}}{The points where the density is estimated.}
 \item{\code{f.hat}}{The estimated density values.}
-\item{\code{bw}}{The bandwidth used.}
-\item{\code{n}}{The sample size after elimination of missing values.}
+\item{\code{bw}}{The bandwidth value.}
+\item{\code{n}}{The sample size after removal of \code{NaN}, \code{Na} and \code{Inf}.}
 \item{\code{call}}{The call which produced the result.}
-\item{\code{data.name}}{The deparsed name of the \code{y} argument (biased dataset).}
-\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
+\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NaN}, \code{Na} or \code{Inf}.}
 }
 \description{
-This function calculates \insertCite{jones1991;textual}{WData} kernel density estimator given a biased dataset and its bias function.
+This function computes \insertCite{jones1991;textual}{WData} kernel density estimator given a sample and the corresponding biased function.
 }
 \details{
 \insertCite{jones1991;textual}{WData} kernel density estimator is expressed as
@@ -64,13 +63,13 @@ This function calculates \insertCite{jones1991;textual}{WData} kernel density es
 \eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 }
 \examples{
-# Rule of the thumb
+# Rule of thumb
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMrt")
 # Cross Validation
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMcv")
 # Bootstrap
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "RT")
-df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "Opt")
+df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot1", bw0 = "PI")
 df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGMboot2", nh = 50L)
 }
 \references{

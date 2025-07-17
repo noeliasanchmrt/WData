@@ -12,15 +12,15 @@ cdf.cox(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 }
 \value{
 A function of class \code{ecdf}, inheriting from the \code{\link[stats:stepfun]{stepfun}} class, and hence inheriting a \code{\link[stats:stepfun]{knots}} method.
 }
 \description{
-This function calculates \insertCite{cox2005;textual}{WData} distribution estimator given a biased dataset and its bias function.
+This function computes \insertCite{cox2005;textual}{WData} distribution estimator given a sample and the corresponding biased function.
 }
 \details{
 \insertCite{cox2005;textual}{WData} distribution estimator is expressed as

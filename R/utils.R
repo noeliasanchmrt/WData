@@ -1,4 +1,4 @@
-.check_biased_dataset <- function(y, w) {
+.check_biased_sample <- function(y, w) {
   data.name <- deparse(substitute(y))
 
   if (!is.numeric(y)) {

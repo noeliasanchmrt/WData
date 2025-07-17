@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbiased.R
 \name{rbiased}
 \alias{rbiased}
-\title{Generate a biased dataset using \insertCite{neumann1951;textual}{WData} acceptance-rejection method}
+\title{Generate a biased sample using \insertCite{neumann1951;textual}{WData} acceptance-rejection method}
 \usage{
 rbiased(
   n,
@@ -36,11 +36,11 @@ rbiased(
 )
 }
 \arguments{
-\item{n}{Number of data points to generate.}
+\item{n}{Sample size.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{fx}{Unbiased density function. Distributions allowed are
+\item{fx}{Unbiased density function. Values allowed are
 Beta (\code{\link[stats:Beta]{beta}}),
 Cauchy (\code{\link[stats:Cauchy]{cauchy}}),
 Chi-Square (\code{\link[stats:Chisquare]{chisq}}),
@@ -53,14 +53,14 @@ Normal (\code{\link[stats:Normal]{norm}}),
 Student t (\code{\link[stats:TDist]{t}}),
 Continuous Uniform (\code{\link[stats:Uniform]{unif}}),
 Weibull (\code{\link[stats:Weibull]{weibull}}),
-Mixture of normal distributions (\code{\link[KScorrect:dmixnorm]{mixnorm}}) and
+Mixture of gaussian distributions (\code{\link[KScorrect:dmixnorm]{mixnorm}}) and
 Mixture of gamma distributions (\code{\link[evmix:mgamma]{mgamma}}) .}
 
 \item{lim}{Lower and upper limits for the range where the bias is significant and, hence, where \eqn{c = \max_{y\in \mathbb{R}}w(y)/\mu_w > 0} must be searched.}
 
-\item{plot}{Logical value indicating whether to generate a diagnostic plot of the biased dataset. Default is \code{TRUE}.}
+\item{plot}{Logical value indicating whether to generate a plot of the biased sample. Default is \code{TRUE}.}
 
-\item{stop}{Logical value indicating whether to stop when bias function can't be evaluated in a generated value. Default is \code{TRUE}. If \code{FALSE} value is discarded and a new one is generated.}
+\item{stop}{Logical value indicating whether to stop when bias function can not be evaluated in a generated value. Default is \code{TRUE}. If \code{FALSE} value is discarded and a new one is generated.}
 
 \item{shape1, shape2}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Beta]{beta}} distribution.}
 
@@ -77,28 +77,28 @@ Mixture of gamma distributions (\code{\link[evmix:mgamma]{mgamma}}) .}
 \item{mean, sd, pro, meanlog, sdlog}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Normal]{norm}},  \code{\link[KScorrect:dmixnorm]{mixnorm}} and \code{\link[stats:Lognormal]{lnorm}}  distributions.}
 }
 \value{
-A numeric vector containing biased random samples from density \code{fx} and bias function \code{w}.
+A numeric vector containing a biased sample from density \code{fx} and bias function \code{w}.
 }
 \description{
-This function generates a biased dataset of size \code{n} using \insertCite{neumann1951;textual}{WData} acceptance-rejection method. The generated dataset is biased according to the provided bias function \code{w}, with respect to the unbiased density function \code{fx}.
+This function generates a biased sample of size \code{n} using \insertCite{neumann1951;textual}{WData} acceptance-rejection method. The generated sample is biased according to the provided bias function \code{w}, with respect to the unbiased density function \code{fx}.
 }
 \details{
-This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased dataset given an  unbiased density function \code{fx} and a bias function \code{w}.
+This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased sample given an  unbiased density function \code{fx} and a bias function \code{w}.
 }
 \examples{
-# Generate a length-biased dataset of size 100 from an exponential distribution
+# Generate a length-biased sample of size 100 from an exponential distribution
 rbiased(n = 100, fx = "exp", rate = 2, plot = FALSE)
 
-#' # Generate a length-biased biased dataset from a gamma distribution
+# Generate a length-biased sample from a gamma distribution
 rbiased(n = 100, fx = "gamma", rate = 1.5^2, shape = 1.5)
 
-# Generate a biased dataset from a normal distribution
+# Generate a biased sample from a gaussian distribution
 custom_bias <- function(y) {
   y^2
 }
 rbiased(n = 100, w = custom_bias, fx = "norm", mean = 3, sd = 10, plot = TRUE)
 
-# Generate a biased dataset from a mixture of normal distributions
+# Generate a biased sample from a mixture of gaussian distributions
 custom_bias <- function(y) {
   sqrt(abs(y)) + 5
 }

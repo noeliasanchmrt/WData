@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.F.SBCpi.R
 \name{bw.F.SBCpi}
 \alias{bw.F.SBCpi}
-\title{Plug-in bandwidth selection for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
+\title{Plug-in bandwidth selector for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
 \usage{
 bw.F.SBCpi(
   y,
@@ -14,29 +14,37 @@ bw.F.SBCpi(
 )
 }
 \arguments{
-\item{y}{A numeric vector for which the density estimation is performed.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function to be used in the estimation. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function to be used. It must be evaluable and positive in each point of the sample the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 }
 \value{
-The optimal bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator using the plug-in method.
+Bandwidth value using the plug-in method.
 }
 \description{
-This function calculates the bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator using the plug-in method.
+This function computes the bandwidth selector for \insertCite{bose2022;textual}{WData} kernel distribution estimator using the plug-in method.
 }
 \details{
 The bandwidth is given by:
-\deqn{\widehat{h}_{F, \mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \kappa(K) }{n \eta(K)^2 R \left(\widehat{f}_{\mathrm{J},\widehat{h}_{F,0, \mathrm{opt}}}^{(1)}\right)}\right)^{1/3}}
-where both \eqn{\kappa(K)} and \eqn{\eta(K)} depend only on the kernel,
-\deqn{\widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+\deqn{\widehat{h}_{F, \mathrm{PI}} = \left(\frac{\widehat{\mu}_w \widehat{\bar{\mu}}_w \kappa(K) }{n \eta(K)^2 R \left(\widehat{f}_{\mathrm{J},\widehat{h}_{F,0, \mathrm{opt}}}^{(1)}\right)}\right)^{1/3},}
+where \eqn{\kappa(K)} and \eqn{\eta(K)} depend only on the kernel and are defined as
+\deqn{
+\kappa(K) = \int_{-\infty}^{+\infty} 2 u W (u) K(u) du
 \quad \text{and} \quad
-\widehat{\bar{\mu}}_w= \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.}
-
+\eta(K) = \int_{-\infty}^{+\infty} u^2 K(u) du,
+}
+where \eqn{ W} is the kernel distribution function associated with the kernel density function \eqn{K}.
+The estimators \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} are given by
+\deqn{
+\widehat{\mu}_w = n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+\quad \text{and} \quad
+\widehat{\bar{\mu}}_w = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n} \frac{1}{w(Y_i)^2}.
+}
 \eqn{\widehat{h}_{F,0, \mathrm{opt}}} is an estimator of
 \deqn{h_{F,0, \mathrm{opt}} = \left(\frac{3 \mu_w \bar{\mu}_w R\left(L^{(1)}\right)}{2 n \eta(L) R\left( f^{(2)} \right)^2}\right)^{1/5},}
-where \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a normal distribution and \eqn{\mu_w} and \eqn{\bar{\mu}_w} are estimated by \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} as defined above.
+where \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a gaussian distribution and \eqn{\mu_w} and \eqn{\bar{\mu}_w} are estimated by \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} as defined above.
 }
 \examples{
 bw.F.SBCpi(shrub.data$Width, kernel = "epanechnikov")

@@ -1,13 +1,13 @@
-test_that("rbiased() generates valid datasets", {
+test_that("rbiased() generates valid samples", {
   set.seed(123) # Fix seed for reproducibility
-  datasets <- lapply(models_params, function(p) {
+  samples <- lapply(models_params, function(p) {
     suppressWarnings(rbiased(
       n = 500, fx = "mixnorm",
       mean = p$mean, sd = p$sd, pro = p$pro, lim = 0.01, plot = FALSE, stop = FALSE
     ))
   })
 
-  lapply(datasets, function(data) {
+  lapply(samples, function(data) {
     expect_type(data, "double")
     expect_true(all(!is.na(data)))
     expect_gt(length(data), 0)

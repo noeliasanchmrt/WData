@@ -1,5 +1,5 @@
-test_that(".check_biased_dataset() handles valid inputs", {
-  result <- .check_biased_dataset(1:10, function(y) y + 1)
+test_that(".check_biased_sample() handles valid inputs", {
+  result <- .check_biased_sample(1:10, function(y) y + 1)
 
   expect_type(result, "list")
   expect_named(result, c("data.name", "n", "y", "w", "yw", "weights", "uw", "uwb", "has.na"))
@@ -9,11 +9,11 @@ test_that(".check_biased_dataset() handles valid inputs", {
   expect_length(result$yw, 10)
 })
 
-test_that(".check_biased_dataset() throws errors for invalid inputs", {
-  expect_error(.check_biased_dataset("not_numeric", function(y) y + 1), "invalid 'y'")
-  expect_error(.check_biased_dataset(c(1, NA), function(y) y + 1), "need at least 2 data points")
-  expect_error(.check_biased_dataset(1:10, "not_a_function"), "argument 'w' must be a function")
-  expect_error(.check_biased_dataset(1:10, function(y) NA), "function 'w' must be bounded")
+test_that(".check_biased_sample() throws errors for invalid inputs", {
+  expect_error(.check_biased_sample("not_numeric", function(y) y + 1), "invalid 'y'")
+  expect_error(.check_biased_sample(c(1, NA), function(y) y + 1), "need at least 2 data points")
+  expect_error(.check_biased_sample(1:10, "not_a_function"), "argument 'w' must be a function")
+  expect_error(.check_biased_sample(1:10, function(y) NA), "function 'w' must be bounded")
 })
 
 test_that(".get_kernel_values() handles valid inputs", {
