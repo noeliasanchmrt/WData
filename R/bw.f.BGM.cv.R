@@ -32,6 +32,7 @@
 #' where IQR is the interquartile range.
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
+#' @export
 #' @examples
 #' bw.f.BGM.cv(shrub.data$Width)
 #' bw.f.BGM.cv(shrub.data$Width, kernel = "epanechnikov")

@@ -36,6 +36,7 @@
 #' }
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
+#' @export
 #' @examples
 #' # Bandwidth value using bootstrap method with "RT" as pilot bandwidth
 #' bw.f.BGM.boot1(y = shrub.data$Width)

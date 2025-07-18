@@ -33,6 +33,7 @@
 #' @return A numeric vector containing a biased sample from density `fx` and bias function `w`.
 #' @details This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased sample given an  unbiased density function `fx` and a bias function `w`.
 #' @references \insertAllCited{}
+#' @export
 #' @examples
 #' # Generate a length-biased sample of size 100 from an exponential distribution
 #' rbiased(n = 100, fx = "exp", rate = 2, plot = FALSE)

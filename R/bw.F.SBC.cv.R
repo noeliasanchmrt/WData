@@ -17,6 +17,7 @@
 #' and \eqn{\widehat{F}_{h_{F}, -j}} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
+#' @export
 #' @examples
 #' bw.F.SBC.cv(shrub.data$Width)
 #' bw.F.SBC.cv(shrub.data$Width, kernel = "epanechnikov")

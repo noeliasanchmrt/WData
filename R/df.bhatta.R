@@ -20,6 +20,7 @@
 #' \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
 #' and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
 #' @references \insertAllCited{}
+#' @export
 #' @examples
 #' # Rule of thumb
 #' df.bhatta(shrub.data$Width, bw = "nrd0")

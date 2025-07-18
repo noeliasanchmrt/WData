@@ -58,7 +58,9 @@ The bandwidth returned is the one minimizing \eqn{\mathrm{MISE}^{\ast}} over a c
 \eqn{\mathrm{MISE}^{\ast}} and \eqn{\mathrm{MSE}^{\ast}} correspond with the expression of the mean integrated squared error and the mean squared error of the bootstrap estimator \eqn{\widehat{f}^{\ast}_{\mathrm{J}, h_{f}}} provided by \insertCite{borrajo2017;textual}{WData}.
 }
 \examples{
+\donttest{
 bw.f.BGM.boot2(shrub.data$Width, nh = 50L)
+}
 }
 \references{
 \insertAllCited{}

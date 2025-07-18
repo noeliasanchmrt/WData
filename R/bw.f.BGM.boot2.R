@@ -22,8 +22,11 @@
 #' \eqn{\mathrm{MISE}^{\ast}} and \eqn{\mathrm{MSE}^{\ast}} correspond with the expression of the mean integrated squared error and the mean squared error of the bootstrap estimator \eqn{\widehat{f}^{\ast}_{\mathrm{J}, h_{f}}} provided by \insertCite{borrajo2017;textual}{WData}.
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
+#' @export
 #' @examples
+#' \donttest{
 #' bw.f.BGM.boot2(shrub.data$Width, nh = 50L)
+#' }
 bw.f.BGM.boot2 <- function(y,
                            w = function(y) {
                              ifelse(y >= 0, y, NA)

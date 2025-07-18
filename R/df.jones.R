@@ -29,6 +29,7 @@
 #' \eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 #' @references \insertAllCited{}
 #' @seealso [`bw.f.BGM.rt`][WData::bw.f.BGM.rt()], [`bw.f.BGM.cv`][WData::bw.f.BGM.cv()],  [`bw.f.BGM.boot1`][WData::bw.f.BGM.boot1()] , [`bw.f.BGM.boot2`][WData::bw.f.BGM.boot2()]
+#' @export
 #' @examples
 #' # Rule of thumb
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.rt")
@@ -37,7 +38,9 @@
 #' # Bootstrap
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "RT")
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot1", bw0 = "PI")
+#' \donttest{
 #' df.jones(y = shrub.data$Width, kernel = "epanechnikov", bw = "bw.f.BGM.boot2", nh = 50L)
+#' }
 df.jones <- function(y,
                      w = function(y) {
                        ifelse(y >= 0, y, NA)
