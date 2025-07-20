@@ -27,7 +27,7 @@ test_that("df.bhatta() correctly handles different kernels", {
 
 test_that("df.bhatta() handles different bandwidth selection methods", {
   result1 <- df.bhatta(biased_models[[1]], bw = "nrd0", plot = FALSE)
-  result2 <- df.bhatta(biased_models[[1]], bw = "ucv", plot = FALSE)
+  result2 <- df.bhatta(biased_models[[1]], bw = "SJ-ste", plot = FALSE)
 
   expect_false(identical(result1$f.hat, result2$f.hat))
 })

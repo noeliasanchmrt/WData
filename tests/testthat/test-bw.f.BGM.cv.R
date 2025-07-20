@@ -10,7 +10,7 @@ test_that("bw.f.BGM.cv() correctly handles different kernels", {
     bw.f.BGM.cv(biased_models[[1]],
       lower = IQR(biased_models[[1]]) * length(biased_models[[1]])^{
         -0.2
-      } * 1000^{
+      } * 10^{
         -1
       },
       upper = IQR(biased_models[[1]]) *
@@ -42,7 +42,7 @@ test_that("bw.f.BGM.cv() produces stable plots", {
           bw.f.BGM.cv(biased_models[[i]],
             lower = IQR(biased_models[[i]]) * length(biased_models[[i]])^{
               -0.2
-            } * 1000^{
+            } * 10^{
               -1
             },
             upper = IQR(biased_models[[i]]) *
@@ -69,7 +69,7 @@ test_that("df.jones() with bw.f.BGM.cv() produces stable plots", {
             bw = "bw.f.BGM.cv",
             lower = IQR(biased_models[[i]]) * length(biased_models[[i]])^{
               -0.2
-            } * 1000^{
+            } * 10^{
               -1
             },
             upper = IQR(biased_models[[i]]) *

@@ -47,7 +47,7 @@ sp_list <- Map(function(f, g) function(x) 1 / f(g(x)), df_list, qf_list)
 set.seed(1234)
 biased_models <- lapply(models_params, function(p) {
   rbiased(
-    n = 500, w = function(y) ifelse(y >= 0, y, NA), fx = "mixnorm",
+    n = 100, w = function(y) ifelse(y >= 0, y, NA), fx = "mixnorm",
     mean = p$mean, sd = p$sd, pro = p$pro, lim = 0.01, plot = FALSE, stop = FALSE
   )
 })

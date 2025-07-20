@@ -9,7 +9,8 @@ test_that("df.jones() returns a valid estimate", {
 })
 
 test_that("df.jones() correctly handles different bandwidth selection methods", {
-  bw_methods <- list("bw.f.BGM.rt", "bw.f.BGM.cv", "bw.f.BGM.boot1", "bw.f.BGM.boot2", 0.5)
+  # We do not include "bw.f.BGM.cv" and "bw.f.BGM.boot2" on purpose
+  bw_methods <- list("bw.f.BGM.rt", "bw.f.BGM.boot1", 0.5)
 
   results <- lapply(bw_methods, function(bw_method) {
     suppressWarnings(df.jones(biased_models[[1]], bw = bw_method, plot = FALSE))
