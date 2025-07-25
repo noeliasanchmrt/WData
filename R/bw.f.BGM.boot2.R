@@ -42,7 +42,7 @@ bw.f.BGM.boot2 <- function(y,
                            nh = 200L,
                            tol = 0.1 * lower,
                            from = min(y) - (sort(y)[5] - min(y)),
-                           to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
+                           to = max(y) + (max(y) - sort(y, decreasing = TRUE)[5]),
                            plot = TRUE) {
   list2env(.check_biased_sample(y, w), envir = environment())
   kernel <- match.arg(kernel)
@@ -186,7 +186,9 @@ bw.f.BGM.boot2 <- function(y,
   h <- ifelse(!identical(h, numeric(0)), h, NA)
 
   if (plot == TRUE) {
-    # par(mfrow = c(1, 3))
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar), add = TRUE)
+
     plot(
       hs, MISE,
       type = "l", xlab = "Bandwidth", ylab = "", sub = "MISE(h)"
@@ -217,8 +219,6 @@ bw.f.BGM.boot2 <- function(y,
     abline(v = h, h = min(Variance), lty = 1, col = "blue")
     abline(v = bw.f.BGM.rt(y, w, kernel = kernel), lty = 2)
     rug(hs)
-
-    par(ask = FALSE)
   }
 
   return(h)

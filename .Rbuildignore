@@ -8,3 +8,4 @@
 ^dev$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^NEWS\.md$

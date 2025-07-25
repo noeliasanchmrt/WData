@@ -46,7 +46,7 @@ bw.F.SBC.cv <- function(y,
 
   # Points for distribution evaluation
   from <- min(y) - (sort(y)[5] - min(y))
-  to <- max(y) + (max(y) - sort(y, decreasing = T)[5])
+  to <- max(y) + (max(y) - sort(y, decreasing = TRUE)[5])
   y.seq <- seq.int(from, to, length.out = 511)
   uw_minus_j <- (n - 1) / (sum(weights) - weights)
 

@@ -17,7 +17,7 @@ bw.f.BGM.boot2(
   nh = 200L,
   tol = 0.1 * lower,
   from = min(y) - (sort(y)[5] - min(y)),
-  to = max(y) + (max(y) - sort(y, decreasing = T)[5]),
+  to = max(y) + (max(y) - sort(y, decreasing = TRUE)[5]),
   plot = TRUE
 )
 }

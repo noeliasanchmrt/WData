@@ -327,7 +327,7 @@ rbiased <- function(n,
     stop("failure on the method -  it was not possible to generate biased sample")
   }
 
-  boundw <- sapply(seq(base::min(y, na.rm = T), base::max(y, na.rm = T), length.out = 1000L), w)
+  boundw <- sapply(seq(base::min(y, na.rm = TRUE), base::max(y, na.rm = TRUE), length.out = 1000L), w)
   if (any(length(boundw) == 0) | anyNA(boundw)) {
     stop("function 'w' must be bounded in [min(y), max(y)]")
   }
