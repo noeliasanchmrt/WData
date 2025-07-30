@@ -19,7 +19,7 @@ Description: Analyzes and models data subject to sampling biases.
     different bandwidth selectors. Also includes a real length-biased
     dataset on shrub width from Muttlak (1988)
     <https://www.proquest.com/openview/3dd74592e623cdbcfa6176e85bd3d390/1?cbl=18750&diss=y&pq-origsite=gscholar>.
-License: GPL-3 | file LICENSE
+License: GPL-3
 URL: https://github.com/noeliasanchmrt/WData
 BugReports: https://github.com/noeliasanchmrt/WData/issues
 Depends: 
