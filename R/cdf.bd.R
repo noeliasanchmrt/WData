@@ -40,6 +40,7 @@
 #' The truncation correction is also valid for variables supported on \eqn{[a, +\infty)} or \eqn{(-\infty, b]}, replacing \eqn{\widehat{F}_{h_{F}}(b)} by 1 or \eqn{\widehat{F}_{h_{F}}(a)} by 0, respectively, in the above expression.  This correction is implemented in the `correction` argument, which can take values "none", "left", "right" or "both". If "left", the estimator is corrected to 0 for values less than the minimum of `y.seq`; if "right", it is corrected to 1 for values greater than the maximum of `y.seq`; if "both", it applies both corrections simultaneously.
 #' @references \insertAllCited{}
 #' @seealso [`bw.F.SBC.rt`][WData::bw.F.SBC.rt()], [`bw.F.BD`][WData::bw.F.BD()], [`bw.F.SBC.cv`][WData::bw.F.SBC.cv()], [`bw.F.SBC.pi`][WData::bw.F.SBC.pi()]
+#' @export
 #' @examples
 #' cdf.bd(shrub.data$Width, kernel = "epanechnikov")
 #' cdf.bd(shrub.data$Width, bw = "bw.F.SBC.cv")

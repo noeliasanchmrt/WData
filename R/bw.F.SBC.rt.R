@@ -28,6 +28,7 @@
 #' \left[\left(\frac{1}{n} \sum_{i=1}^n w(Y_i)\right)-\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}\right]}.}
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
+#' @export
 #' @examples
 #' bw.F.SBC.rt(shrub.data$Width)
 #' bw.F.SBC.rt(shrub.data$Width, kernel = "epanechnikov")

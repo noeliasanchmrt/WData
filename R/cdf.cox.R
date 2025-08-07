@@ -10,6 +10,7 @@
 #' \quad \text{where} \quad
 #' \widehat{\mu}_w = n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)} \right)^{-1}.}
 #' @references \insertAllCited{}
+#' @export
 #' @examples
 #' cdf.cox(y = shrub.data$Width)
 cdf.cox <- function(y,

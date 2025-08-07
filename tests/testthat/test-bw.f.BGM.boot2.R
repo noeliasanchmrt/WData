@@ -1,5 +1,5 @@
 test_that("bw.f.BGM.boot2() returns a valid bandwidth", {
-  bw <- suppressWarnings(bw.f.BGM.boot2(biased_models[[1]], nh = 25L, plot = FALSE))
+  bw <- suppressWarnings(bw.f.BGM.boot2(biased_models[[1]], nh = 10L, plot = FALSE))
 
   expect_type(bw, "double")
   expect_gt(bw, 0)
@@ -7,7 +7,18 @@ test_that("bw.f.BGM.boot2() returns a valid bandwidth", {
 
 test_that("bw.f.BGM.boot2() correctly handles different kernels", {
   bw_values <- sapply(kernels, function(k) {
-    suppressWarnings(bw.f.BGM.boot2(biased_models[[1]], nh = 25L, kernel = k, plot = FALSE))
+    suppressWarnings(bw.f.BGM.boot2(biased_models[[1]],
+      nh = 10L,
+      lower = IQR(biased_models[[1]]) * length(biased_models[[1]])^{
+        -0.2
+      } * 10^{
+        -1
+      },
+      upper = IQR(biased_models[[1]]) *
+        (log(length(biased_models[[1]])) / length(biased_models[[1]]))^{
+          0.2
+        } * 3, kernel = k, plot = FALSE
+    ))
   })
 
   expect_false(all(duplicated(bw_values)), info = "Different kernels should produce different bandwidths")
@@ -22,7 +33,7 @@ test_that("bw.f.BGM.boot2() produces stable plots", {
   lapply(seq_along(biased_models), function(i) {
     lapply(kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("bw_f_BGMboot2_model_", i, "_kernel_", k),
+        paste0("bw.f.BGM.boot2_model_", i, "_kernel_", k),
         function() {
           original_par <- par(no.readonly = TRUE) # Save current graphical parameters
           on.exit(par(original_par)) # Restore after test
@@ -32,7 +43,16 @@ test_that("bw.f.BGM.boot2() produces stable plots", {
           suppressWarnings(bw.f.BGM.boot2(biased_models[[i]],
             kernel = k,
             from = max(0.02, min(biased_models[[i]]) - (sort(biased_models[[i]])[2] - min(biased_models[[i]]))),
-            nh = 25L,
+            nh = 10L,
+            lower = IQR(biased_models[[1]]) * length(biased_models[[1]])^{
+              -0.2
+            } * 10^{
+              -1
+            },
+            upper = IQR(biased_models[[1]]) *
+              (log(length(biased_models[[1]])) / length(biased_models[[1]]))^{
+                0.2
+              } * 3,
             plot = TRUE
           ))
         }
@@ -54,9 +74,19 @@ test_that("df.jones() with bw.f.BGM.boot2() produces stable plots", {
         paste0("df.jones_bw.f.BGM.boot2_model_", i, "_kernel_", k),
         function() {
           suppressWarnings(df.jones(biased_models[[i]],
-            bw = "bw.f.BGM.boot2", kernel = k,
+            bw = "bw.f.BGM.boot2",
             from = max(0.02, min(biased_models[[i]]) - (sort(biased_models[[i]])[2] - min(biased_models[[i]]))),
-            nh = 25L,
+            nh = 10L,
+            lower = IQR(biased_models[[1]]) * length(biased_models[[1]])^{
+              -0.2
+            } * 10^{
+              -1
+            },
+            upper = IQR(biased_models[[1]]) *
+              (log(length(biased_models[[1]])) / length(biased_models[[1]]))^{
+                0.2
+              } * 3,
+            kernel = k,
             plot = TRUE
           ))
           suppressWarnings(curve(

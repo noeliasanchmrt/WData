@@ -32,6 +32,7 @@
 #' where IQR is the interquartile range.
 #' @references \insertAllCited{}
 #' @seealso [`df.jones`][WData::df.jones()]
+#' @export
 #' @examples
 #' bw.f.BGM.cv(shrub.data$Width)
 #' bw.f.BGM.cv(shrub.data$Width, kernel = "epanechnikov")
@@ -89,6 +90,9 @@ bw.f.BGM.cv <-
     }
 
     if (plot == TRUE) {
+      oldpar <- par(no.readonly = TRUE)
+      on.exit(par(oldpar), add = TRUE)
+
       # Rule of thumb with gaussian kernel as reference.
 
       sigma <- sqrt(uw * (mean(yw) - uw))
@@ -131,8 +135,6 @@ bw.f.BGM.cv <-
       )
       abline(v = h, col = "blue")
       abline(v = bw.f.BGM.rt, lty = 2)
-
-      par(ask = FALSE)
     }
 
     return(h)

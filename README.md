@@ -149,7 +149,7 @@ The function allows different bandwidth selection methods:
 par(mfrow = c(2, 3))
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.rt", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.cv", lower = 0.01, upper = 0.5, nh = 500L, from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.cv", lower = 0.01, upper = 0.5, nh = 100L, from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Interval where bandwidth is searched: [0.010000, 0.500000]
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.boot1", from = -0.4, to = 3)
@@ -158,7 +158,7 @@ jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.boot1", 
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.boot1", bw0 = "PI", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.267953
-bw.f.BGM.boot2 <- bw.f.BGM.boot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 200L, plot = F)
+bw.f.BGM.boot2 <- bw.f.BGM.boot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 100L, plot = F)
 #> Interval where bandwidth is searched: [0.000161, 217.341159]
 #> Interval where density is evaluated: [0.001000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.075912
@@ -231,7 +231,7 @@ bandwidth selector.
 par(mfrow = c(1, 3))
 bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left")
 #> Interval for Estimation: [0.000000, 3.000000]
-bw_cv <- bw.F.SBC.cv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 250, plot = F)
+bw_cv <- bw.F.SBC.cv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 100, plot = F)
 #> Interval where bandwidth is searched: [0.050000, 0.200000]
 bd <- cdf.bd(shrub.data$Width, correction = "left", bw = bw_cv)
 #> Interval for Estimation: [0.030000, 3.130000]

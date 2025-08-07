@@ -19,6 +19,7 @@
 #' If some bandwidths are not positive, they are replaced by the mean of the neighbors.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
+#' @export
 #' @examples
 #' bw.F.BD(shrub.data$Width, y.seq = seq(0, 1, length.out = 512), cy.seq = rep(1, 512))
 bw.F.BD <- function(y,

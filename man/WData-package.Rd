@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A set of tools for analyzing and modeling data subject to sampling biases. Provides functions to estimate the density and cumulative distribution functions from biased samples of continuous distributions. Includes the estimators proposed by Bhattacharyya et al. (1988) and Jones (1991) for density, and by Cox (2005) and Bose and Dutta (2022) for distribution, with different bandwidth selectors. Also includes a real length-biased dataset on shrub width from Muttlak (1988).
+Analyzes and models data subject to sampling biases. Provides functions to estimate the density and cumulative distribution functions from biased samples of continuous distributions. Includes the estimators proposed by Bhattacharyya et al. (1988) \doi{10.1080/03610928808829825} and Jones (1991) \doi{10.2307/2337020} for density, and by Cox (2005, ISBN:052184939X) and Bose and Dutta (2022) \doi{10.1007/s00184-021-00824-3} for distribution, with different bandwidth selectors. Also includes a real length-biased dataset on shrub width from Muttlak (1988) \url{https://www.proquest.com/openview/3dd74592e623cdbcfa6176e85bd3d390/1?cbl=18750&diss=y&pq-origsite=gscholar}.
 }
 \seealso{
 Useful links:

@@ -26,6 +26,7 @@
 #' where \eqn{R\left(f^{(2)}\right)} is estimated assuming that \eqn{f} follows a gaussian distribution and \eqn{\mu_w} and \eqn{\bar{\mu}_w} are estimated by \eqn{\widehat{\mu}_w} and \eqn{\widehat{\bar{\mu}}_w} as defined above.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
+#' @export
 #' @examples
 #' bw.F.SBC.pi(shrub.data$Width, kernel = "epanechnikov")
 bw.F.SBC.pi <- function(y,

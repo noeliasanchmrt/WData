@@ -53,7 +53,7 @@ test_that("df.jones() with bw.f.BGM.boot1() (RT) produces stable plots for suppo
   lapply(seq_along(biased_models), function(i) {
     lapply(supported_kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("df.jones_bw.f.BGM.boot1_RT_model_", i, "_kernel_", k),
+        paste0("bw.f.BGM.boot1_RT_model_", i, "_kernel_", k),
         function() {
           df.jones(biased_models[[i]], bw = "bw.f.BGM.boot1", bw0 = "RT", kernel = k, plot = TRUE)
           suppressWarnings(curve(

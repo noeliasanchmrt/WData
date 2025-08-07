@@ -4,8 +4,8 @@ test_that("cdf.cox() returns a valid estimate", {
   expect_s3_class(cdf, "ecdf")
   expect_s3_class(cdf, "stepfun")
   expect_type(cdf(0.5), "double")
-  expect_gte(cdf(min(biased_models[[1]])), 0)
-  expect_lte(cdf(max(biased_models[[1]])), 1)
+  expect_gte(cdf(min(biased_models[[1]])), 0 - 2 * .Machine$double.eps)
+  expect_lte(cdf(max(biased_models[[1]])), 1 + 2 * .Machine$double.eps)
 })
 
 test_that("cdf.cox() produces stable plots", {

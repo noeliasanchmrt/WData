@@ -17,6 +17,7 @@
 #' and \eqn{\widehat{F}_{h_{F}, -j}} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
+#' @export
 #' @examples
 #' bw.F.SBC.cv(shrub.data$Width)
 #' bw.F.SBC.cv(shrub.data$Width, kernel = "epanechnikov")
@@ -45,7 +46,7 @@ bw.F.SBC.cv <- function(y,
 
   # Points for distribution evaluation
   from <- min(y) - (sort(y)[5] - min(y))
-  to <- max(y) + (max(y) - sort(y, decreasing = T)[5])
+  to <- max(y) + (max(y) - sort(y, decreasing = TRUE)[5])
   y.seq <- seq.int(from, to, length.out = 511)
   uw_minus_j <- (n - 1) / (sum(weights) - weights)
 
