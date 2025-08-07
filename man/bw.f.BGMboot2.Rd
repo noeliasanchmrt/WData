@@ -51,35 +51,11 @@ The estimated bootstrap bandwidth for \insertCite{jones1991;textual}{WData} kern
 This function estimates the bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator using the bias-corrected bootstrap method developed by \insertCite{borrajo2017;textual}{WData} and based on the methodology introduced by \insertCite{bose2013;textual}{WData}.
 }
 \details{
-In \insertCite{bose2013;textual}{WData}, a bootstrap method is provided for bandwidth selection in the context of unbiased data that does not require assuming any specific form for the density function.
-The adaptation of this method to the context of biased data, carried out by \insertCite{borrajo2017;textual}{WData}, is presented below.
-\itemize{
-\item Given a biased sample \eqn{\{Y_1, Y_2, \dots, Y_n\}}, the estimator \eqn{\widehat{g}_{n, h_0}} with pilot bandwidth \eqn{h_{0}} is constructed as
-\deqn{\widehat{g}_{n, h_0}(y)= \frac{1}{n}\sum_{i=1}^{n} L_{h_0}(y-Y_i).}
-\item A bootstrap sample \eqn{\{Y_1^{\ast}, Y_2^{\ast}, \dots, Y_n^{\ast}\}} is generated with density function \eqn{\widehat{g}_{n, h_0}(y)}.
-\item From \eqn{\{Y_1^{\ast}, Y_2^{\ast}, \dots, Y_n^{\ast}\}}, an unbiased sample of the variable \eqn{Y^{\ast}} is generated, and the bootstrap density estimator \eqn{\widehat{f}^{\ast}_{\mathrm{J}, h}(y)} with bandwidth \eqn{h} is constructed as
-\deqn{\widehat{f}^{\ast}_{\mathrm{J}, h}(y)= \frac{\widehat{\mu}_{w}^{\ast}}{n}\sum_{i=1}^{n} \frac{1}{w(Y_{i}^{\ast})} K^{\ast}_h(y-Y_{i}^{\ast}),
-\quad \text{where} \quad
-\widehat{\mu}_{w}^{\ast}= n\left(\sum_{i=1}^{n} \frac{1}{w(Y_{i}^{\ast})} \right)^{-1}.}
-}
-
-Under certain conditions, it is satisfied that:
-\deqn{\begin{aligned}
-\mathrm{MSE}^{\ast}\left(\widehat{f}^{\ast}_{\mathrm{J}, h}(y)\right) & =
-\left(\frac{\int_{-\infty}^{+ \infty} w(z)^{-1} K^{\ast}_{h}(y-z) \widehat{g}_{n, h_0}(z) d z}
-{\int_{-\infty}^{+ \infty} w(z)^{-1} \widehat{g}_{n, h_0}(z) d z}
--\widehat{f}_{\mathrm{J},h}(y)\right)^2
-+\frac{1}{n\left(\int_{-\infty}^{+ \infty} w(z)^{-1} \widehat{g}_{n, h_0}(z) d z\right)^2} \\ &
-\left[ \int_{-\infty}^{+ \infty} w(z)^{-2} \left(K^{\ast}_{h}(y-z)\right)^2 \widehat{g}_{n, h_0}(z) d z
--\left(\int_{-\infty}^{+ \infty} w(z)^{-1} K^{\ast}_{h}(y-z) \widehat{g}_{n, h_0}(z) d z \right)^2\right] \\ &
-+O\left(\frac{1}{n}\right).
-\end{aligned}}
-
-Hence, it is possible to obtain a bandwidth \eqn{\widehat{h}_{\mathrm{B}}} minimizing \eqn{\mathrm{MISE}^{\ast}(h)} over a compact interval \eqn{[h_1,h_2]}, i.e.,
+The bandwidth returned is the one minimizing \eqn{\mathrm{MISE}^{\ast}} over a compact interval \eqn{[h_1,h_2]} (determined by arguments \code{lower} and \code{upper}), i.e.,
 \deqn{
-\widehat{h}_{\mathrm{B}} = \arg \min_{h \in [h_1,h_2]} \mathrm{MISE}^{\ast}\left(\widehat{f}^{\ast}_{J, h}\right) =
-\arg \min_{h \in [h_1,h_2]} \int_{-\infty}^{+ \infty} \mathrm{MSE}^{\ast}\left(\widehat{f}^{\ast}_{J, h}(y)\right)dy.
+\widehat{h}_{f, \mathrm{B}} = \arg \min_{h_{f} \in [h_1,h_2]} \int_{-\infty}^{+ \infty} \mathrm{MSE}^{\ast}\left(\widehat{f}^{\ast}_{\mathrm{J}, h_{f}}(y)\right)dy.
 }
+\eqn{\mathrm{MISE}^{\ast}} and \eqn{\mathrm{MSE}^{\ast}} correspond with the expression of the mean integrated squared error and the mean squared error of the bootstrap estimator \eqn{\widehat{f}^{\ast}_{\mathrm{J}, h_{f}}} provided by \insertCite{borrajo2017;textual}{WData}.
 }
 \examples{
 bw.f.BGMboot2(shrub.data$Width, nh = 50L)

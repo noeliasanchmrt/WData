@@ -33,7 +33,7 @@ A list with the following components:
 \item{\code{bw}}{The bandwidth used.}
 \item{\code{n}}{The sample size after elimination of missing values.}
 \item{\code{call}}{ The call which produced the result.}
-\item{\code{data.name}}{The deparsed name of the y argument (biased dataset).}
+\item{\code{data.name}}{The deparsed name of the \code{y} argument (biased dataset).}
 \item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
 }
 \description{
@@ -41,9 +41,9 @@ This function calculates \insertCite{bhattacharyya1988;textual}{WData} density e
 }
 \details{
 \insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
-\deqn{\widehat{f}_{\mathrm{B}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}(y),
+\deqn{\widehat{f}_{\mathrm{B}, h_{g}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}_{h_{g}}(y),
 \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-and \eqn{\widehat{g}(y)} is the kernel density estimate of the given data \code{y} using \code{\link[stats:density]{density}} function with main arguments \code{bw} and \code{kernel}.
+and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data \code{y} using \code{\link[stats:density]{density}} function with main arguments \code{bw} and \code{kernel}.
 }
 \examples{
 # Rule of the thumb

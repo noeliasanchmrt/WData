@@ -1,6 +1,6 @@
 #' Cross-validation bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimator
 #'
-#' This function performs bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimation using cross-validation. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation score is selected as the optimal bandwidth.
+#' This function performs bandwidth selection for \insertCite{jones1991;textual}{WData} kernel density estimation using cross-validation from \insertCite{guillamon1998;textual}{WData}. It iterates through a range of bandwidth values and computes the cross-validation score for each bandwidth. The bandwidth that minimizes the cross-validation score is selected as the optimal bandwidth.
 #'
 #' @param y A numeric vector containing the biased data.
 #' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
@@ -13,25 +13,18 @@
 #' @return The optimal cross-validation bandwidth for \insertCite{jones1991;textual}{WData} kernel density estimator.
 #' @details The optimal bandwidth is the one that minimizes the cross-validation function, i.e.,
 #' \deqn{
-#' \widehat{h}_{\mathrm{CV}}= \mathrm{arg} \min_{h>0} \mathrm{CV}(h) = \mathrm{arg} \min_{h>0} \int_{-\infty}^{+\infty} \widehat{f}_{\mathrm{J}}(y)^2 d y-2 \widehat{\mathbb{E}[\widehat{f}_{\mathrm{J}}]}.}
+#' \widehat{h}_{f, \mathrm{CV}}= \mathrm{arg} \min_{h_{f}>0} \mathrm{CV}(h_{f}) = \mathrm{arg} \min_{h_{f}>0} \int_{-\infty}^{+\infty} \widehat{f}_{\mathrm{J},h_{f}}(y)^2 d y-2 \widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J},h_{f}}].}
 #' It holds that
 #' \deqn{
-#' \int_{-\infty}^{+\infty} \widehat{f}_{\mathrm{J}}(y)^2 dy = \frac{\widehat{\mu}_w^2}{n^{2} h} \sum_{i=1}^{n} \sum_{\substack{j=1}}^{n}
+#' \int_{-\infty}^{+\infty} \widehat{f}_{\mathrm{J}, h_{f}}(y)^2 dy = \frac{\widehat{\mu}_w^2}{n^{2} h_{f}} \sum_{i=1}^{n} \sum_{\substack{j=1}}^{n}
 #' \frac{1}{w(Y_i)} \frac{1}{w(Y_j)}
-#' (K \circ K) \left(\frac{Y_i-Y_j}{h} \right),
+#' (K \circ K) \left(\frac{Y_i-Y_j}{h_{f}} \right),
 #' }
-#' where \eqn{\circ} denotes convolution between two functions. Moreover,
+#' where \eqn{\circ} denotes convolution between two functions. \eqn{\widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J}, h_{f}}]} is calculated as
 #' \deqn{
-#' \widehat{\mathbb{E}[\widehat{f}_{\mathrm{J}}]}=\frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} \widehat{f}_{\mathrm{J}, -i}\left(Y_i\right),
-#' \quad \text{where} \quad
-#' \widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}
+#' \widehat{\mathbb{E}}[\widehat{f}_{\mathrm{J}, h_{f}}] = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n}  \frac{1}{w(Y_i)} \left( \sum_{j\neq i}  \frac{1}{w(Y_j)} \right)^{-1} \left(\sum_{j\neq i}  \frac{1}{w(Y_j)} K_{h_{f}}(Y_i-Y_j)\right).
 #' }
-#' and \eqn{\widehat{f}_{J, -i}} is \insertCite{jones1991;textual}{WData} estimator constructed without the \eqn{i}-th data point. In practice, it is not necessary to calculate \eqn{\widehat{f}_{J, -i}} for each data point in the sample, but the estimator
-#' \eqn{\widehat{\mathbb{E}[\widehat{f}_{\mathrm{J}}]}} can be calculated as
-#' \deqn{
-#' \widehat{\mathbb{E}[\widehat{f}_{\mathrm{J}}]} = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^{n}  \frac{1}{w(Y_i)} \left( \sum_{j\neq i}  \frac{1}{w(Y_j)} \right)^{-1} \left(\sum_{j\neq i}  \frac{1}{w(Y_j)} K_h(Y_i-Y_j)\right).
-#' }
-#' The function optimizes the cross-validation function on the interval \eqn{I} determined by `lower` and `upper`. By default,
+#' The function optimizes the cross-validation function, \eqn{\mathrm{CV}},  on the interval \eqn{I} determined by `lower` and `upper`. By default,
 #' \eqn{I} is the one suggested by \insertCite{borrajo2017;textual}{WData}:
 #' \deqn{
 #' I = \left[\frac{\mathrm{IQR}}{2000n^{1/5}}, \frac{500 \mathrm{IQR} \log(n)^{1/5}}{n^{1/5}}\right],
@@ -99,7 +92,7 @@ bw.f.BGMcv <-
       # Rule of the thumb with normal kernel as reference.
 
       sigma <- sqrt(uw * (mean(yw) - uw))
-      bw.f.BGMnrd0 <- sigma * (8 * sqrt(pi) * RK * uw * uwb)^(0.2) * (3 * n * sigma_K_2^2)^(-0.2)
+      bw.f.BGMnrd0 <- sigma * (8 * sqrt(pi) * kernel_r * uw * uwb)^(0.2) * (3 * n * kernel_eta^2)^(-0.2)
 
       # Plot the Cross - Validation function
 

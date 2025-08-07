@@ -62,10 +62,10 @@ This function calculates \insertCite{bose2022;textual}{WData} kernel distributio
 \details{
 \insertCite{bose2022;textual}{WData} kernel distribution estimator is expressed as
 \deqn{
-\widehat{F}_h(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_h\left(y-Y_i\right),
+\widehat{F}_{h_{F}}(y) = \frac{\widehat{\mu}_w}{n} \sum_{i=1}^n \frac{1}{w(Y_i)} W_{h_{F}}\left(y-Y_i\right),
 \quad
 \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}\frac{1}{w(Y_i)}\right)^{-1},}
-\eqn{h} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_h(u) = W(u/h)}.
+\eqn{h_{F}} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_{h_{F}}(u) = W(u/{h_{F}})}.
 }
 \examples{
 cdf.bd(shrub.data$Width, kernel = "epanechnikov")

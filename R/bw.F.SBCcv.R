@@ -12,9 +12,9 @@
 #' @param plot A logical value indicating whether to plot the cross-validation function. Default is `TRUE`.
 #' @return The optimal bandwidth for \insertCite{bose2022;textual}{WData} kernel distribution estimator based on cross-validation.
 #' @details The optimal bandwidth is obtained as the one that minimizes the cross-validation function, that is,
-#' \deqn{\widehat{h}_{\mathrm{CV}} = \arg \min_{h>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{-j, h}(y)\right)^2,
+#' \deqn{\widehat{h}_{F, \mathrm{CV}} = \arg \min_{h_{F}>0} \frac{1}{n} \sum_{j=1}^n \left( \frac{\widehat{\mu}_w}{w(Y_j)} \mathbb{I} (y \geq Y_j) - \widehat{F}_{h_{F}, -j}(y)\right)^2 \!\!,
 #' \quad \text{with} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}  \frac{1}{w(Y_i)} \right)^{-1}}
-#' and \eqn{\widehat{F}_{-j, h}(y)} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
+#' and \eqn{\widehat{F}_{h_{F}, -j}} is the \insertCite{bose2022;textual}{WData} kernel distribution estimator without the observation \eqn{Y_j}.
 #' @references \insertAllCited{}
 #' @seealso [`cdf.bd`][WData::cdf.bd()]
 #' @examples
@@ -88,7 +88,7 @@ bw.F.SBCcv <- function(y,
   if (plot) {
     # Compute the rule of the thumb bandwidth
     sigma <- sqrt(uw * (mean(yw) - uw))
-    bw.F.SBCnrd0 <- sigma * (sqrt(pi) * uw * uwb * intudW2)^(1 / 3) * (n * sigma_K_2^2)^(-1 / 3)
+    bw.F.SBCnrd0 <- sigma * (sqrt(pi) * uw * uwb * kernel_kappa)^(1 / 3) * (n * kernel_eta^2)^(-1 / 3)
 
     plot(
       hs,

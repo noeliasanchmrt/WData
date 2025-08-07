@@ -16,14 +16,26 @@ library(showtext)
 font_add_google("lobster", family = "Lobster")
 showtext_auto()
 
-sticker(p,
-        s_x = 1, s_y = 0.75, s_width = 0.75, s_height = 0.75,
+library(magick)
+
+# https://pixabay.com/vectors/dumbbell-gym-activity-fitness-body-7610150/
+img <- image_read("scales.png")
+
+info <- image_info(img)
+new_height <- info$height - 635  # recorta 50 px desde abajo
+img <- image_crop(img, geometry = paste0(info$width, "x", new_height, "+0+0"))
+img_white <- image_colorize(img, opacity = 100, color = "#24693D")
+image_write(img_white, path = "white_scale.png", format = "png")
+
+
+sticker("white_scale.png",
+        s_x = 1, s_y = 0.75, s_width = 0.5, s_height = 0.5,
         package = "WData",
-        p_color = "white", p_size = 30, p_family = "lobster",
-        h_fill = "#CDCDC1", h_color = "#8B8B83",  spotlight = FALSE,
+        p_color = "#24693D", p_size = 30, p_family = "Lobster",
+        h_fill = "#C5D4B9", h_color = "#24693D",  spotlight = FALSE,
         white_around_sticker = FALSE,
         url = "https://github.com/noeliasanchmrt/WData",
-        u_color = "white", u_size = 3.5, u_family = "sans",
+        u_color = "#24693D", u_size = 3.5, u_family = "sans",
         filename = "inst/extdata/WData_logo.png")
 
 usethis::use_logo("inst/extdata/WData_logo.png") # To use the logo in the README

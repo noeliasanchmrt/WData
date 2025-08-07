@@ -23,7 +23,7 @@ A function of class \code{ecdf}, inheriting from the \code{\link[stats:stepfun]{
 This function calculates \insertCite{cox2005;textual}{WData} distribution estimator given a biased dataset and its bias function.
 }
 \details{
-\insertCite{cox2005;textual}{WData} proposes the following estimator for the distribution function:
+\insertCite{cox2005;textual}{WData} distribution estimator is expressed as
 \deqn{\widehat{F}_n(y) = \frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n} \frac{1}{w(Y_i)} \mathbb{I}(Y_i \leq y),
 \quad \text{where} \quad
 \widehat{\mu}_w = n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)} \right)^{-1}.}

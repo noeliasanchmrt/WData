@@ -54,7 +54,7 @@ A list with the following components:
 \item{\code{bw}}{The bandwidth used.}
 \item{\code{n}}{The sample size after elimination of missing values.}
 \item{\code{call}}{The call which produced the result.}
-\item{\code{data.name}}{The deparsed name of the y argument (biased dataset).}
+\item{\code{data.name}}{The deparsed name of the \code{y} argument (biased dataset).}
 \item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
 }
 \description{
@@ -62,9 +62,9 @@ This function calculates \insertCite{jones1991;textual}{WData} kernel density es
 }
 \details{
 \insertCite{jones1991;textual}{WData} kernel density estimator is expressed as
-\deqn{\widehat{f}_{\mathrm{J}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_h(y-Y_i),\quad
+\deqn{\widehat{f}_{\mathrm{J}, h_{f}}(y)=\frac{\widehat{\mu}_w}{n}\sum_{i=1}^{n}  \frac{1}{w(Y_i)} K_{h_{f}}(y-Y_i),\quad
 \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-\eqn{h} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h}(u)=1/h K\left(u / h\right)}.
+\eqn{h_{f}} is the bandwidth, \eqn{K} is the kernel density function and \eqn{K_{h_{f}}(u)=1/h_{f} K\left(u / h_{f}\right)}.
 }
 \examples{
 # Rule of the thumb

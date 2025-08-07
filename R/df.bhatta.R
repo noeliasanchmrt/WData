@@ -14,12 +14,12 @@
 #'   \item{`bw`}{The bandwidth used.}
 #'   \item{`n`}{The sample size after elimination of missing values.}
 #'   \item{`call`}{ The call which produced the result.}
-#'   \item{`data.name`}{The deparsed name of the y argument (biased dataset).}
+#'   \item{`data.name`}{The deparsed name of the `y` argument (biased dataset).}
 #'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
 #' @details \insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
-#' \deqn{\widehat{f}_{\mathrm{B}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}(y),
+#' \deqn{\widehat{f}_{\mathrm{B}, h_{g}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}_{h_{g}}(y),
 #' \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
-#' and \eqn{\widehat{g}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
+#' and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
 #' @references \insertAllCited{}
 #' @examples
 #' # Rule of the thumb
