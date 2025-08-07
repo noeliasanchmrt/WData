@@ -13,9 +13,7 @@ importFrom(Rdpack, reprompt)
 importFrom(latex2exp, TeX)
 importFrom("utils", "tail")
 importFrom("bayesmeta", "convolve")
-importFrom("cubature", "cubintegrate")
 importFrom("progress", "progress_bar")
-useDynLib(WData)
 importFrom(Rcpp, evalCpp)
 export(
     "bw.F.BD",
@@ -28,27 +26,7 @@ export(
     "bw.F.SBCpi",
     "cdf.bd",
     "cdf.cox",
-    "cdf.efro",
     "df.bhatta",
     "df.jones",
-    "eqf",
-    "qf.SBC",
-    "qf.SBCkernel",
-    "qf.sen",
-    "rbiased",
-    "sp.akbarikernel",
-    "sp.akbaripi",
-    "sp.SBC",
-    "w_boxplot",
-    "w_boxstats",
-    "w_fivenum",
-    "w_qqnorm"
+    "rbiased"
 )
-S3method(plot, eqf)
-S3method(print, eqf)
-S3method(summary, eqf)
-S3method(quantile, eqf)
-S3method(w_boxplot, default)
-S3method(w_boxplot, formula)
-S3method(w_qqnorm, default)
-
