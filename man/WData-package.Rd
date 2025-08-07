@@ -4,11 +4,11 @@
 \name{WData-package}
 \alias{WData}
 \alias{WData-package}
-\title{WData: Density, Distribution, and Quantile Estimation for Biased Datasets}
+\title{WData: Statistical Inference for Weighted Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Set of tools for analyzing and modeling data that may be subject to biases in sampling. It offers functions to estimate density function and cumulative distribution function from a biased sample of a continuous distribution. Regarding density function estimation, the package includes @bhattacharyya1988 and @jones1991 density estimators and various bandwidth selectors for the latter, enhancing the flexibility and adaptability of density estimation to different types of datasets and biases. For cumulative distribution function estimation, the package includes the empirical estimator proposed by @cox2005 and the kernel-type estimator by @bose2022, along with several bandwidth selectors for the latter. Finally, the package includes @muttlak1988 real length-biased dataset on shrub width as an example dataset.
+A set of tools for analyzing and modeling data subject to sampling biases. Provides functions to estimate the density and cumulative distribution functions from biased samples of continuous distributions. Includes the estimators proposed by Bhattacharyya et al. (1988) and Jones (1991) for density, and by Cox (2005) and Bose and Dutta (2022) for distribution, with different bandwidth selectors. Also includes a real length-biased dataset on shrub width from Muttlak (1988).
 }
 \seealso{
 Useful links:
@@ -28,6 +28,4 @@ Authors:
 }
 
 }
-\keyword{`r}
 \keyword{internal}
-\keyword{lifecycle::badge('experimental')`}

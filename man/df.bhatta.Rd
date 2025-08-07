@@ -14,39 +14,38 @@ df.bhatta(
 )
 }
 \arguments{
-\item{y}{A numeric vector for which the density estimation is performed.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function to be used in the estimation. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function to be used. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
 \item{plot}{Logical indicating whether to plot the estimated density. Default is \code{TRUE}.}
 
 \item{...}{Additional arguments to be passed to \code{\link[stats:density]{density}} function as, for instance, \code{kernel} or \code{bw}:
 \itemize{
-\item \code{kernel} A character string giving the smoothing kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
+\item \code{kernel} A character string giving the kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
 \item \code{bw} The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. Options available can be checked in \code{\link[stats:bandwidth]{bw.nrd}}. Default is \code{"nrd0"}.
 }}
 }
 \value{
 A list with the following components:
-\item{\code{x}}{The points where the density is estimated.}
-\item{\code{est_values}}{The estimated density values.}
-\item{\code{bw}}{The bandwidth used.}
-\item{\code{n}}{The sample size after elimination of missing values.}
-\item{\code{call}}{ The call which produced the result.}
-\item{\code{data.name}}{The deparsed name of the \code{y} argument (biased dataset).}
-\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
+\item{\code{y.seq}}{The points where the density is estimated.}
+\item{\code{f.hat}}{The estimated density values.}
+\item{\code{bw}}{The bandwidth value.}
+\item{\code{n}}{The sample size after removal of \code{NaN}, \code{Na} and \code{Inf}.}
+\item{\code{call}}{The call which produced the result.}
+\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NaN}, \code{Na} or \code{Inf}.}
 }
 \description{
-This function calculates \insertCite{bhattacharyya1988;textual}{WData} density estimator given a biased dataset and its bias function.
+This function computes \insertCite{bhattacharyya1988;textual}{WData} density estimator given a sample and the corresponding biased function.
 }
 \details{
-\insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
+\insertCite{bhattacharyya1988;textual}{WData} density estimator is computed as follows:
 \deqn{\widehat{f}_{\mathrm{B}, h_{g}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}_{h_{g}}(y),
 \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
 and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data \code{y} using \code{\link[stats:density]{density}} function with main arguments \code{bw} and \code{kernel}.
 }
 \examples{
-# Rule of the thumb
+# Rule of thumb
 df.bhatta(shrub.data$Width, bw = "nrd0")
 # Cross Validation
 df.bhatta(shrub.data$Width, bw = "ucv")

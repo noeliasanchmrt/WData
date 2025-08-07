@@ -2,45 +2,46 @@
 % Please edit documentation in R/bw.F.BD.R
 \name{bw.F.BD}
 \alias{bw.F.BD}
-\title{\insertCite{bose2022;textual}{WData} bandwidth selection for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
+\title{\insertCite{bose2022;textual}{WData} local bandwidth selector for \insertCite{bose2022;textual}{WData} kernel distribution estimator}
 \usage{
 bw.F.BD(
   y,
   w = function(y) {
      ifelse(y >= 0, y, NA)
  },
-  x,
-  c_adj
+  y.seq,
+  cy.seq
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function to be used in the estimation. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function to be used. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{x}{A numeric vector containing the points for which the bandwidth is calculated.}
+\item{y.seq}{A numeric vector containing the points on which the local bandwidth is estimated.}
 
-\item{c_adj}{A numeric vector representing the constants to be used in the bandwidth calculation for each point of \code{x}.}
+\item{cy.seq}{A numeric vector representing the constants to be used in the bandwidth estimation for each point of \code{y.seq}.
+Alternatively, a single numeric value can be provided, which will be used for all points in the \code{y.seq} vector.}
 }
 \value{
-A numeric vector containing the bandwidths for each point in \code{x}.
+A numeric vector containing the bandwidths for each point in \code{y.seq}.
 }
 \description{
-This function calculates the bandwidth for \insertCite{bose2022;textual}{WData} distribution estimator following the method proposed by \insertCite{bose2022;textual}{WData}.
+This function implements the local bandwidth selector proposed by \insertCite{bose2022;textual}{WData} for their own kernel distribution estimator.
 }
 \details{
-Bandwidths are calculated using the formula:
+Local bandwidths selectors are estimated using the formula:
 \deqn{\widehat{h}_{F, \mathrm{BD}, C(y)} (y) = \frac{C(y) \widehat{\sigma}_{w}}{(n w(y))^{1/3}},}
-where \eqn{C(y)} is a positive parameter that depends on the point \eqn{y} and \eqn{\widehat{\sigma}_{w}} is an estimate of the standard deviation of the distribution given by
+where \eqn{C(y)} is a positive parameter that depends on the point \eqn{y} and \eqn{\widehat{\sigma}_{w}} is an estimation of the standard deviation of the distribution given by
 \deqn{\widehat{\sigma}_w=\sqrt{\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}
 \left[\left(\frac{1}{n} \sum_{i=1}^n w(Y_i)\right)-\left(\frac{1}{n} \sum_{i=1}^n \frac{1}{w(Y_i)}\right)^{-1}\right]}.}
 
-The parameter \eqn{C(y)} is provided to the function by using the argument \code{c_adj}, which is a vector of positive values that is used to compute the bandwidth for each point in \code{x}.
+The parameter \eqn{C(y)} is provided to the function by using the argument \code{cy.seq}, which is a vector of positive values that is used to compute the bandwidth for each point in \code{y.seq}. Alternatively, a single numeric value can be provided, which will be used for all points in the \code{y.seq} vector.
 The simulations carried out by \insertCite{bose2022;textual}{WData} suggest that choosing \eqn{C(y)=0.25} or \eqn{C(y)=0.5} provides good results in the tail region of the distribution, with tails defined as points below the 5th percentile or above the 95th percentile. On the other hand, \eqn{C(y)=1.3} provides good results for the remaining points.
 If some bandwidths are not positive, they are replaced by the mean of the neighbors.
 }
 \examples{
-bw.F.BD(shrub.data$Width, x = seq(0, 1, length.out = 512), c_adj = rep(1, 512))
+bw.F.BD(shrub.data$Width, y.seq = seq(0, 1, length.out = 512), cy.seq = rep(1, 512))
 }
 \references{
 \insertAllCited{}

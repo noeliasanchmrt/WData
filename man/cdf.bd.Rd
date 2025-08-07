@@ -9,9 +9,8 @@ cdf.bd(
   w = function(y) {
      ifelse(y >= 0, y, NA)
  },
-  x,
-  bw = "bw.F.SBCnrd0",
-  adjust = 1,
+  y.seq,
+  bw = "bw.F.SBC.rt",
   kernel = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight",
     "cosine", "optcosine"),
   from,
@@ -23,23 +22,21 @@ cdf.bd(
 )
 }
 \arguments{
-\item{y}{A numeric vector containing the biased data.}
+\item{y}{A numeric vector containing the biased sample.}
 
-\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of \code{y}. By default, it is set to the length-biased function.}
+\item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
-\item{x}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
+\item{y.seq}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
 
-\item{bw}{The smoothing bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}} and \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}. Default is \code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}. The specified (or computed) value of \code{bw} multiplied by \code{adjust}.}
+\item{bw}{The bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}} and \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}. Default is \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}.}
 
-\item{adjust}{A numeric value representing the manual adjustment factor for the bandwidth. Default is 1.}
+\item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{kernel}{A character vector specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
+\item{from}{Numeric value specifying the lower bound of the grid where the estimator is computed when \code{y.seq} is not provided. Default is computed based on the range of input data.}
 
-\item{from}{Numeric value specifying the lower bound for  evaluation when \code{x} not provided. Default is calculated based on the range of input data.}
+\item{to}{Numeric value specifying the upper bound of the grid where the estimator is computed when \code{y.seq} is not provided. Default is computed based on the range of input data.}
 
-\item{to}{Numeric value specifying the upper bound for  evaluation when \code{x} not provided. Default is calculated based on the range of input data.}
-
-\item{nb}{An integer specifying the number of points for evaluation when \code{x} not provided. Default is 512.}
+\item{nb}{An integer specifying the number of points at which the estimator is computed when \code{y.seq} is not provided. Default is 512.}
 
 \item{plot}{A logical value indicating whether to plot the estimation. Default is \code{TRUE}.}
 
@@ -49,15 +46,15 @@ cdf.bd(
 }
 \value{
 A list with the following components:
-\item{\code{x}}{The points where the distribution is estimated.}
-\item{\code{est_values}}{The estimated distribution values.}
-\item{\code{bw}}{The bandwidth used.}
-\item{\code{n}}{The sample size after elimination of missing values.}
+\item{\code{y.seq}}{The points where the distribution is estimated.}
+\item{\code{F.hat}}{The estimated distribution values.}
+\item{\code{bw}}{The bandwidth value.}
+\item{\code{n}}{The sample size after removal of \code{NaN}, \code{Na} and \code{Inf}.}
 \item{\code{call}}{The call which produced the result.}
-\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NA} values.}
+\item{\code{has.na}}{Logical; indicates whether the original vector \code{y} contains any \code{NaN}, \code{Na} or \code{Inf}.}
 }
 \description{
-This function calculates \insertCite{bose2022;textual}{WData} kernel distribution estimator given a biased dataset and its bias function.
+This function computes \insertCite{bose2022;textual}{WData} kernel distribution estimator given a sample and the corresponding biased function.
 }
 \details{
 \insertCite{bose2022;textual}{WData} kernel distribution estimator is expressed as
@@ -66,14 +63,25 @@ This function calculates \insertCite{bose2022;textual}{WData} kernel distributio
 \quad
 \text{where}\quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n}\frac{1}{w(Y_i)}\right)^{-1},}
 \eqn{h_{F}} is the bandwidth, \eqn{W} is the kernel distribution function and \eqn{W_{h_{F}}(u) = W(u/{h_{F}})}.
+\insertCite{bose2022;textual}{WData} propose a truncation correction for variables with compact support \eqn{[a,b]} for the estimator as follows:
+\deqn{
+\widehat{F}_{[a,b], h_{F}}(y)=\left\{
+\begin{array}{ll}
+0, & y<a \\
+\dfrac{\widehat{F}_{h_{F}}(y)-\widehat{F}_{h_{F}}(a)}{\widehat{F}_{h_{F}}(b)-\widehat{F}_{h_{F}}(a)}, & a \leq y<b \\
+1, & y \geq b.
+\end{array}
+\right.
+}
+The truncation correction is also valid for variables supported on \eqn{[a, +\infty)} or \eqn{(-\infty, b]}, replacing \eqn{\widehat{F}_{h_{F}}(b)} by 1 or \eqn{\widehat{F}_{h_{F}}(a)} by 0, respectively, in the above expression.  This correction is implemented in the \code{correction} argument, which can take values "none", "left", "right" or "both". If "left", the estimator is corrected to 0 for values less than the minimum of \code{y.seq}; if "right", it is corrected to 1 for values greater than the maximum of \code{y.seq}; if "both", it applies both corrections simultaneously.
 }
 \examples{
 cdf.bd(shrub.data$Width, kernel = "epanechnikov")
-cdf.bd(shrub.data$Width, bw = "bw.F.SBCcv")
+cdf.bd(shrub.data$Width, bw = "bw.F.SBC.cv")
 }
 \references{
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=bw.F.SBCnrd0]{bw.F.SBCnrd0}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBCcv]{bw.F.SBCcv}}, \code{\link[=bw.F.SBCpi]{bw.F.SBCpi}}
+\code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}}, \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}
 }

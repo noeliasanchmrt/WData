@@ -1,28 +1,27 @@
 #' \insertCite{bhattacharyya1988;textual}{WData} density estimator
 #'
-#' This function calculates \insertCite{bhattacharyya1988;textual}{WData} density estimator given a biased dataset and its bias function.
+#' This function computes \insertCite{bhattacharyya1988;textual}{WData} density estimator given a sample and the corresponding biased function.
 #'
-#' @param y A numeric vector for which the density estimation is performed.
-#' @param w A function representing the bias function to be used in the estimation. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
+#' @param y A numeric vector containing the biased sample.
+#' @param w A function representing the bias function to be used. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
 #' @param plot Logical indicating whether to plot the estimated density. Default is `TRUE`.
 #' @param ... Additional arguments to be passed to [`density`][stats::density()] function as, for instance, `kernel` or `bw`:
-#' * `kernel` A character string giving the smoothing kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
+#' * `kernel` A character string giving the kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
 #' * `bw` The smoothing bandwidth to be used in the density estimation. `bw` can also be a character string giving a rule to choose the bandwidth. Options available can be checked in [`bw.nrd`][stats::bw.nrd()]. Default is `"nrd0"`.
 #' @return A list with the following components:
-#'   \item{`x`}{The points where the density is estimated.}
-#'   \item{`est_values`}{The estimated density values.}
-#'   \item{`bw`}{The bandwidth used.}
-#'   \item{`n`}{The sample size after elimination of missing values.}
-#'   \item{`call`}{ The call which produced the result.}
-#'   \item{`data.name`}{The deparsed name of the `y` argument (biased dataset).}
-#'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NA` values.}
-#' @details \insertCite{bhattacharyya1988;textual}{WData} density estimator is calculated as follows:
+#'   \item{`y.seq`}{The points where the density is estimated.}
+#'   \item{`f.hat`}{The estimated density values.}
+#'   \item{`bw`}{The bandwidth value.}
+#'   \item{`n`}{The sample size after removal of `NaN`, `Na` and `Inf`.}
+#'   \item{`call`}{The call which produced the result.}
+#'   \item{`has.na`}{Logical; indicates whether the original vector `y` contains any `NaN`, `Na` or `Inf`.}
+#' @details \insertCite{bhattacharyya1988;textual}{WData} density estimator is computed as follows:
 #' \deqn{\widehat{f}_{\mathrm{B}, h_{g}}(y)= \widehat{\mu}_w w(y)^{-1} \widehat{g}_{h_{g}}(y),
 #' \quad \text{where} \quad \widehat{\mu}_w=n \left(\sum_{i=1}^{n} \frac{1}{w(Y_i)}\right)^{-1},}
 #' and \eqn{\widehat{g}_{h_{g}}(y)} is the kernel density estimate of the given data `y` using [`density`][stats::density()] function with main arguments `bw` and `kernel`.
 #' @references \insertAllCited{}
 #' @examples
-#' # Rule of the thumb
+#' # Rule of thumb
 #' df.bhatta(shrub.data$Width, bw = "nrd0")
 #' # Cross Validation
 #' df.bhatta(shrub.data$Width, bw = "ucv")
@@ -37,7 +36,7 @@ df.bhatta <- function(y,
                       },
                       plot = TRUE,
                       ...) {
-  list2env(.check_biased_dataset(y, w), envir = environment())
+  list2env(.check_biased_sample(y, w), envir = environment())
 
   g_hat <- do.call(density, list(x = y, ...))
   f_hat <- uw * g_hat$y / w(g_hat$x)
@@ -68,8 +67,8 @@ df.bhatta <- function(y,
   }
 
   list(
-    x = g_hat$x,
-    est_values = f_hat,
+    y.seq = g_hat$x,
+    f.hat = f_hat,
     bw = g_hat$bw,
     data.name = data.name,
     n = n,

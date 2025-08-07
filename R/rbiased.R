@@ -1,10 +1,10 @@
-#' Generate a biased dataset using \insertCite{neumann1951;textual}{WData} acceptance-rejection method
+#' Generate a biased sample using \insertCite{neumann1951;textual}{WData} acceptance-rejection method
 #'
-#' This function generates a biased dataset of size `n` using \insertCite{neumann1951;textual}{WData} acceptance-rejection method. The generated dataset is biased according to the provided bias function `w`, with respect to the unbiased density function `fx`.
+#' This function generates a biased sample of size `n` using \insertCite{neumann1951;textual}{WData} acceptance-rejection method. The generated sample is biased according to the provided bias function `w`, with respect to the unbiased density function `fx`.
 #'
-#' @param n Number of data points to generate.
-#' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of `y`. By default, it is set to the length-biased function.
-#' @param fx Unbiased density function. Distributions allowed are
+#' @param n Sample size.
+#' @param w A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample `y`. By default, it is set to the length-biased function.
+#' @param fx Unbiased density function. Values allowed are
 #' Beta ([`beta`][stats::dbeta()]),
 #' Cauchy ([`cauchy`][stats::dcauchy()]),
 #' Chi-Square ([`chisq`][stats::dchisq()]),
@@ -17,11 +17,12 @@
 #' Student t ([`t`][stats::dt()]),
 #' Continuous Uniform ([`unif`][stats::dunif()]),
 #' Weibull ([`weibull`][stats::dweibull()]),
-#' Mixture of normal distributions ([`mixnorm`][KScorrect::dmixnorm()]) and
+#' Mixture of gaussian distributions ([`mixnorm`][KScorrect::dmixnorm()]) and
 #' Mixture of gamma distributions ([`mgamma`][evmix::dmgamma()]) .
+#' @param lim A numeric value between 0 and 1 specifying the quantile range within which the bias function is considered significant and, hence, the interval over which the constant \eqn{c = \max_{y \in \mathbb{R}} w(y)/\mu_w > 0} is searched. The lower and upper bounds for this interval are determined by `q(lim)` and `q(1 - lim)``, respectively, where `q` is the quantile function of the chosen distribution `fx`.
 #' @param lim Lower and upper limits for the range where the bias is significant and, hence, where \eqn{c = \max_{y\in \mathbb{R}}w(y)/\mu_w > 0} must be searched.
-#' @param plot Logical value indicating whether to generate a diagnostic plot of the biased dataset. Default is `TRUE`.
-#' @param stop Logical value indicating whether to stop when bias function can't be evaluated in a generated value. Default is `TRUE`. If `FALSE` value is discarded and a new one is generated.
+#' @param plot Logical value indicating whether to generate a plot of the biased sample. Default is `TRUE`.
+#' @param stop Logical value indicating whether to stop when bias function can not be evaluated in a generated value. Default is `TRUE`. If `FALSE` value is discarded and a new one is generated.
 #' @param shape1,shape2 Additional arguments to be passed to the unbiased density function `fx` when set to the [`beta`][stats::dbeta()] distribution.
 #' @param df,ncp Additional arguments to be passed to the unbiased density function `fx` when set to the [`chisq`][stats::dchisq()] and [`t`][stats::dt()] distributions.
 #' @param shape,rate,scale,location Additional arguments to be passed to the unbiased density function `fx` when set to the [`cauchy`][stats::dcauchy()], [`logis`][stats::dlogis()], [`exp`][stats::dexp()], [`gamma`][stats::dgamma()] and [`weibull`][stats::dweibull()] distributions.
@@ -29,23 +30,23 @@
 #' @param min,max Additional arguments to be passed to the unbiased density function `fx` when set to the [`unif`][stats::dunif()] distribution.
 #' @param mean,sd,pro,meanlog,sdlog Additional arguments to be passed to the unbiased density function `fx` when set to the [`norm`][stats::dnorm()],  [`mixnorm`][KScorrect::dmixnorm()] and [`lnorm`][stats::dlnorm()]  distributions.
 #' @param mgshape,mgscale,mgweight Additional arguments to be passed to the unbiased density function `fx` when set to the [`mgamma`][evmix::dmgamma()] distribution.
-#' @return A numeric vector containing biased random samples from density `fx` and bias function `w`.
-#' @details This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased dataset given an  unbiased density function `fx` and a bias function `w`.
+#' @return A numeric vector containing a biased sample from density `fx` and bias function `w`.
+#' @details This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased sample given an  unbiased density function `fx` and a bias function `w`.
 #' @references \insertAllCited{}
 #' @examples
-#' # Generate a length-biased dataset of size 100 from an exponential distribution
+#' # Generate a length-biased sample of size 100 from an exponential distribution
 #' rbiased(n = 100, fx = "exp", rate = 2, plot = FALSE)
 #'
-#' #' # Generate a length-biased biased dataset from a gamma distribution
+#' # Generate a length-biased sample from a gamma distribution
 #' rbiased(n = 100, fx = "gamma", rate = 1.5^2, shape = 1.5)
 #'
-#' # Generate a biased dataset from a normal distribution
+#' # Generate a biased sample from a gaussian distribution
 #' custom_bias <- function(y) {
 #'   y^2
 #' }
 #' rbiased(n = 100, w = custom_bias, fx = "norm", mean = 3, sd = 10, plot = TRUE)
 #'
-#' # Generate a biased dataset from a mixture of normal distributions
+#' # Generate a biased sample from a mixture of gaussian distributions
 #' custom_bias <- function(y) {
 #'   sqrt(abs(y)) + 5
 #' }
@@ -86,47 +87,47 @@ rbiased <- function(n,
   ))
 
   f <- switch(fx,
-    beta = function(x) {
-      dbeta(x, shape1, shape2)
+    beta = function(y) {
+      dbeta(y, shape1, shape2)
     },
-    cauchy = function(x) {
-      dcauchy(x, location, scale)
+    cauchy = function(y) {
+      dcauchy(y, location, scale)
     },
-    chisq = function(x) {
-      dchisq(x, df, ncp)
+    chisq = function(y) {
+      dchisq(y, df, ncp)
     },
-    exp = function(x) {
-      dexp(x, rate)
+    exp = function(y) {
+      dexp(y, rate)
     },
-    f = function(x) {
-      df(x, df1, df2)
+    f = function(y) {
+      df(y, df1, df2)
     },
-    gamma = function(x) {
-      dgamma(x, shape, rate)
+    gamma = function(y) {
+      dgamma(y, shape, rate)
     },
-    logis = function(x) {
-      dlogis(x, location, scale)
+    logis = function(y) {
+      dlogis(y, location, scale)
     },
-    lnorm = function(x) {
-      dlnorm(x, meanlog, sdlog)
+    lnorm = function(y) {
+      dlnorm(y, meanlog, sdlog)
     },
-    norm = function(x) {
-      dnorm(x, mean, sd)
+    norm = function(y) {
+      dnorm(y, mean, sd)
     },
-    t = function(x) {
-      dt(x, df, ncp)
+    t = function(y) {
+      dt(y, df, ncp)
     },
-    unif = function(x) {
-      dunif(x, min, max)
+    unif = function(y) {
+      dunif(y, min, max)
     },
-    weibull = function(x) {
-      dweibull(x, shape, scale)
+    weibull = function(y) {
+      dweibull(y, shape, scale)
     },
-    mixnorm = function(x) {
-      KScorrect::dmixnorm(x, mean, sd, pro)
+    mixnorm = function(y) {
+      KScorrect::dmixnorm(y, mean, sd, pro)
     },
-    mgamma = function(x) {
-      evmix::dmgamma(x, mgshape, mgscale, mgweight)
+    mgamma = function(y) {
+      evmix::dmgamma(y, mgshape, mgscale, mgweight)
     }
   )
 
@@ -204,11 +205,11 @@ rbiased <- function(n,
     pro <- pro / sum(pro)
     clabels <- sample(1:G, size = n, replace = TRUE, prob = pro)
     ctable <- tabulate(clabels, nbins = G)
-    x <- rep(0, n)
+    y <- rep(0, n)
     for (k in 1:G) {
-      x[clabels == k] <- mean[k] + rnorm(ctable[k], sd = sd[k])
+      y[clabels == k] <- mean[k] + rnorm(ctable[k], sd = sd[k])
     }
-    structure(as.vector(x), modelName = modelName)
+    structure(as.vector(y), modelName = modelName)
   }
 
 
@@ -236,13 +237,13 @@ rbiased <- function(n,
     modelName <- "V"
     clabels <- sample(1:G, size = n, replace = TRUE, prob = mgweight)
     ctable <- tabulate(clabels, nbins = G)
-    x <- rep(0, n)
+    y <- rep(0, n)
 
     for (i in 1:G) {
-      x[clabels == i] <- rgamma(1, shape = mgshape[i], scale = mgscale[i])
+      y[clabels == i] <- rgamma(1, shape = mgshape[i], scale = mgscale[i])
     }
 
-    structure(as.vector(x), modelName = modelName)
+    structure(as.vector(y), modelName = modelName)
   }
 
   r <- switch(fx,
@@ -304,8 +305,8 @@ rbiased <- function(n,
       wxi <- w(xi)
       if (any(length(wxi) == 0 | !is.numeric(wxi) | wxi <= 0)) {
         ifelse(stop,
-          stop("bias function 'w' must be evaluable and positive in each point of 'fx' domain"),
-          warning("bias function 'w' must be evaluable and positive in each point of 'fx' domain")
+          stop("bias function 'w' must be evaluable and positive in each point of the sample 'fx' domain"),
+          warning("bias function 'w' must be evaluable and positive in each point of the sample 'fx' domain")
         )
       }
 
@@ -322,7 +323,7 @@ rbiased <- function(n,
 
 
   if (any(length(y) == 0 | !is.numeric(y) | anyNA(y))) {
-    stop("failure on the method -  it was not possible to generate biased dataset")
+    stop("failure on the method -  it was not possible to generate biased sample")
   }
 
   boundw <- sapply(seq(base::min(y, na.rm = T), base::max(y, na.rm = T), length.out = 1000L), w)
@@ -338,7 +339,7 @@ rbiased <- function(n,
 
   if (plot == TRUE) {
     wf <- function(y) {
-      w(y) * f(x = y)
+      w(y) * f(y = y)
     }
     uw <- integrate(wf, lower = q(lim), upper = q(1 - lim))
     g <- function(y) {
@@ -355,7 +356,7 @@ rbiased <- function(n,
 
     plot(density(y, bw = bw.SJ(y)),
       col = "black", lty = 2,
-      ylim = c(y_min, y_max),
+      ylim = c(y_min, 1.2 * y_max),
       sub = paste0("Bias:", gsub("\\s+", " ", deparse1(w))),
       xlab = paste0("Unbiased Density f(y):", gsub("\\s+", " ", deparse1(fx)))
     )

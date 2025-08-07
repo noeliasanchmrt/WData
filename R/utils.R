@@ -1,4 +1,4 @@
-.check_biased_dataset <- function(y, w) {
+.check_biased_sample <- function(y, w) {
   data.name <- deparse(substitute(y))
 
   if (!is.numeric(y)) {
@@ -242,20 +242,20 @@
 }
 
 
-.simpsons_rule <- function(x, fx) {
+.simpsons_rule <- function(y.seq, fx) {
   # https://scicomp.stackexchange.com/questions/25649/composite-simpsons-rule-with-odd-intervals
-  valid <- which(!is.na(x) & !is.na(fx) & is.finite(x) & is.finite(fx))
-  x <- x[valid]
+  valid <- which(!is.na(y.seq) & !is.na(fx) & is.finite(y.seq) & is.finite(fx))
+  y.seq <- y.seq[valid]
   fx <- fx[valid]
 
-  ord <- order(x)
-  x <- x[ord]
+  ord <- order(y.seq)
+  y.seq <- y.seq[ord]
   fx <- fx[ord]
-  n <- length(x)
+  n <- length(y.seq)
   if (n < 5) stop("At least 5 points are required for Simpson's rule")
 
-  h <- (x[2] - x[1])
-  if (any(abs(diff(x) - h) > .Machine$double.eps^0.5)) stop("x must be equally spaced")
+  h <- (y.seq[2] - y.seq[1])
+  if (any(abs(diff(y.seq) - h) > .Machine$double.eps^0.5)) stop("y.seq must be equally spaced")
 
   integral <- fx[1] + fx[n] + 4 * sum(fx[seq.int(2, n - 1, by = 2)]) + 2 * sum(fx[seq.int(3, n - 2, by = 2)])
   integral * h / 3
@@ -285,31 +285,8 @@
   seq(lower, upper, length.out = nh)
 }
 
-.get_prob_grid <- function(x, from, to, nb, bw, adjust) {
-  if (missing(x)) {
-    .validate_number(nb, "nb")
-    .validate_number(from, "from")
-    .validate_number(to, "to")
-    if (from < 0 || to > 1) stop("'from' and 'to' must be numeric on [0,1]")
-    if (from > to) stop("'from' must be smaller than 'to'")
-    if (!all.equal(nb, as.integer(nb)) || nb <= 0) stop("'nb' must be a positive integer")
-    x <- seq.int(from, to, length.out = nb)
-  } else {
-    if (!is.numeric(x) || !is.vector(x) || !all(x >= 0 & x <= 1)) stop("'x' must be a numeric vector on [0,1]")
-    x <- sort(x)
-  }
-
-  message(sprintf("Interval for Estimation: [%f, %f]", min(x), max(x)))
-
-  .validate_number(bw, "bw")
-  .validate_number(adjust, "adjust")
-
-  bw <- adjust * bw
-  list(x = x, from = from, to = to, bw = bw)
-}
-
-.get_xaxn_grid <- function(y, x, from, to, nb, plot) {
-  if (missing(x)) {
+.get_xaxn_grid <- function(y, y.seq, from, to, nb, plot) {
+  if (missing(y.seq)) {
     if (missing(from)) {
       from <- min(y) - (sort(y)[5] - min(y))
     }
@@ -322,17 +299,17 @@
     .validate_number(to, "to")
     if (from >= to) stop("'from' must be smaller than 'to'")
     if (!all.equal(nb, as.integer(nb)) || nb <= 0) stop("'nb' must be a positive integer")
-    x <- seq.int(from, to, length.out = nb)
+    y.seq <- seq.int(from, to, length.out = nb)
   } else {
-    if (!is.numeric(x) || !is.vector(x)) stop("'x' must be a numeric vector")
-    from <- min(x)
-    to <- max(x)
+    if (!is.numeric(y.seq) || !is.vector(y.seq)) stop("'y.seq' must be a numeric vector")
+    from <- min(y.seq)
+    to <- max(y.seq)
   }
 
-  message(sprintf("Interval for Estimation: [%f, %f]", min(x), max(x)))
+  message(sprintf("Interval for Estimation: [%f, %f]", min(y.seq), max(y.seq)))
 
   if (!is.logical(plot)) {
     stop("argument 'plot' must be logical")
   }
-  list(x = x, from = from, to = to)
+  list(y.seq = y.seq, from = from, to = to)
 }

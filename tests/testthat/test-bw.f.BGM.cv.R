@@ -1,13 +1,13 @@
-test_that("bw.f.BGMcv() returns a valid bandwidth", {
-  bw <- bw.f.BGMcv(biased_models[[1]], nh = 25L, plot = FALSE)
+test_that("bw.f.BGM.cv() returns a valid bandwidth", {
+  bw <- bw.f.BGM.cv(biased_models[[1]], nh = 25L, plot = FALSE)
 
   expect_type(bw, "double")
   expect_gt(bw, 0)
 })
 
-test_that("bw.f.BGMcv() correctly handles different kernels", {
+test_that("bw.f.BGM.cv() correctly handles different kernels", {
   bw_values <- sapply(kernels, function(k) {
-    bw.f.BGMcv(biased_models[[1]],
+    bw.f.BGM.cv(biased_models[[1]],
       lower = IQR(biased_models[[1]]) * length(biased_models[[1]])^{
         -0.2
       } * 1000^{
@@ -26,20 +26,20 @@ test_that("bw.f.BGMcv() correctly handles different kernels", {
   )
 })
 
-test_that("bw.f.BGMcv() produces stable plots", {
+test_that("bw.f.BGM.cv() produces stable plots", {
   skip_on_os(os = c("windows", "linux"))
 
   lapply(seq_along(biased_models), function(i) {
     lapply(kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("bw.f.BGMcv_model_", i, "_kernel_", k),
+        paste0("bw.f.BGM.cv_model_", i, "_kernel_", k),
         function() {
           original_par <- par(no.readonly = TRUE) # Save current graphical parameters
           on.exit(par(original_par)) # Restore them after the test
 
           par(mfrow = c(1, 3)) # Set layout for three plots
 
-          bw.f.BGMcv(biased_models[[i]],
+          bw.f.BGM.cv(biased_models[[i]],
             lower = IQR(biased_models[[i]]) * length(biased_models[[i]])^{
               -0.2
             } * 1000^{
@@ -57,16 +57,16 @@ test_that("bw.f.BGMcv() produces stable plots", {
   })
 })
 
-test_that("df.jones() with bw.f.BGMcv() produces stable plots", {
+test_that("df.jones() with bw.f.BGM.cv() produces stable plots", {
   skip_on_os(os = c("windows", "linux"))
 
   lapply(seq_along(biased_models), function(i) {
     lapply(kernels, function(k) {
       vdiffr::expect_doppelganger(
-        paste0("df.jones_bw.f.BGMcv_model_", i, "_kernel_", k),
+        paste0("df.jones_bw.f.BGM.cv_model_", i, "_kernel_", k),
         function() {
           df.jones(biased_models[[i]],
-            bw = "bw.f.BGMcv",
+            bw = "bw.f.BGM.cv",
             lower = IQR(biased_models[[i]]) * length(biased_models[[i]])^{
               -0.2
             } * 1000^{

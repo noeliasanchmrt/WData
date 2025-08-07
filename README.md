@@ -17,9 +17,9 @@ distribution. Regarding density function estimation, the package
 includes Bhattacharyya et al. (1988) and Jones (1991) density estimators
 and various bandwidth selectors for the latter, enhancing the
 flexibility and adaptability of density estimation to different types of
-datasets and biases. For cumulative distribution function estimation,
-the package includes the empirical estimator proposed by Cox (2005) and
-the kernel-type estimator by Bose and Dutta (2022), along with several
+samples and biases. For cumulative distribution function estimation, the
+package includes the empirical estimator proposed by Cox (2005) and the
+kernel-type estimator by Bose and Dutta (2022), along with several
 bandwidth selectors for the latter. Finally, the package includes
 Muttlak (1988) real length-biased dataset on shrub width as an example
 dataset.
@@ -140,29 +140,29 @@ Bhattacharyya et al. (1988) density estimator for shrub width.
 
 The function allows different bandwidth selection methods:
 
-- `"bw.f.BGMnrd0"`: Normal reference rule-of-thumb selector.
-- `"bw.f.BGMcv"`: Cross-validation-based selector.
-- `"bw.f.BGMboot1"`: Bootstrap-based selector (method 1).
-- `"bw.f.BGMboot2"`: Bootstrap-based selector (method 2).
+- `"bw.f.BGM.rt"`: Normal reference rule-of-thumb selector.
+- `"bw.f.BGM.cv"`: Cross-validation-based selector.
+- `"bw.f.BGM.boot1"`: Bootstrap-based selector (method 1).
+- `"bw.f.BGM.boot2"`: Bootstrap-based selector (method 2).
 
 ``` r
 par(mfrow = c(2, 3))
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMnrd0", from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.rt", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMcv", lower = 0.01, upper = 0.5, nh = 500L, from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.cv", lower = 0.01, upper = 0.5, nh = 500L, from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Interval where bandwidth is searched: [0.010000, 0.500000]
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.boot1", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.293207
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", bw0 = "Opt", from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.boot1", bw0 = "PI", from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.267953
-bw.f.BGMboot2 <- bw.f.BGMboot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 200L, plot = F)
+bw.f.BGM.boot2 <- bw.f.BGM.boot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 200L, plot = F)
 #> Interval where bandwidth is searched: [0.000161, 217.341159]
 #> Interval where density is evaluated: [0.001000, 3.000000]
 #> Pilot Bandwidth for Bootstrap: 0.075912
-jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = bw.f.BGMboot2, from = -0.4, to = 3)
+jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = bw.f.BGM.boot2, from = -0.4, to = 3)
 #> Interval for Estimation: [-0.400000, 3.000000]
 ```
 
@@ -202,15 +202,15 @@ Cox (2005) distribution estimator for shrub width.
 
 ``` r
 par(mfrow = c(2, 2))
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.25, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.25, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.5, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.5, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(1.3, 512))
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(1.3, 512))
 #> Interval for Estimation: [0.000000, 3.000000]
-c_adj <- ifelse(seq(from = 0, to = 3, length.out = 512) <= quantile(shrub.data$Width, 0.05) |
+cy.seq <- ifelse(seq(from = 0, to = 3, length.out = 512) <= quantile(shrub.data$Width, 0.05) |
   seq(from = 0, to = 3, length.out = 512) >= quantile(shrub.data$Width, 0.95), 0.5, 1.3)
-bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = c_adj)
+bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = cy.seq)
 #> Interval for Estimation: [0.000000, 3.000000]
 ```
 
@@ -225,17 +225,17 @@ bandwidth selector.
 
 </div>
 
-##### `bw.F.SBCnrd0()`, `bw.F.SBCcv()`and `bw.F.SBCpi()`: Global bandwidth selectors
+##### `bw.F.SBC.rt()`, `bw.F.SBC.cv()`and `bw.F.SBC.pi()`: Global bandwidth selectors
 
 ``` r
 par(mfrow = c(1, 3))
 bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left")
 #> Interval for Estimation: [0.000000, 3.000000]
-bw_cv <- bw.F.SBCcv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 250, plot = F)
+bw_cv <- bw.F.SBC.cv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 250, plot = F)
 #> Interval where bandwidth is searched: [0.050000, 0.200000]
 bd <- cdf.bd(shrub.data$Width, correction = "left", bw = bw_cv)
 #> Interval for Estimation: [0.030000, 3.130000]
-bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F.SBCpi")
+bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F.SBC.pi")
 #> Interval for Estimation: [0.000000, 3.000000]
 #> Pilot Bandwidth: 0.214138
 ```
