@@ -1,0 +1,65 @@
+Package: WData
+Title: Density, Distribution, and Quantile Estimation for Biased Datasets
+Version: 0.1.0
+Authors@R: c(
+    person("Sánchez Martínez", "Noelia", , "noelia.sanchez.martinez@rai.usc.es", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-2869-1347")),
+    person("Borrajo Garcia", "Maria Isabel", , "mariaisabel.borrajo@usc.es", role = "aut",
+           comment = c(ORCID = "0000-0002-3372-1993")),
+    person("Conde Amboage", "Mercedes", , "mercedes.amboage@usc.es", role = "aut",
+           comment = c(ORCID = "0000-0003-0306-8142"))
+  )
+Description: Set of tools for analyzing and modeling data that may be
+    subject to biases in sampling. It offers functions to estimate density
+    functions, cumulative distribution functions, and quantiles from
+    biased samples of a continuous distribution. Regarding density
+    function estimation, the package includes Bhattacharyya et al. (1988)
+    and Jones (1991) density estimators and various bandwidth selectors
+    for Jones (1991) density estimator, enhancing the flexibility and
+    adaptability of density estimation to different types of datasets and
+    biases. For cumulative distribution function estimation, the package
+    includes the empirical estimator proposed by Cox (2005) and the
+    kernel-type estimator by Bose and Dutta (2022), along with several
+    bandwidth selectors for the latter. For quantile function estimation,
+    it provides two empirical estimators (one of which corresponds to
+    Sen’s (1984) proposal) and one kernel-type estimator. Additionally,
+    for sparsity function estimation, the package includes the two
+    estimators proposed by Akbari et al. (2019) (one plug-in and one
+    kernel-type), as well as a third kernel-type estimator. Moreover, it
+    offers functions for simulating datasets given a bias function and a
+    reference distribution, providing users with the ability to generate
+    synthetic datasets for various modeling and analysis purposes. It also
+    includes functions for constructing boxplots and QQ plots for biased
+    data, facilitating graphical exploration. Finally, the package
+    includes Muttlak’s (1988) real length-biased dataset on shrub width as
+    an example dataset.
+License: MIT + file LICENSE
+URL: https://github.com/noeliasanchmrt/WData
+BugReports: https://github.com/noeliasanchmrt/WData/issues
+Depends: 
+    R (>= 3.5.0)
+Imports: 
+    bayesmeta,
+    cubature,
+    evmix,
+    KScorrect,
+    latex2exp,
+    progress,
+    Rcpp,
+    Rdpack
+Suggests: 
+    roxygen2,
+    testthat (>= 3.0.0),
+    vdiffr
+Enhances: 
+    stats
+LinkingTo: 
+    Rcpp
+RdMacros: 
+    Rdpack
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

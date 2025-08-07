@@ -1,0 +1,54 @@
+exportPattern("^[[:alpha:]]+")
+importFrom("graphics", "abline", "bxp", "curve", "legend", "lines", "par", "rug", "title")
+importFrom("stats", "IQR", "approx", "approxfun", "bw.SJ", "bw.bcv", "bw.nrd", "bw.nrd0", "bw.ucv", "density", "integrate", "knots", "nobs", "optimize", "plot.stepfun", "quantile", "stepfun")
+importFrom("stats",
+    "dbeta", "dcauchy", "dchisq", "dexp", "dgamma", "dlnorm", "dlogis", "dnorm", "dt", "dunif", "dweibull",
+    "pbeta", "pnorm",
+    "qbeta", "qcauchy", "qchisq", "qexp", "qf", "qgamma", "qlnorm", "qlogis", "qnorm", "qt", "qunif", "qweibull",
+    "rbeta", "rcauchy", "rchisq", "rexp", "rf", "rgamma", "rlnorm", "rlogis", "rmultinom", "rnorm", "rt", "runif", "rweibull"
+)
+importFrom("KScorrect", "dmixnorm", "pmixnorm", "qmixnorm")
+importFrom("evmix", "check.inputn", "check.n", "check.posparam", "dmgamma", "pmgamma", "qmgamma")
+importFrom(Rdpack, reprompt)
+importFrom(latex2exp, TeX)
+importFrom("utils", "tail")
+importFrom("bayesmeta", "convolve")
+importFrom("cubature", "cubintegrate")
+importFrom("progress", "progress_bar")
+useDynLib(WData)
+importFrom(Rcpp, evalCpp)
+export(
+    "bw.F.BD",
+    "bw.f.BGMboot1",
+    "bw.f.BGMboot2",
+    "bw.f.BGMcv",
+    "bw.f.BGMnrd0",
+    "bw.F.SBCcv",
+    "bw.F.SBCnrd0",
+    "bw.F.SBCpi",
+    "cdf.bd",
+    "cdf.cox",
+    "cdf.efro",
+    "df.bhatta",
+    "df.jones",
+    "eqf",
+    "qf.SBC",
+    "qf.SBCkernel",
+    "qf.sen",
+    "rbiased",
+    "sp.akbarikernel",
+    "sp.akbaripi",
+    "sp.SBC",
+    "w_boxplot",
+    "w_boxstats",
+    "w_fivenum",
+    "w_qqnorm"
+)
+S3method(plot, eqf)
+S3method(print, eqf)
+S3method(summary, eqf)
+S3method(quantile, eqf)
+S3method(w_boxplot, default)
+S3method(w_boxplot, formula)
+S3method(w_qqnorm, default)
+

@@ -1,0 +1,215 @@
+---
+output: github_document
+bibliography: inst/REFERENCES.bib
+csl: https://www.zotero.org/styles/american-statistical-association
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+options(tibble.print_min = 5, tibble.print_max = 5)
+```
+
+# <img src="man/figures/logo.png" align="left" height="139" alt="" /> WData 
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/noeliasanchmrt/WData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/noeliasanchmrt/WData/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/noeliasanchmrt/WData/graph/badge.svg)](https://app.codecov.io/gh/noeliasanchmrt/WData)
+<!-- badges: end -->
+
+Set of tools for analyzing and modeling data that may be
+    subject to biases in sampling. It offers functions to estimate density
+    functions, cumulative distribution functions, and quantiles from
+    biased samples of a continuous distribution. Regarding density
+    function estimation, the package includes @bhattacharyya1988
+    and @jones1991 density estimators and various bandwidth selectors
+    for @jones1991 density estimator, enhancing the flexibility and
+    adaptability of density estimation to different types of datasets and
+    biases. For cumulative distribution function estimation, the package
+    includes the empirical estimator proposed by @cox2005 and the
+    kernel-type estimator by @bose2022, along with several
+    bandwidth selectors for the latter. For quantile function estimation,
+    it provides two empirical estimators (one of which corresponds to
+    @sen1984 proposal) and one kernel-type estimator. Additionally,
+    for sparsity function estimation, the package includes the two
+    estimators proposed by @akbari2019 (one plug-in and one
+    kernel-type), as well as a third kernel-type estimator. Moreover, it
+    offers functions for simulating datasets given a bias function and a
+    reference distribution, providing users with the ability to generate
+    synthetic datasets for various modeling and analysis purposes. It also
+    includes functions for constructing boxplots and QQ plots for biased
+    data, facilitating graphical exploration. Finally, the package
+    includes @muttlak1988 real length-biased dataset on shrub width as
+    an example dataset.
+    
+## Installation
+
+You can install the development version of WData from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("noeliasanchmrt/WData")
+library(WData)
+```
+
+## Getting help
+
+If you encounter a clear bug, please file an issue with a minimal reproducible example on [GitHub](https://github.com/tidyverse/dplyr/issues). For questions and other discussion, please use [forum.posit.co](https://forum.posit.co/).
+
+
+## Usage
+
+### Real data 
+
+The species *Cercocarpus montanus*, commonly known as mountain mahogany, is a deciduous shrub native to the western United States and northern Mexico. It is typically found on slopes, canyons, and rocky, arid formations with calcareous or other alkaline soils. This small shrub has white flowers and oval-shaped leaves with serrated edges. It is highly drought-tolerant and can survive even in nutrient-poor soils. Its intricate root system prevents landslides on sloped terrains, while its branches provide food and habitat for various animal species. These characteristics make *Cercocarpus montanus* an ideal species for studying wildlife recovery in a given geographic region.
+
+During the fall semester of 1986, graduate students in a biological sampling techniques course taught by Lyman L. McDonald at the University of Wyoming conducted a study on the size of *Cercocarpus montanus* in an old limestone quarry located just east of Laramie, Wyoming (United States).
+
+The sampling was conducted using line transect methods, which are widely used in ecological studies to measure species abundance in a given area and other relevant parameters. These methods involve randomly placing parallel sampling lines (transects) across the study area. Researchers traverse these lines, recording variables of interest.
+
+To establish the sampling lines, a baseline was set across the study region. Random positions were generated along this baseline following a uniform distribution, and each sampling line was drawn perpendicularly from these points. One limitation of this approach is the need for a large number of transects to cover the area adequately. An alternative method involves selecting a single random point along the baseline and setting a fixed distance between transects. More details on variations of this method can be found in @buckland2001.
+
+The Laramie quarry was covered with north-south-oriented rock fissures. Since moisture levels and vegetation density were higher in these fissures, a baseline parallel to them was established. The transects were drawn perpendicular to this baseline, crossing the terrain fissures instead of running parallel to them. A distance of 41.6 meters was set between transects, and two independent replicates (I and II) were obtained, each with three equidistant parallel transects. In total, six transects were surveyed from the baseline to the eastern boundary of the quarry. Students traversed the transects, identifying *Cercocarpus montanus* shrubs intersected by the line. For each shrub, its maximum height, the number of main branches, and its width (the maximum distance between two parallel tangent lines to the shrub's contour along the transect) were measured.
+
+Since *Cercocarpus montanus* is a rhizomatous species and adjacent shrubs may be interconnected via their root system, a shrub was defined as an individual if it had a distinct cluster of stems at the base and was at least 15 centimeters away from its nearest neighbor. For shrub clusters, the length of their intersection with the transect was recorded. More details on the sampling procedure and additional measurements can be found in @muttlak1988.
+
+Due to the sampling method, wider shrubs had a higher probability of being intersected by the transects. Consequently, the recorded shrub widths represent a sample biased by longitudinal bias, meaning the bias function is given by $w(x) = x$. The height and branch count measurements were also subject to bias, although the bias function $w$ is more complex as it depends on the relationship between shrub width and these respective variables.
+
+
+``` r
+summary(shrub.data)
+summary(shrub.data$Width)
+```
+
+### Density estimation 
+
+#### `df.bhatta()`: @bhattacharyya1988 density estimator
+
+```{r,  fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bhattacharyya1988 density estimator for shrub width."}
+library(WData)
+par(mfrow = c(1, 3))
+df.bhatta(shrub.data$Width, bw = "nrd0", kernel = "gaussian", from = -0.4, to = 3)
+bw.ucv <- bw.ucv(shrub.data$Width, lower = 0.15, upper = 0.3)
+df.bhatta(shrub.data$Width, bw = bw.ucv, kernel = "gaussian", from = -0.4, to = 3)
+df.bhatta(shrub.data$Width, bw = "SJ-ste", kernel = "gaussian", from = -0.3, to = 3)
+```
+
+#### `df.jones()`: @jones1991 density estimator
+
+The function allows different bandwidth selection methods:
+
+- `"bw.f.BGMnrd0"`: Normal reference rule-of-thumb selector.
+- `"bw.f.BGMcv"`: Cross-validation-based selector.
+- `"bw.f.BGMboot1"`: Bootstrap-based selector (method 1).
+- `"bw.f.BGMboot2"`: Bootstrap-based selector (method 2).
+
+```{r, fig.width=12, fig.height=8, fig.align="center", fig.cap= "@jones1991 density estimator for shrub width."}
+par(mfrow = c(2, 3))
+df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMnrd0", from = -0.4, to = 3)
+df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMcv", lower = 0.01, upper = 0.5, nh = 500L, from = -0.4, to = 3)
+df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", from = -0.4, to = 3)
+df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGMboot1", bw0 = "Opt", from = -0.4, to = 3)
+bw.f.BGMboot2 <- bw.f.BGMboot2(y = shrub.data$Width, from = 0.001, to = 3, nh = 200L, plot = F)
+df.jones(shrub.data$Width, kernel = "gaussian", bw = bw.f.BGMboot2, from = -0.4, to = 3)
+```
+
+### Distribution estimation 
+
+#### `cdf.cox()`: @cox2005 distribution estimator
+
+```{r,  out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "@cox2005 distribution estimator for shrub width."}
+par(mfrow = c(1, 1))
+plot(cdf.cox(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 3))
+rug(shrub.data$Width)
+```
+
+#### @bose2022 distribution estimator
+
+##### `bw.F.BD()`: @bose2022 local bandwidth selector
+
+```{r,   fig.width=8, fig.height=8, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using local bandwiths."}
+par(mfrow = c(2, 2))
+cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.25, 512))
+cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(0.5, 512))
+cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = rep(1.3, 512))
+c_adj <- ifelse(seq(from = 0, to = 3, length.out = 512) <= quantile(shrub.data$Width, 0.05) |
+  seq(from = 0, to = 3, length.out = 512) >= quantile(shrub.data$Width, 0.95), 0.5, 1.3)
+cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", c_adj = c_adj)
+```
+
+##### `bw.F.SBCnrd0()`, `bw.F.SBCcv()`and `bw.F.SBCpi()`: Global bandwidth selectors
+
+```{r,  fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using global bandwiths."}
+par(mfrow = c(1, 3))
+cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left")
+bw_cv <- bw.F.SBCcv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 250, plot = F)
+cdf.bd(shrub.data$Width, correction = "left", bw = bw_cv)
+cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F.SBCpi")
+```
+
+#### `cdf.efro()`: @efromovich2008 series distribution estimator 
+
+```{r,  fig.width=12, fig.height=6, fig.align="center"}
+par(mfrow = c(2, 4))
+cdf.efro(shrub.data$Width)
+```
+
+### Quantile estimation
+
+#### `qf.sen()`and `qf.sen()`: Empirical quantile estimators 
+
+```{r, out.width = '80%', fig.width=8, fig.height=4, fig.align="center", fig.cap= "Empirical quantile estimators for shrub width."}
+par(mfrow = c(1, 2))
+plot(qf.sen(shrub.data$Width), xlab = "", ylab = "", col = "blue", main = "Empirical quantile estimator (qf.sen)")
+plot(qf.SBC(shrub.data$Width), xlab = "", ylab = "", col = "blue", main = "Empirical quantile estimator (qf.SBC)")
+```
+
+#### `qf.SBCkernel()`: Kernel quantile estimator 
+
+```{r,  fig.width=16, fig.height=4, fig.align="center", fig.cap= "Kernel quantile estimator for shrub width."}
+par(mfrow = c(1, 4))
+qf.SBCkernel(shrub.data$Width, kernel = "epanechnikov", bw = 0.01)
+qf.SBCkernel(shrub.data$Width, kernel = "epanechnikov", bw = 0.05)
+qf.SBCkernel(shrub.data$Width, kernel = "epanechnikov", bw = 0.10)
+qf.SBCkernel(shrub.data$Width, kernel = "epanechnikov", bw = 0.25)
+```
+
+### Sparsity estimation
+
+#### `sp.akbaripi()`: @akbari2019 plug-in sparsity estimator
+
+```{r,  fig.width=16, fig.height=4, fig.align="center", fig.cap= "@akbari2019 plug-in sparsity estimator for shrub width."}
+par(mfrow = c(1, 4))
+sp.akbaripi(shrub.data$Width, bw = 0.01, kernel = "epanechnikov")
+sp.akbaripi(shrub.data$Width, bw = 0.05, kernel = "epanechnikov")
+sp.akbaripi(shrub.data$Width, bw = 0.10, kernel = "epanechnikov")
+sp.akbaripi(shrub.data$Width, bw = 0.25, kernel = "epanechnikov")
+```
+
+#### `sp.akbarikernel()`: Kernel sparsity estimator
+
+```{r,  fig.width=16, fig.height=4, fig.align="center", fig.cap= "@akbari2019 kernel sparsity estimator for shrub width."}
+par(mfrow = c(1, 4))
+sp.akbarikernel(shrub.data$Width, bw = 0.01, kernel = "epanechnikov")
+sp.akbarikernel(shrub.data$Width, bw = 0.05, kernel = "epanechnikov")
+sp.akbarikernel(shrub.data$Width, bw = 0.10, kernel = "epanechnikov")
+sp.akbarikernel(shrub.data$Width, bw = 0.25, kernel = "epanechnikov")
+```
+
+#### `sp.SBC()`: Kernel sparsity estimator based on @cox2005 distribution estimator
+
+```{r,  fig.width=16, fig.height=4, fig.align="center", fig.cap= "kernel sparsity estimator based on @cox2005 distribution estimator for shrub width."}
+par(mfrow = c(1, 4))
+sp.SBC(shrub.data$Width, bw = 0.01, kernel = "epanechnikov")
+sp.SBC(shrub.data$Width, bw = 0.05, kernel = "epanechnikov")
+sp.SBC(shrub.data$Width, bw = 0.10, kernel = "epanechnikov")
+sp.SBC(shrub.data$Width, bw = 0.25, kernel = "epanechnikov")
+```
+
+## References
