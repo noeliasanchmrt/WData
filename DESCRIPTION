@@ -16,8 +16,12 @@ Description: Analyzes and models data subject to sampling biases.
     <doi:10.1080/03610928808829825> and Jones (1991) <doi:10.2307/2337020>
     for density, and by Cox (2005, ISBN:052184939X) and Bose and Dutta
     (2022) <doi:10.1007/s00184-021-00824-3> for distribution, with
-    different bandwidth selectors. Also includes a real length-biased
-    dataset on shrub width from Muttlak (1988)
+    different bandwidth selectors. Regarding quantile function, 
+    it includes the estimators proposed by Sen (1984) 
+    <doi:10.1177/0008068319840106> and the empirical 
+    quantile function based on the distribution function estimator proposed 
+    by Cox (2005, ISBN:052184939X).
+    Also includes a real length-biased dataset on shrub width from Muttlak (1988)
     <https://www.proquest.com/openview/3dd74592e623cdbcfa6176e85bd3d390/1?cbl=18750&diss=y&pq-origsite=gscholar>.
 License: GPL-3
 URL: https://github.com/noeliasanchmrt/WData

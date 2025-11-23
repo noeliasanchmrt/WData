@@ -8,6 +8,7 @@
 [![R-CMD-check](https://github.com/noeliasanchmrt/WData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/noeliasanchmrt/WData/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/noeliasanchmrt/WData/graph/badge.svg)](https://app.codecov.io/gh/noeliasanchmrt/WData)
+
 <!-- badges: end -->
 
 Set of tools for analyzing and modeling data that may be subject to
@@ -251,6 +252,42 @@ global bandwidths.
 
 </div>
 
+### Quantile estimation
+
+#### `qf.sen()`: Sen (1984) quantile estimator
+
+``` r
+par(mfrow = c(1, 1))
+plot(qf.sen(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 1))
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="@sen1984 quantile estimator for shrub width." width="50%" />
+<p class="caption">
+
+Sen (1984) quantile estimator for shrub width.
+</p>
+
+</div>
+
+#### `qf.SBC()`: Empirical quantile estimator based on Cox (2005)
+
+``` r
+par(mfrow = c(1, 1))
+plot(qf.SBC(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 1))
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="Empirical quantile estimator for shrub width." width="50%" />
+<p class="caption">
+
+Empirical quantile estimator for shrub width.
+</p>
+
+</div>
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
@@ -302,6 +339,14 @@ Jones, M. C. (1991), “Kernel density estimation for length biased data,”
 Muttlak, H. A. (1988), “Some aspects of ranked set sampling with size
 biased probability of selection,” *ProQuest Dissertations and Theses*,
 PhD thesis, University of Wyoming.
+
+</div>
+
+<div id="ref-sen1984" class="csl-entry">
+
+Sen, P. K. (1984), “On asymptotic representations for reduced quantiles
+in sampling from a length-biased distribution,” *Calcutta Statistical
+Association Bulletin*, 33, 59–68.
 
 </div>
 

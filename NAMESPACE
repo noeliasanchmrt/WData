@@ -27,5 +27,7 @@ export(
     "cdf.cox",
     "df.bhatta",
     "df.jones",
+    "qf.SBC",
+    "qf.sen",
     "rbiased"
 )

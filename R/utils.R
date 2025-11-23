@@ -264,7 +264,7 @@
 
 .validate_number <- function(x, name) {
   if (!is.numeric(x) || any(is.na(x)) || any(!is.finite(x)) || length(x) != 1) {
-    stop(paste("Invalid", name, ":", name, "must be numeric of lenght one"))
+    stop(paste("Invalid", name, ":", name, "must be numeric of length one"))
   }
 }
 
