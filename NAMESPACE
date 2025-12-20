@@ -10,7 +10,6 @@ importFrom("stats",
 importFrom("KScorrect", "dmixnorm", "pmixnorm", "qmixnorm")
 importFrom("evmix", "check.inputn", "check.n", "check.posparam", "dmgamma", "pmgamma", "qmgamma")
 importFrom(Rdpack, reprompt)
-importFrom(latex2exp, TeX)
 importFrom("utils", "tail")
 importFrom("bayesmeta", "convolve")
 importFrom("progress", "progress_bar")

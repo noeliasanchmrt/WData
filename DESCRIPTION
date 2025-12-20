@@ -1,6 +1,6 @@
 Package: WData
 Title: Statistical Inference for Weighted Data
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Sánchez Martínez", "Noelia", , "noelia.sanchez.martinez@rai.usc.es", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-2869-1347")),
@@ -28,7 +28,6 @@ Imports:
     bayesmeta,
     evmix,
     KScorrect,
-    latex2exp,
     progress,
     Rcpp,
     Rdpack
