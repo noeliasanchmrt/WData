@@ -13,7 +13,11 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-options(tibble.print_min = 5, tibble.print_max = 5)
+
+options(
+  tibble.print_min = 5,
+  tibble.print_max = 5
+)
 ```
 
 # <img src="man/figures/logo.png" align="left" height="139" alt="" /> WData
@@ -25,28 +29,17 @@ options(tibble.print_min = 5, tibble.print_max = 5)
 
 <!-- badges: end -->
 
-Set of tools for analyzing and modeling data that may be
-subject to biases in sampling. It offers functions to estimate density
-function and cumulative distribution function from
-a biased sample of a continuous distribution. Regarding density
-function estimation, the package includes @bhattacharyya1988
-and @jones1991 density estimators and various bandwidth selectors
-for the latter, enhancing the flexibility and
-adaptability of density estimation to different types of samples and
-biases. For cumulative distribution function estimation, the package
-includes the empirical estimator proposed by @cox2005 and the
-kernel-type estimator by @bose2022, along with several
-bandwidth selectors for the latter. Finally, the package
-includes @muttlak1988 real length-biased dataset on shrub width as
-an example dataset.
+Set of tools for analyzing and modeling data that may be subject to biases in sampling. It offers functions to estimate density function and cumulative distribution function from a biased sample of a continuous distribution. Regarding density function estimation, the package includes @bhattacharyya1988 and @jones1991 density estimators and various bandwidth selectors for the latter, enhancing the flexibility and adaptability of density estimation to different types of samples and biases. For cumulative distribution function estimation, the package includes the empirical estimator proposed by @cox2005 and the kernel-type estimator by @bose2022, along with several bandwidth selectors for the latter. Regarding quantile function, it includes the estimators proposed by @sen1984 and the empirical quantile function based on the distribution function estimator proposed by @cox2005.
+
+Finally, the package includes a real length-biased dataset on shrub width from @muttlak1988 and fish length data from the ICES _Spanish North Coast Bottom Trawl Survey_ (DATRAS).
 
 ## Installation
 
 You can install the development version of WData from [GitHub](https://github.com/) with:
 
-```r
+```{r}
 # install.packages("devtools")
-devtools::install_github("noeliasanchmrt/WData")
+# devtools::install_github("noeliasanchmrt/WData")
 library(WData)
 ```
 
@@ -57,6 +50,8 @@ If you encounter a clear bug, please file an issue with a minimal reproducible e
 ## Usage
 
 ### Real data
+
+#### _Cercocarpus montanus_ width data
 
 The species _Cercocarpus montanus_, commonly known as mountain mahogany, is a deciduous shrub native to the western United States and northern Mexico. It is typically found on slopes, canyons, and rocky, arid formations with calcareous or other alkaline soils. This small shrub has white flowers and oval-shaped leaves with serrated edges. It is highly drought-tolerant and can survive even in nutrient-poor soils. Its intricate root system prevents landslides on sloped terrains, while its branches provide food and habitat for various animal species. These characteristics make _Cercocarpus montanus_ an ideal species for studying wildlife recovery in a given geographic region.
 
@@ -77,12 +72,142 @@ summary(shrub.data)
 summary(shrub.data$Width)
 ```
 
+#### ICES _Spanish North Coast Bottom Trawl Survey_ (DATRAS)
+
+DATRAS is maintained by ICES (International Council for the Exploration of the Sea) to collate, document, and standardise trawl survey data, ensure data quality, and facilitate access for stock assessment and fish community studies. It primarily contains data from bottom trawl surveys coordinated by ICES expert groups, covering the Baltic Sea, Skagerrak, Kattegat, North Sea, English Channel, Celtic Sea, Irish Sea, Bay of Biscay, and the eastern Atlantic from the Shetlands to Gibraltar.
+
+A complete list of ICES DATRAS surveys is available [here](https://datras.ices.dk/home/surveycode.aspx) and correspondent data can be manually downloaded from the @ices_datras [web portal](https://datras.ices.dk/Data_products/Download/Download_Data_public.aspx) or obtained using the `icesDatras` R package. Additionally, `icesVocab` ([CRAN](https://cran.r-project.org/web/packages/icesVocab/index.html)) provides an R interface to the [ICES Vocabularies database](https://vocab.ices.dk/services/), facilitating the mapping of `ValidAphiaID` (Valid WoRMS AphiaID) to `ScientificName_WoRMS` (Scientific name according to WoRMS).
+
+The fields available at DATRAS are:
+
+| Field                  | Description                                  |
+| ---------------------- | -------------------------------------------- |
+| `RecordType`           | Record type identifier (`HL`).               |
+| `Survey`               | Survey abbreviation (`SP-NORTH`).            |
+| `Quarter`              | Survey quarter.                              |
+| `Country`              | Reporting country code (`ES`).               |
+| `Ship`                 | Vessel identifier.                           |
+| `Gear`                 | Gear type used in the haul.                  |
+| `SweepLngt`            | Sweep length (metres).                       |
+| `GearEx`               | Gear exploitation / expansion code.          |
+| `DoorType`             | Type of trawl door.                          |
+| `StNo`                 | National station code or number.             |
+| `HaulNo`               | Haul number.                                 |
+| `Year`                 | Calendar year (YYYY).                        |
+| `SpecCodeType`         | Species coding system used.                  |
+| `SpecCode`             | DATRAS species code.                         |
+| `SpecVal`              | Species category or value.                   |
+| `Sex`                  | Sex of the individual.                       |
+| `TotalNo`              | Total number of individuals in the catch.    |
+| `CatIdentifier`        | Catch category identifier.                   |
+| `NoMeas`               | Number of individuals measured.              |
+| `SubFactor`            | Subsampling factor (`SubWgt / CatCatchWgt`). |
+| `SubWgt`               | Subsample weight (grams).                    |
+| `CatCatchWgt`          | Catch weight per category (grams).           |
+| `LngtCode`             | Length measurement code.                     |
+| `LngtClass`            | Length (centimetres).                        |
+| `HLNoAtLngt`           | Number of individuals at length `LngtClass`. |
+| `DevStage`             | Development stage.                           |
+| `LenMeasType`          | Length measurement type.                     |
+| `ValidAphiaID`         | Valid WoRMS AphiaID.                         |
+| `ScientificName_WoRMS` | Scientific name according to WoRMS.          |
+| `DateofCalculation`    | Date of last update (YYYYMMDD).              |
+
+Length distributions are recorded for all fish species and selected commercial cephalopods and shellfish. Length measurement precision varies by taxon (1 mm to 5 cm) and is tracked in `LngtCode` variable. More details in the [Manual of the IBTS North Eastern Atlantic Surveys](https://ices-library.figshare.com/articles/report/SISP_15_-_Manual_of_the_IBTS_North_Eastern_Atlantic_Surveys/19051037).
+
+Fishing gears are selective by species and, within species, by size. The probability that a fish is retained and hauled to the surface depends on its body size because of mesh selectivity. Although retention is more directly determined by girth, length is typically recorded in practice, and the two measures are strongly linearly related. As a result, the observed length distributions are biased toward larger individuals because of size-dependent trawl selectivity (@wileman1996).
+
+We have considered _Spanish North Coast Bottom Trawl Survey_ from 2024 to ensure recent sampling and then filtered the dataset to identify species for which all hauls had complete length measurements (`TotalNo == NoMeas`) and `LngtCode` equal to `.` or `1`, which indicates a measurement precision higher than 1 cm.
+
+```{r, message=FALSE, warning=FALSE}
+hldata <- icesDatras::getDATRAS(
+  record = "HL",
+  survey = "SP-NORTH",
+  year = 2024,
+  quarter = 1:4
+)
+
+hldata$ScientificName_WoRMS <- sapply(
+  hldata$Valid_Aphia,
+  function(x) icesVocab::getCodeDetail("SpecWoRMS", x)$detail$Description
+)
+
+library(dplyr)
+
+res_filt <- hldata %>%
+  mutate(
+    calc = TotalNo == NoMeas
+  ) %>%
+  group_by(ScientificName_WoRMS, LngtCode) %>%
+  summarise(
+    n_haul = n(),
+    n_haul_true = sum(calc),
+    n_HLNoAtLngt = sum(HLNoAtLngt),
+    LngtClass_min = min(LngtClass, na.rm = TRUE),
+    LngtClass_max = max(LngtClass, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(perc_true = n_haul_true / n_haul) %>%
+  filter(
+    perc_true == 1,
+    LngtCode %in% c(".", "1"),
+    n_haul >= 25,
+    n_HLNoAtLngt > 100
+
+  ) %>%
+  select(-perc_true, -n_haul_true) %>%
+  arrange(-n_HLNoAtLngt, -n_haul)
+
+pander::pander(res_filt,
+  caption = "Summary table for 2024 _Spanish North Coast Bottom Trawl Survey_.",
+  style = "rmarkdown",
+  split.tables = Inf
+)
+```
+
+_Conger conger_ was deemed the most appropriate species for length analyses, as it comprised the highest number of observations among all species and exhibited the broadest length range.
+
+##### _Conger conger_ 2024 data
+
+`spnorthdatras.data` includes _Conger conger_ 2024 length data from the ICES _Spanish North Coast Bottom Trawl Survey_ (DATRAS). Missing values in the original DATRAS files (`-9`) were replaced by `NA`. Some variables were converted to factors, and several fields from the original database were omitted; otherwise, the column names and formats remained aligned with the original specification.
+
+To facilitate the length frequency analysis, we transformed the data into a long format, where each row represents a single fish measurement. This was done by expanding rows using the `HLNoAtLngt` column, which indicates the number of individuals in each length class.
+
+```{r spnorthdatras, fig.width=12, fig.height=4, fig.align="center", fig.cap= "Cumulative distribution function for *Conger conger* 2024 length data."}
+conger_data_long <- spnorthdatras.data %>%
+  select(HaulNo, LngtClass, HLNoAtLngt) %>%
+  tidyr::uncount(HLNoAtLngt, .remove = FALSE) %>%
+  select(HaulNo, LngtClass) %>%
+  arrange(HaulNo, LngtClass)
+
+
+pander::pander(
+  conger_data_long %>%
+    summarise(
+      n = n(),
+      Min = min(LngtClass, na.rm = TRUE),
+      Q1 = quantile(LngtClass, 0.25, na.rm = TRUE),
+      Median = median(LngtClass, na.rm = TRUE),
+      Mean = mean(LngtClass, na.rm = TRUE),
+      Q3 = quantile(LngtClass, 0.75, na.rm = TRUE),
+      Max = max(LngtClass, na.rm = TRUE)
+    ),
+  caption = "Summary table for *Conger conger* 2024 data.",
+  style = "rmarkdown",
+  split.tables = Inf
+)
+
+conger_data_LngtClass <- conger_data_long %>%
+  pull(LngtClass)
+
+plot(cdf.cox(conger_data_LngtClass), col = "blue", main = "", xlab = "Length (cm)", ylab = "Cumulative Distribution Function")
+```
+
 ### Density estimation
 
 #### `df.bhatta()`: @bhattacharyya1988 density estimator
 
-```{r, fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bhattacharyya1988 density estimator for shrub width."}
-library(WData)
+```{r bhattacharyya1988, fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bhattacharyya1988 density estimator for shrub width."}
 par(mfrow = c(1, 3))
 bhatta <- df.bhatta(shrub.data$Width, bw = "nrd0", kernel = "gaussian", from = -0.4, to = 3)
 bw.ucv <- bw.ucv(shrub.data$Width, lower = 0.15, upper = 0.3)
@@ -99,7 +224,7 @@ The function allows different bandwidth selection methods:
 - `"bw.f.BGM.boot1"`: Bootstrap-based selector (method 1).
 - `"bw.f.BGM.boot2"`: Bootstrap-based selector (method 2).
 
-```{r, fig.width=12, fig.height=8, fig.align="center", fig.cap= "@jones1991 density estimator for shrub width."}
+```{r jones1991, fig.width=12, fig.height=8, fig.align="center", fig.cap= "@jones1991 density estimator for shrub width."}
 par(mfrow = c(2, 3))
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.rt", from = -0.4, to = 3)
 jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = "bw.f.BGM.cv", lower = 0.01, upper = 0.5, nh = 100L, from = -0.4, to = 3)
@@ -113,7 +238,7 @@ jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = bw.f.BGM.boot2, fr
 
 #### `cdf.cox()`: @cox2005 distribution estimator
 
-```{r, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "@cox2005 distribution estimator for shrub width."}
+```{r cox2005, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "@cox2005 distribution estimator for shrub width."}
 par(mfrow = c(1, 1))
 plot(cdf.cox(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 3))
 rug(shrub.data$Width)
@@ -123,7 +248,7 @@ rug(shrub.data$Width)
 
 ##### `bw.F.BD()`: @bose2022 local bandwidth selector
 
-```{r, fig.width=8, fig.height=8, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using local bandwidth selector."}
+```{r bose2022_AMSE, fig.width=8, fig.height=8, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using local bandwidth selector."}
 par(mfrow = c(2, 2))
 bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.25, 512))
 bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F.BD", cy.seq = rep(0.5, 512))
@@ -135,7 +260,7 @@ bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F
 
 ##### `bw.F.SBC.rt()`, `bw.F.SBC.cv()`and `bw.F.SBC.pi()`: Global bandwidth selectors
 
-```{r, fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using global bandwidths."}
+```{r bose2022_AMISE, fig.width=12, fig.height=4, fig.align="center", fig.cap= "@bose2022 distribution estimator for shrub width using global bandwidths."}
 par(mfrow = c(1, 3))
 bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left")
 bw_cv <- bw.F.SBC.cv(shrub.data$Width, lower = 0.05, upper = 0.2, nh = 100, plot = F)
@@ -147,14 +272,14 @@ bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F
 
 #### `qf.sen()`: @sen1984 quantile estimator
 
-```{r, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "@sen1984 quantile estimator for shrub width."}
+```{r sen1984, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "@sen1984 quantile estimator for shrub width."}
 par(mfrow = c(1, 1))
 plot(qf.sen(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 1))
 ```
 
 #### `qf.SBC()`: Empirical quantile estimator based on @cox2005
 
-```{r, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "Empirical quantile estimator for shrub width."}
+```{r ecdfcox2005, out.width = '50%', fig.width=4, fig.height=4, fig.align="center", fig.cap= "Empirical quantile estimator for shrub width."}
 par(mfrow = c(1, 1))
 plot(qf.SBC(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xlim = c(0, 1))
 ```

@@ -21,9 +21,14 @@ flexibility and adaptability of density estimation to different types of
 samples and biases. For cumulative distribution function estimation, the
 package includes the empirical estimator proposed by Cox (2005) and the
 kernel-type estimator by Bose and Dutta (2022), along with several
-bandwidth selectors for the latter. Finally, the package includes
-Muttlak (1988) real length-biased dataset on shrub width as an example
-dataset.
+bandwidth selectors for the latter. Regarding quantile function, it
+includes the estimators proposed by Sen (1984) and the empirical
+quantile function based on the distribution function estimator proposed
+by Cox (2005).
+
+Finally, the package includes a real length-biased dataset on shrub
+width from Muttlak (1988) and fish length data from the ICES *Spanish
+North Coast Bottom Trawl Survey* (DATRAS).
 
 ## Installation
 
@@ -32,7 +37,7 @@ You can install the development version of WData from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("noeliasanchmrt/WData")
+# devtools::install_github("noeliasanchmrt/WData")
 library(WData)
 ```
 
@@ -46,6 +51,8 @@ other discussion, please use [forum.posit.co](https://forum.posit.co/).
 ## Usage
 
 ### Real data
+
+#### *Cercocarpus montanus* width data
 
 The species *Cercocarpus montanus*, commonly known as mountain mahogany,
 is a deciduous shrub native to the western United States and northern
@@ -114,12 +121,215 @@ summary(shrub.data)
 summary(shrub.data$Width)
 ```
 
+#### ICES *Spanish North Coast Bottom Trawl Survey* (DATRAS)
+
+DATRAS is maintained by ICES (International Council for the Exploration
+of the Sea) to collate, document, and standardise trawl survey data,
+ensure data quality, and facilitate access for stock assessment and fish
+community studies. It primarily contains data from bottom trawl surveys
+coordinated by ICES expert groups, covering the Baltic Sea, Skagerrak,
+Kattegat, North Sea, English Channel, Celtic Sea, Irish Sea, Bay of
+Biscay, and the eastern Atlantic from the Shetlands to Gibraltar.
+
+A complete list of ICES DATRAS surveys is available
+[here](https://datras.ices.dk/home/surveycode.aspx) and correspondent
+data can be manually downloaded from the ICES (2025) [web
+portal](https://datras.ices.dk/Data_products/Download/Download_Data_public.aspx)
+or obtained using the `icesDatras` R package. Additionally, `icesVocab`
+([CRAN](https://cran.r-project.org/web/packages/icesVocab/index.html))
+provides an R interface to the [ICES Vocabularies
+database](https://vocab.ices.dk/services/), facilitating the mapping of
+`ValidAphiaID` (Valid WoRMS AphiaID) to `ScientificName_WoRMS`
+(Scientific name according to WoRMS).
+
+The fields available at DATRAS are:
+
+| Field                  | Description                                  |
+|------------------------|----------------------------------------------|
+| `RecordType`           | Record type identifier (`HL`).               |
+| `Survey`               | Survey abbreviation (`SP-NORTH`).            |
+| `Quarter`              | Survey quarter.                              |
+| `Country`              | Reporting country code (`ES`).               |
+| `Ship`                 | Vessel identifier.                           |
+| `Gear`                 | Gear type used in the haul.                  |
+| `SweepLngt`            | Sweep length (metres).                       |
+| `GearEx`               | Gear exploitation / expansion code.          |
+| `DoorType`             | Type of trawl door.                          |
+| `StNo`                 | National station code or number.             |
+| `HaulNo`               | Haul number.                                 |
+| `Year`                 | Calendar year (YYYY).                        |
+| `SpecCodeType`         | Species coding system used.                  |
+| `SpecCode`             | DATRAS species code.                         |
+| `SpecVal`              | Species category or value.                   |
+| `Sex`                  | Sex of the individual.                       |
+| `TotalNo`              | Total number of individuals in the catch.    |
+| `CatIdentifier`        | Catch category identifier.                   |
+| `NoMeas`               | Number of individuals measured.              |
+| `SubFactor`            | Subsampling factor (`SubWgt / CatCatchWgt`). |
+| `SubWgt`               | Subsample weight (grams).                    |
+| `CatCatchWgt`          | Catch weight per category (grams).           |
+| `LngtCode`             | Length measurement code.                     |
+| `LngtClass`            | Length (centimetres).                        |
+| `HLNoAtLngt`           | Number of individuals at length `LngtClass`. |
+| `DevStage`             | Development stage.                           |
+| `LenMeasType`          | Length measurement type.                     |
+| `ValidAphiaID`         | Valid WoRMS AphiaID.                         |
+| `ScientificName_WoRMS` | Scientific name according to WoRMS.          |
+| `DateofCalculation`    | Date of last update (YYYYMMDD).              |
+
+Length distributions are recorded for all fish species and selected
+commercial cephalopods and shellfish. Length measurement precision
+varies by taxon (1 mm to 5 cm) and is tracked in `LngtCode` variable.
+More details in the [Manual of the IBTS North Eastern Atlantic
+Surveys](https://ices-library.figshare.com/articles/report/SISP_15_-_Manual_of_the_IBTS_North_Eastern_Atlantic_Surveys/19051037).
+
+Fishing gears are selective by species and, within species, by size. The
+probability that a fish is retained and hauled to the surface depends on
+its body size because of mesh selectivity. Although retention is more
+directly determined by girth, length is typically recorded in practice,
+and the two measures are strongly linearly related. As a result, the
+observed length distributions are biased toward larger individuals
+because of size-dependent trawl selectivity (Wileman et al. (1996)).
+
+We have considered *Spanish North Coast Bottom Trawl Survey* from 2024
+to ensure recent sampling and then filtered the dataset to identify
+species for which all hauls had complete length measurements
+(`TotalNo == NoMeas`) and `LngtCode` equal to `.` or `1`, which
+indicates a measurement precision higher than 1 cm.
+
+``` r
+hldata <- icesDatras::getDATRAS(
+  record = "HL",
+  survey = "SP-NORTH",
+  year = 2024,
+  quarter = 1:4
+)
+
+hldata$ScientificName_WoRMS <- sapply(
+  hldata$Valid_Aphia,
+  function(x) icesVocab::getCodeDetail("SpecWoRMS", x)$detail$Description
+)
+
+library(dplyr)
+
+res_filt <- hldata %>%
+  mutate(
+    calc = TotalNo == NoMeas
+  ) %>%
+  group_by(ScientificName_WoRMS, LngtCode) %>%
+  summarise(
+    n_haul = n(),
+    n_haul_true = sum(calc),
+    n_HLNoAtLngt = sum(HLNoAtLngt),
+    LngtClass_min = min(LngtClass, na.rm = TRUE),
+    LngtClass_max = max(LngtClass, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(perc_true = n_haul_true / n_haul) %>%
+  filter(
+    perc_true == 1,
+    LngtCode %in% c(".", "1"),
+    n_haul >= 25,
+    n_HLNoAtLngt > 100
+
+  ) %>%
+  select(-perc_true, -n_haul_true) %>%
+  arrange(-n_HLNoAtLngt, -n_haul)
+
+pander::pander(res_filt,
+  caption = "Summary table for 2024 _Spanish North Coast Bottom Trawl Survey_.",
+  style = "rmarkdown",
+  split.tables = Inf
+)
+```
+
+| ScientificName_WoRMS | LngtCode | n_haul | n_HLNoAtLngt | LngtClass_min | LngtClass_max |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| Conger conger | 1 | 886 | 1392 | 10 | 132 |
+| Raja clavata | 1 | 903 | 1280 | 11 | 95 |
+| Phycis blennoides | 1 | 190 | 585 | 9 | 51 |
+| Eutrigla gurnardus | 1 | 236 | 495 | 9 | 46 |
+| Raja montagui | 1 | 261 | 401 | 21 | 106 |
+| Lophius budegassa | 1 | 191 | 208 | 6 | 95 |
+| Lophius piscatorius | 1 | 167 | 188 | 8 | 102 |
+| Chelidonichthys lucerna | 1 | 115 | 154 | 17 | 74 |
+| Scomber scombrus | 1 | 75 | 143 | 17 | 37 |
+| Leucoraja naevus | 1 | 121 | 138 | 22 | 64 |
+
+Summary table for 2024 *Spanish North Coast Bottom Trawl Survey*.
+
+*Conger conger* was deemed the most appropriate species for length
+analyses, as it comprised the highest number of observations among all
+species and exhibited the broadest length range.
+
+##### *Conger conger* 2024 data
+
+`spnorthdatras.data` includes *Conger conger* 2024 length data from the
+ICES *Spanish North Coast Bottom Trawl Survey* (DATRAS). Missing values
+in the original DATRAS files (`-9`) were replaced by `NA`. Some
+variables were converted to factors, and several fields from the
+original database were omitted; otherwise, the column names and formats
+remained aligned with the original specification.
+
+To facilitate the length frequency analysis, we transformed the data
+into a long format, where each row represents a single fish measurement.
+This was done by expanding rows using the `HLNoAtLngt` column, which
+indicates the number of individuals in each length class.
+
+``` r
+conger_data_long <- spnorthdatras.data %>%
+  select(HaulNo, LngtClass, HLNoAtLngt) %>%
+  tidyr::uncount(HLNoAtLngt, .remove = FALSE) %>%
+  select(HaulNo, LngtClass) %>%
+  arrange(HaulNo, LngtClass)
+
+
+pander::pander(
+  conger_data_long %>%
+    summarise(
+      n = n(),
+      Min = min(LngtClass, na.rm = TRUE),
+      Q1 = quantile(LngtClass, 0.25, na.rm = TRUE),
+      Median = median(LngtClass, na.rm = TRUE),
+      Mean = mean(LngtClass, na.rm = TRUE),
+      Q3 = quantile(LngtClass, 0.75, na.rm = TRUE),
+      Max = max(LngtClass, na.rm = TRUE)
+    ),
+  caption = "Summary table for *Conger conger* 2024 data.",
+  style = "rmarkdown",
+  split.tables = Inf
+)
+```
+
+|  n   | Min | Q1  | Median | Mean  | Q3  | Max |
+|:----:|:---:|:---:|:------:|:-----:|:---:|:---:|
+| 1392 | 10  | 35  |   39   | 39.96 | 45  | 132 |
+
+Summary table for *Conger conger* 2024 data.
+
+``` r
+
+conger_data_LngtClass <- conger_data_long %>%
+  pull(LngtClass)
+
+plot(cdf.cox(conger_data_LngtClass), col = "blue", main = "", xlab = "Length (cm)", ylab = "Cumulative Distribution Function")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="man/figures/README-spnorthdatras-1.png" alt="Cumulative distribution function for *Conger conger* 2024 length data." width="100%" />
+<p class="caption">
+
+Cumulative distribution function for *Conger conger* 2024 length data.
+</p>
+
+</div>
+
 ### Density estimation
 
 #### `df.bhatta()`: Bhattacharyya et al. (1988) density estimator
 
 ``` r
-library(WData)
 par(mfrow = c(1, 3))
 bhatta <- df.bhatta(shrub.data$Width, bw = "nrd0", kernel = "gaussian", from = -0.4, to = 3)
 bw.ucv <- bw.ucv(shrub.data$Width, lower = 0.15, upper = 0.3)
@@ -129,7 +339,7 @@ bhatta <- df.bhatta(shrub.data$Width, bw = "SJ-ste", kernel = "gaussian", from =
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="@bhattacharyya1988 density estimator for shrub width." width="100%" />
+<img src="man/figures/README-bhattacharyya1988-1.png" alt="@bhattacharyya1988 density estimator for shrub width." width="100%" />
 <p class="caption">
 
 Bhattacharyya et al. (1988) density estimator for shrub width.
@@ -169,7 +379,7 @@ jones <- df.jones(shrub.data$Width, kernel = "gaussian", bw = bw.f.BGM.boot2, fr
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" alt="@jones1991 density estimator for shrub width." width="100%" />
+<img src="man/figures/README-jones1991-1.png" alt="@jones1991 density estimator for shrub width." width="100%" />
 <p class="caption">
 
 Jones (1991) density estimator for shrub width.
@@ -189,7 +399,7 @@ rug(shrub.data$Width)
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" alt="@cox2005 distribution estimator for shrub width." width="50%" />
+<img src="man/figures/README-cox2005-1.png" alt="@cox2005 distribution estimator for shrub width." width="50%" />
 <p class="caption">
 
 Cox (2005) distribution estimator for shrub width.
@@ -217,7 +427,7 @@ bd <- cdf.bd(shrub.data$Width, correction = "left", from = 0, to = 3, bw = "bw.F
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" alt="@bose2022 distribution estimator for shrub width using local bandwidth selector." width="100%" />
+<img src="man/figures/README-bose2022_AMSE-1.png" alt="@bose2022 distribution estimator for shrub width using local bandwidth selector." width="100%" />
 <p class="caption">
 
 Bose and Dutta (2022) distribution estimator for shrub width using local
@@ -243,7 +453,7 @@ bd <- cdf.bd(shrub.data$Width, from = 0, to = 3, correction = "left", bw = "bw.F
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" alt="@bose2022 distribution estimator for shrub width using global bandwidths." width="100%" />
+<img src="man/figures/README-bose2022_AMISE-1.png" alt="@bose2022 distribution estimator for shrub width using global bandwidths." width="100%" />
 <p class="caption">
 
 Bose and Dutta (2022) distribution estimator for shrub width using
@@ -263,7 +473,7 @@ plot(qf.sen(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xl
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" alt="@sen1984 quantile estimator for shrub width." width="50%" />
+<img src="man/figures/README-sen1984-1.png" alt="@sen1984 quantile estimator for shrub width." width="50%" />
 <p class="caption">
 
 Sen (1984) quantile estimator for shrub width.
@@ -280,7 +490,7 @@ plot(qf.SBC(shrub.data$Width), xlab = "", ylab = "", main = "", col = "blue", xl
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" alt="Empirical quantile estimator for shrub width." width="50%" />
+<img src="man/figures/README-ecdfcox2005-1.png" alt="Empirical quantile estimator for shrub width." width="50%" />
 <p class="caption">
 
 Empirical quantile estimator for shrub width.
@@ -326,6 +536,13 @@ Cambridge University Press, pp. 81–92.
 
 </div>
 
+<div id="ref-ices_datras" class="csl-entry">
+
+ICES (2025), “ICES database on trawl surveys (DATRAS),” Copenhagen,
+Denmark: <https://datras.ices.dk>.
+
+</div>
+
 <div id="ref-jones1991" class="csl-entry">
 
 Jones, M. C. (1991), “Kernel density estimation for length biased data,”
@@ -347,6 +564,14 @@ PhD thesis, University of Wyoming.
 Sen, P. K. (1984), “On asymptotic representations for reduced quantiles
 in sampling from a length-biased distribution,” *Calcutta Statistical
 Association Bulletin*, 33, 59–68.
+
+</div>
+
+<div id="ref-wileman1996" class="csl-entry">
+
+Wileman, D. A., Ferro, R., Fonteyne, R., and Millar, R. (1996), *Manual
+of methods of measuring the selectivity of towed fishing gears*, ICES
+cooperative research reports (CRR).
 
 </div>
 
