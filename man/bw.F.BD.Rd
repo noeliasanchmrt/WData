@@ -47,5 +47,5 @@ bw.F.BD(shrub.data$Width, y.seq = seq(0, 1, length.out = 512), cy.seq = rep(1, 5
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=cdf.bd]{cdf.bd}}
+\code{\link{cdf.bd}}
 }

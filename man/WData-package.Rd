@@ -19,10 +19,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Sánchez Martínez Noelia \email{noelia.sanchez.martinez@rai.usc.es} (\href{https://orcid.org/0000-0002-2869-1347}{ORCID})
+\strong{Maintainer}: Sánchez Martínez Noelia \email{noeliaschzmrt@gmail.com} (\href{https://orcid.org/0000-0002-2869-1347}{ORCID})
 
 Authors:
 \itemize{
+  \item Sánchez Martínez Noelia \email{noeliaschzmrt@gmail.com} (\href{https://orcid.org/0000-0002-2869-1347}{ORCID})
   \item Borrajo Garcia Maria Isabel \email{mariaisabel.borrajo@usc.es} (\href{https://orcid.org/0000-0002-3372-1993}{ORCID})
   \item Conde Amboage Mercedes \email{mercedes.amboage@usc.es} (\href{https://orcid.org/0000-0003-0306-8142}{ORCID})
 }

@@ -56,5 +56,5 @@ bw.F.SBC.rt(shrub.data$Width, kernel = "epanechnikov")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=cdf.bd]{cdf.bd}}
+\code{\link{cdf.bd}}
 }

@@ -1,6 +1,6 @@
 ## Resubmission
 
-- Removed dependency on `latex2exp` to avoid potential CRAN archival by the 2026-01-03.
+- Removed the `evmix` dependency to avoid potential CRAN archival by the 2026-11-02.
 
 ## Test environments
 

@@ -23,7 +23,7 @@ df.bhatta(
 \item{...}{Additional arguments to be passed to \code{\link[stats:density]{density}} function as, for instance, \code{kernel} or \code{bw}:
 \itemize{
 \item \code{kernel} A character string giving the kernel to be used. This must partially match one of "gaussian", "rectangular", "triangular", "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian", and may be abbreviated to a unique prefix (single letter).
-\item \code{bw} The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. Options available can be checked in \code{\link[stats:bandwidth]{bw.nrd}}. Default is \code{"nrd0"}.
+\item \code{bw} The smoothing bandwidth to be used in the density estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. Options available can be checked in \code{\link[stats:bw.nrd]{bw.nrd}}. Default is \code{"nrd0"}.
 }}
 }
 \value{
