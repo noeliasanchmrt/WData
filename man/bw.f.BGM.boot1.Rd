@@ -37,7 +37,7 @@ When \code{bw0="RT"}, the bandwidth is given by
 \text{where} \quad
 \widehat{h}_{f, 0, \mathrm{RT}}= \frac{n^{1/5}}{n^{1/7}} \widehat{h}_{f, \mathrm{RT}}.
 }
-\eqn{\widehat{h}_{f, \mathrm{RT}}} is the value returned by \code{\link[=bw.f.BGM.rt]{bw.f.BGM.rt}}. An alternative is to consider the following pilot bandwidth:
+\eqn{\widehat{h}_{f, \mathrm{RT}}} is the value returned by \code{\link{bw.f.BGM.rt}}. An alternative is to consider the following pilot bandwidth:
 \deqn{
 \widehat{h}_{f, \mathrm{B}_{\mathrm{opt}}}= \left( \frac{R(K^{\ast})\widehat{\mu}_w\widehat{\bar{\mu}}_w}{n \eta(K^{\ast})^{2} R\left(\widehat{f}_{J,\widehat{h}_{f, 0,\mathrm{opt}}}^{(2)}\right)}\right)^{1/5},
 \quad
@@ -67,5 +67,5 @@ bw.f.BGM.boot1(y = shrub.data$Width, bw0 = "PI")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=df.jones]{df.jones}}
+\code{\link{df.jones}}
 }

@@ -28,7 +28,7 @@ cdf.bd(
 
 \item{y.seq}{A numeric vector specifying the points where the distribution is estimated. Alternatively, \code{from}, \code{to} and \code{nb} can be used to define the evaluation points.}
 
-\item{bw}{The bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}} and \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}. Default is \code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}.}
+\item{bw}{The bandwidth to be used in the distribution estimation. \code{bw} can also be a character string giving a rule to choose the bandwidth. In this case, options available are \code{\link{bw.F.SBC.rt}}, \code{\link{bw.F.BD}}, \code{\link{bw.F.SBC.cv}} and \code{\link{bw.F.SBC.pi}}. Default is \code{\link{bw.F.SBC.rt}}.}
 
 \item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
@@ -83,5 +83,5 @@ cdf.bd(shrub.data$Width, bw = "bw.F.SBC.cv")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=bw.F.SBC.rt]{bw.F.SBC.rt}}, \code{\link[=bw.F.BD]{bw.F.BD}}, \code{\link[=bw.F.SBC.cv]{bw.F.SBC.cv}}, \code{\link[=bw.F.SBC.pi]{bw.F.SBC.pi}}
+\code{\link{bw.F.SBC.rt}}, \code{\link{bw.F.BD}}, \code{\link{bw.F.SBC.cv}}, \code{\link{bw.F.SBC.pi}}
 }

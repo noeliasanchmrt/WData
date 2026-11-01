@@ -28,7 +28,7 @@ bw.f.BGM.boot2(
 
 \item{kernel}{A character string specifying the kernel function. Available options: \code{"gaussian"}, \code{"epanechnikov"}, \code{"rectangular"}, \code{"triangular"}, \code{"biweight"}, \code{"cosine"} and \code{"optcosine"}.}
 
-\item{bw0}{The bandwidth value to be used in \code{\link[stats:density]{density}}. It can also be a character string specifying a bandwidth selection method. Options available can be checked in \code{\link[stats:bandwidth]{bw.nrd}}. By default it is set to \verb{1/8 n^(-1/9)}, where \code{n} is the sample size.}
+\item{bw0}{The bandwidth value to be used in \code{\link[stats:density]{density}}. It can also be a character string specifying a bandwidth selection method. Options available can be checked in \code{\link[stats:bw.nrd]{bw.nrd}}. By default it is set to \verb{1/8 n^(-1/9)}, where \code{n} is the sample size.}
 
 \item{lower}{Numeric value specifying the lower bound for bandwidth selection. Default is computed based on the interquartile range (IQR) and sample size.}
 
@@ -66,5 +66,5 @@ bw.f.BGM.boot2(shrub.data$Width, nh = 50L)
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=df.jones]{df.jones}}
+\code{\link{df.jones}}
 }
