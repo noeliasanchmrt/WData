@@ -29,13 +29,12 @@ Imports:
     KScorrect,
     progress,
     Rcpp,
-    Rdpack
+    Rdpack,
+    stats
 Suggests: 
     roxygen2,
     testthat (>= 3.0.0),
     vdiffr
-Enhances: 
-    stats
 RdMacros: 
     Rdpack
 Config/testthat/edition: 3
