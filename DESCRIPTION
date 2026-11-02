@@ -1,8 +1,8 @@
 Package: WData
 Title: Statistical Inference for Weighted Data
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
-    person("Sánchez Martínez", "Noelia", , "noelia.sanchez.martinez@rai.usc.es", role = c("cre", "aut"),
+    person("Sánchez Martínez", "Noelia", , "noeliaschzmrt@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-2869-1347")),
     person("Borrajo Garcia", "Maria Isabel", , "mariaisabel.borrajo@usc.es", role = "aut",
            comment = c(ORCID = "0000-0002-3372-1993")),
@@ -24,9 +24,7 @@ Description: Analyzes and models data subject to sampling biases.
     dataset on shrub width from Muttlak (1988)
     <https://www.proquest.com/openview/3dd74592e623cdbcfa6176e85bd3d390/1?cbl=18750&diss=y&pq-origsite=gscholar>
     and fish length data from the ICES Spanish North Coast Bottom Trawl
-    Survey (DATRAS (2005) <https://datras.ices.dk>).  Also includes a real
-    length-biased dataset on shrub width from Muttlak (1988)
-    <https://www.proquest.com/openview/3dd74592e623cdbcfa6176e85bd3d390/1?cbl=18750&diss=y&pq-origsite=gscholar>.
+    Survey (DATRAS (2005) <https://datras.ices.dk>).
 License: GPL-3
 URL: https://github.com/noeliasanchmrt/WData
 BugReports: https://github.com/noeliasanchmrt/WData/issues
@@ -34,17 +32,15 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     bayesmeta,
-    evmix,
     KScorrect,
     progress,
     Rcpp,
-    Rdpack
+    Rdpack,
+    stats
 Suggests: 
     roxygen2,
     testthat (>= 3.0.0),
     vdiffr
-Enhances: 
-    stats
 RdMacros: 
     Rdpack
 Config/testthat/edition: 3
@@ -52,4 +48,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.1.1

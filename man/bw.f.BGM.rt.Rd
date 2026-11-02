@@ -54,5 +54,5 @@ bw.f.BGM.rt(shrub.data$Width, kernel = "epanechnikov")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=df.jones]{df.jones}}
+\code{\link{df.jones}}
 }

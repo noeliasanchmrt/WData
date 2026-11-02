@@ -18,7 +18,7 @@
 #' Continuous Uniform ([`unif`][stats::dunif()]),
 #' Weibull ([`weibull`][stats::dweibull()]),
 #' Mixture of gaussian distributions ([`mixnorm`][KScorrect::dmixnorm()]) and
-#' Mixture of gamma distributions ([`mgamma`][evmix::dmgamma()]) .
+#' Mixture of gamma distributions (weighted sum of gamma densities).
 #' @param lim A numeric value between 0 and 1 specifying the quantile range within which the bias function is considered significant and, hence, the interval over which the constant \eqn{c = \max_{y \in \mathbb{R}} w(y)/\mu_w > 0} is searched. The lower and upper bounds for this interval are determined by `q(lim)` and `q(1 - lim)``, respectively, where `q` is the quantile function of the chosen distribution `fx`.
 #' @param lim Lower and upper limits for the range where the bias is significant and, hence, where \eqn{c = \max_{y\in \mathbb{R}}w(y)/\mu_w > 0} must be searched.
 #' @param plot Logical value indicating whether to generate a plot of the biased sample. Default is `TRUE`.
@@ -29,7 +29,7 @@
 #' @param df1,df2 Additional arguments to be passed to the unbiased density function `fx` when set to the [`f`][stats::df()] distribution.
 #' @param min,max Additional arguments to be passed to the unbiased density function `fx` when set to the [`unif`][stats::dunif()] distribution.
 #' @param mean,sd,pro,meanlog,sdlog Additional arguments to be passed to the unbiased density function `fx` when set to the [`norm`][stats::dnorm()],  [`mixnorm`][KScorrect::dmixnorm()] and [`lnorm`][stats::dlnorm()]  distributions.
-#' @param mgshape,mgscale,mgweight Additional arguments to be passed to the unbiased density function `fx` when set to the [`mgamma`][evmix::dmgamma()] distribution.
+#' @param mgshape,mgscale,mgweight Shape, scale, and mixing weights for the gamma components when `fx = "mgamma"`. If `mgweight` is omitted, equal weights are used.
 #' @return A numeric vector containing a biased sample from density `fx` and bias function `w`.
 #' @details This function implements \insertCite{neumann1951;textual}{WData} acceptance-rejection method to generate a biased sample given an  unbiased density function `fx` and a bias function `w`.
 #' @references \insertAllCited{}
@@ -128,7 +128,7 @@ rbiased <- function(n,
       KScorrect::dmixnorm(y, mean, sd, pro)
     },
     mgamma = function(y) {
-      evmix::dmgamma(y, mgshape, mgscale, mgweight)
+      .dgamma_mix(y, mgshape, mgscale, mgweight)
     }
   )
 
@@ -173,7 +173,7 @@ rbiased <- function(n,
       KScorrect::qmixnorm(p, mean, sd, pro)
     },
     mgamma = function(p) {
-      evmix::qmgamma(p, mgshape, mgscale, mgweight)
+      .qgamma_mix(p, mgshape, mgscale, mgweight)
     }
   )
 
@@ -213,39 +213,6 @@ rbiased <- function(n,
     structure(as.vector(y), modelName = modelName)
   }
 
-
-  # Auxiliar Function to Generate a Mixture of gammas
-  r_mixto_gamma <- function(n, mgshape, mgscale, mgweight) {
-    if (any(missing(mgshape), missing(mgscale))) {
-      stop("'mgshape' and 'mgscale' not provided, without default")
-    }
-
-    if (length(mgshape) != length(mgweight)) {
-      stop("lengths of 'shape', 'scale', and 'weight' must be equal")
-    }
-    G <- length(mgshape)
-    if (missing(mgweight)) {
-      mgweight <- rep(1 / G, G)
-      warning("mixing proportion 'mgweight' not provided. Assigned equal proportions by default")
-    }
-
-    mgweight <- as.vector(mgweight, mode = "numeric")
-    mgweight <- mgweight / sum(mgweight)
-    if (any(mgshape < 0L, mgscale < 0L, mgweight < 0L)) {
-      stop("'mgshape', 'mgscale' and 'mgweight' must not be negative")
-    }
-
-    modelName <- "V"
-    clabels <- sample(1:G, size = n, replace = TRUE, prob = mgweight)
-    ctable <- tabulate(clabels, nbins = G)
-    y <- rep(0, n)
-
-    for (i in 1:G) {
-      y[clabels == i] <- rgamma(1, shape = mgshape[i], scale = mgscale[i])
-    }
-
-    structure(as.vector(y), modelName = modelName)
-  }
 
   r <- switch(fx,
     beta = function(n) {
@@ -288,7 +255,7 @@ rbiased <- function(n,
       r_mixto_norm(n, mean, sd, pro)
     },
     mgamma = function(n) {
-      r_mixto_gamma(n, mgshape, mgscale, mgweight)
+      .rgamma_mix(n, mgshape, mgscale, mgweight)
     }
   )
 

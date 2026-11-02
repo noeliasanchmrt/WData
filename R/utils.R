@@ -313,3 +313,114 @@
   }
   list(y.seq = y.seq, from = from, to = to)
 }
+
+# Adapted from evmix 2.12 (GPL-3).
+.gamma_mix_parameters <- function(shape, scale, weight = NULL) {
+  if (missing(shape)) stop("'mgshape' not provided, without default")
+  if (missing(scale)) stop("'mgscale' not provided, without default")
+
+  shape <- as.numeric(shape)
+  scale <- as.numeric(scale)
+  if (is.null(weight)) {
+    weight <- rep(1, length(shape))
+  }
+  weight <- as.numeric(weight)
+
+  if (length(shape) == 0L || length(shape) != length(scale) || length(shape) != length(weight)) {
+    stop("lengths of 'shape', 'scale', and 'weight' must be equal")
+  }
+  if (any(!is.finite(c(shape, scale, weight))) || any(shape <= 0) ||
+    any(scale <= 0) || any(weight <= 0)) {
+    stop("'shape', 'scale', and 'weight' must be positive and finite")
+  }
+
+  list(shape = shape, scale = scale, weight = weight / sum(weight))
+}
+
+# Adapted from evmix 2.12 (GPL-3).
+.dgamma_mix <- function(x, shape, scale, weight = NULL, log = FALSE) {
+  mix <- .gamma_mix_parameters(shape, scale, weight)
+  if (!is.logical(log) || length(log) != 1L || is.na(log)) {
+    stop("'log' must be a single logical value")
+  }
+  if (any(is.infinite(x))) warning("infinite quantiles set to NA")
+  x[is.infinite(x)] <- NA_real_
+
+  density <- x
+  finite <- which(is.finite(x))
+  if (length(finite) > 0L) {
+    density[finite] <- 0
+    for (i in seq_along(mix$shape)) {
+      density[finite] <- density[finite] +
+        stats::dgamma(x[finite], shape = mix$shape[i], scale = mix$scale[i]) * mix$weight[i]
+    }
+  }
+  if (log) density <- log(density)
+  density
+}
+
+# Adapted from evmix 2.12 (GPL-3).
+.pgamma_mix <- function(q, shape, scale, weight = NULL, lower.tail = TRUE) {
+  mix <- .gamma_mix_parameters(shape, scale, weight)
+  if (!is.logical(lower.tail) || length(lower.tail) != 1L || is.na(lower.tail)) {
+    stop("'lower.tail' must be a single logical value")
+  }
+  if (any(is.infinite(q))) warning("infinite quantiles set to NA")
+  q[is.infinite(q)] <- NA_real_
+
+  probability <- q
+  finite <- which(is.finite(q))
+  if (length(finite) > 0L) {
+    probability[finite] <- 0
+    for (i in seq_along(mix$shape)) {
+      probability[finite] <- probability[finite] +
+        stats::pgamma(q[finite], shape = mix$shape[i], scale = mix$scale[i]) * mix$weight[i]
+    }
+  }
+  if (!lower.tail) probability <- 1 - probability
+  probability
+}
+
+# Adapted from evmix 2.12 (GPL-3).
+.qgamma_mix <- function(p, shape, scale, weight = NULL, lower.tail = TRUE) {
+  mix <- .gamma_mix_parameters(shape, scale, weight)
+  if (!is.logical(lower.tail) || length(lower.tail) != 1L || is.na(lower.tail)) {
+    stop("'lower.tail' must be a single logical value")
+  }
+  if (!is.numeric(p) || length(p) == 0L || any(is.infinite(p)) ||
+    any(p < 0, na.rm = TRUE) || any(p > 1, na.rm = TRUE)) {
+    stop("'p' must contain probabilities between 0 and 1")
+  }
+  if (!lower.tail) p <- 1 - p
+
+  quantile <- p
+  finite <- which(is.finite(p))
+  if (length(finite) > 0L) {
+    maxp <- max(ifelse(p[finite] >= 1, NA_real_, p[finite]), na.rm = TRUE)
+    maxq <- max(stats::qgamma(maxp, shape = mix$shape, scale = mix$scale))
+    qgrid <- seq(0, maxq, length.out = 1000L)
+    pgrid <- .pgamma_mix(qgrid, mix$shape, mix$scale, mix$weight)
+    qfun <- stats::splinefun(x = pgrid, y = qgrid)
+    quantile[finite] <- qfun(p[finite])
+  }
+  quantile
+}
+
+# Adapted from evmix 2.12 (GPL-3)
+.rgamma_mix <- function(n, shape, scale, weight = NULL) {
+  if (length(n) != 1L || !is.numeric(n) || is.na(n) || !is.finite(n) ||
+    n < 1 || abs(n - round(n)) > sqrt(.Machine$double.eps)) {
+    stop("'n' must be a positive integer")
+  }
+  mix <- .gamma_mix_parameters(shape, scale, weight)
+  component <- sample.int(length(mix$shape), size = n, replace = TRUE, prob = mix$weight)
+  sample <- numeric(n)
+  for (i in seq_along(mix$shape)) {
+    selected <- which(component == i)
+    sample[selected] <- stats::rgamma(
+      length(selected),
+      shape = mix$shape[i], scale = mix$scale[i]
+    )
+  }
+  sample
+}

@@ -8,7 +8,6 @@ importFrom("stats",
     "rbeta", "rcauchy", "rchisq", "rexp", "rf", "rgamma", "rlnorm", "rlogis", "rmultinom", "rnorm", "rt", "runif", "rweibull"
 )
 importFrom("KScorrect", "dmixnorm", "pmixnorm", "qmixnorm")
-importFrom("evmix", "check.inputn", "check.n", "check.posparam", "dmgamma", "pmgamma", "qmgamma")
 importFrom(Rdpack, reprompt)
 importFrom("utils", "tail")
 importFrom("bayesmeta", "convolve")

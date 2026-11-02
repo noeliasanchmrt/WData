@@ -41,20 +41,20 @@ rbiased(
 \item{w}{A function representing the bias function applied to the data points. It must be evaluable and positive in each point of the sample \code{y}. By default, it is set to the length-biased function.}
 
 \item{fx}{Unbiased density function. Values allowed are
-Beta (\code{\link[stats:Beta]{beta}}),
-Cauchy (\code{\link[stats:Cauchy]{cauchy}}),
-Chi-Square (\code{\link[stats:Chisquare]{chisq}}),
-Exponential (\code{\link[stats:Exponential]{exp}}),
-F (\code{\link[stats:Fdist]{f}}),
-Gamma  (\code{\link[stats:GammaDist]{gamma}}),
-Logistic  (\code{\link[stats:Logistic]{logis}}),
-Log Normal (\code{\link[stats:Lognormal]{lnorm}}),
-Normal (\code{\link[stats:Normal]{norm}}),
-Student t (\code{\link[stats:TDist]{t}}),
-Continuous Uniform (\code{\link[stats:Uniform]{unif}}),
-Weibull (\code{\link[stats:Weibull]{weibull}}),
+Beta (\code{\link[stats:dbeta]{beta}}),
+Cauchy (\code{\link[stats:dcauchy]{cauchy}}),
+Chi-Square (\code{\link[stats:dchisq]{chisq}}),
+Exponential (\code{\link[stats:dexp]{exp}}),
+F (\code{\link[stats:df]{f}}),
+Gamma  (\code{\link[stats:dgamma]{gamma}}),
+Logistic  (\code{\link[stats:dlogis]{logis}}),
+Log Normal (\code{\link[stats:dlnorm]{lnorm}}),
+Normal (\code{\link[stats:dnorm]{norm}}),
+Student t (\code{\link[stats:dt]{t}}),
+Continuous Uniform (\code{\link[stats:dunif]{unif}}),
+Weibull (\code{\link[stats:dweibull]{weibull}}),
 Mixture of gaussian distributions (\code{\link[KScorrect:dmixnorm]{mixnorm}}) and
-Mixture of gamma distributions (\code{\link[evmix:mgamma]{mgamma}}) .}
+Mixture of gamma distributions (weighted sum of gamma densities).}
 
 \item{lim}{Lower and upper limits for the range where the bias is significant and, hence, where \eqn{c = \max_{y\in \mathbb{R}}w(y)/\mu_w > 0} must be searched.}
 
@@ -62,19 +62,19 @@ Mixture of gamma distributions (\code{\link[evmix:mgamma]{mgamma}}) .}
 
 \item{stop}{Logical value indicating whether to stop when bias function can not be evaluated in a generated value. Default is \code{TRUE}. If \code{FALSE} value is discarded and a new one is generated.}
 
-\item{shape1, shape2}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Beta]{beta}} distribution.}
+\item{shape1, shape2}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:dbeta]{beta}} distribution.}
 
-\item{df, ncp}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Chisquare]{chisq}} and \code{\link[stats:TDist]{t}} distributions.}
+\item{df, ncp}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:dchisq]{chisq}} and \code{\link[stats:dt]{t}} distributions.}
 
-\item{df1, df2}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Fdist]{f}} distribution.}
+\item{df1, df2}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:df]{f}} distribution.}
 
-\item{shape, rate, scale, location}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Cauchy]{cauchy}}, \code{\link[stats:Logistic]{logis}}, \code{\link[stats:Exponential]{exp}}, \code{\link[stats:GammaDist]{gamma}} and \code{\link[stats:Weibull]{weibull}} distributions.}
+\item{shape, rate, scale, location}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:dcauchy]{cauchy}}, \code{\link[stats:dlogis]{logis}}, \code{\link[stats:dexp]{exp}}, \code{\link[stats:dgamma]{gamma}} and \code{\link[stats:dweibull]{weibull}} distributions.}
 
-\item{min, max}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Uniform]{unif}} distribution.}
+\item{min, max}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:dunif]{unif}} distribution.}
 
-\item{mgshape, mgscale, mgweight}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[evmix:mgamma]{mgamma}} distribution.}
+\item{mgshape, mgscale, mgweight}{Shape, scale, and mixing weights for the gamma components when \code{fx = "mgamma"}. If \code{mgweight} is omitted, equal weights are used.}
 
-\item{mean, sd, pro, meanlog, sdlog}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:Normal]{norm}},  \code{\link[KScorrect:dmixnorm]{mixnorm}} and \code{\link[stats:Lognormal]{lnorm}}  distributions.}
+\item{mean, sd, pro, meanlog, sdlog}{Additional arguments to be passed to the unbiased density function \code{fx} when set to the \code{\link[stats:dnorm]{norm}},  \code{\link[KScorrect:dmixnorm]{mixnorm}} and \code{\link[stats:dlnorm]{lnorm}}  distributions.}
 }
 \value{
 A numeric vector containing a biased sample from density \code{fx} and bias function \code{w}.
