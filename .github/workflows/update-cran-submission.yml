@@ -1,0 +1,54 @@
+name: Update CRAN-SUBMISSION
+
+on:
+  workflow_run:
+    workflows: ["Submit to CRAN"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  update-cran-submission:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update CRAN-SUBMISSION
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SUBMISSION_STARTED_AT: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          set -euo pipefail
+
+          version="$(git show "${SOURCE_SHA}:DESCRIPTION" | sed -n 's/^Version:[[:space:]]*//p' | head -n 1 | tr -d '\r')"
+
+          if [[ -z "$version" ]]; then
+            echo "Could not read Version from DESCRIPTION at the submitted source commit." >&2
+            exit 1
+          fi
+
+          submitted_date="$(date -u -d "$SUBMISSION_STARTED_AT" '+%Y-%m-%d %H:%M:%S UTC')"
+
+          printf 'Version: %s\nDate: %s\nSHA: %s\n' \
+            "$version" "$submitted_date" "$SOURCE_SHA" > CRAN-SUBMISSION
+
+          if git diff --quiet -- CRAN-SUBMISSION; then
+            echo "CRAN-SUBMISSION already records this source version and commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CRAN-SUBMISSION
+          git commit -m "Update CRAN-SUBMISSION for ${version}"
+          git push origin HEAD:main
